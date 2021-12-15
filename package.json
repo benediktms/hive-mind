@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "nx serve",
+    "start:api": "nx serve",
+    "start:web": "nx run web:serve",
     "build": "nx build",
     "test": "nx run api:test && nx run web:test",
     "test:e2e": "nx run web-e2e:e2e"
