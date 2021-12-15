@@ -6,6 +6,11 @@
     "next/core-web-vitals"
   ],
   "ignorePatterns": ["!**/*"],
+  // FIXME: this should work by extending the base config?
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.base.json"
+  },
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
