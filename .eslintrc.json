@@ -2,6 +2,10 @@
   "root": true,
   "ignorePatterns": ["**/*"],
   "plugins": ["@nrwl/nx"],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.base.json"
+  },
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
@@ -18,7 +22,12 @@
               }
             ]
           }
-        ]
+        ],
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          { "varsIgnorePattern": "^_", "argsIgnorePattern": "^_" }
+        ],
+        "@typescript-eslint/no-floating-promises": "error"
       }
     },
     {
