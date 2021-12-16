@@ -7,12 +7,12 @@ on:
   # pull_request:
 
 jobs:
-  main:
+  check-branch:
     runs-on: ubuntu-latest
     if: ${{ github.event_name != 'pull_request' }}
     steps:
       - uses: actions/checkout@v2
-        name: Checkout [main]
+        # name: Checkout [main]
         with:
           fetch-depth: 0
       - name: Derive appropriate SHAs for base and head for `nx affected` commands
