@@ -6,14 +6,17 @@
     "predev": "docker-compose up -d",
     "start:api": "nx serve",
     "start:web": "nx run web:serve",
-    "build": "nx build",
-    "test": "nx run api:test && nx run web:test",
+    "build": "nx rn api:build && nx run web:build",
+    "build:api": "nx rn api:build",
+    "build:web": "nx run web:build",
+    "test": "nx run api:test && nx run web:test && nx run web-e2e:e2e",
     "test:api": "nx run api:test",
     "test:web": "nx run web:test",
     "test:e2e": "nx run web-e2e:e2e",
-    "lint": "nx run api:lint && nx run web:lint",
+    "lint": "nx run api:lint && nx run web:lint && nx run web-e2e:lint",
     "lint:api": "nx run api:lint",
-    "lint:web": "nx run web:lint"
+    "lint:web": "nx run web:lint",
+    "lint:e2e": "nx run web-e2e:lint"
   },
   "private": true,
   "dependencies": {

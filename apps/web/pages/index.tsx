@@ -1,4 +1,3 @@
-import { Header } from '@nestjs/common';
 import styles from './index.module.css';
 
 export function Index() {
