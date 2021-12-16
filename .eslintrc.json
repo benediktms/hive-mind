@@ -23,17 +23,18 @@
             ]
           }
         ],
-        "@typescript-eslint/no-unused-vars": [
-          "error",
-          { "varsIgnorePattern": "^_", "argsIgnorePattern": "^_" }
-        ],
         "@typescript-eslint/no-floating-promises": "error"
       }
     },
     {
       "files": ["*.ts", "*.tsx"],
       "extends": ["plugin:@nrwl/nx/typescript"],
-      "rules": {}
+      "rules": {
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          { "varsIgnorePattern": "^_", "argsIgnorePattern": "^_" }
+        ]
+      }
     },
     {
       "files": ["*.js", "*.jsx"],
