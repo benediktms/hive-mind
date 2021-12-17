@@ -14,7 +14,7 @@ import { join } from 'path';
       validate: (configuration) => ConfigSchema.parse(configuration),
     }),
     GraphQLModule.forRoot({
-      autoSchemaFile: join(process.cwd(), '/libs/core/src/schema.gql'),
+      autoSchemaFile: join(process.cwd(), '/libs/core/src/schema.graphql'),
       sortSchema: true,
     }),
   ],
