@@ -24,6 +24,7 @@ async function bootstrap() {
   Logger.log(
     `🚀 Application is running in ${env} mode on: http://localhost:${port}/${globalPrefix}`
   );
+  Logger.log(`GraphQL playground running on http://localhost:${port}/graphql`);
 }
 
 void bootstrap();
