@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "predev": "docker-compose up -d",
-    "start:api": "nx serve",
+    "start:api": "nx run api:serve",
     "start:web": "nx run web:serve",
     "build": "nx rn api:build && nx run web:build",
     "build:api": "nx rn api:build",
