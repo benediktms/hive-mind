@@ -16,6 +16,7 @@ import { join } from 'path';
     GraphQLModule.forRoot({
       autoSchemaFile: join(process.cwd(), '/libs/core/src/schema.graphql'),
       sortSchema: true,
+      playground: true,
     }),
   ],
   controllers: [],
