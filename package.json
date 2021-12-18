@@ -19,7 +19,7 @@
     "lint:e2e": "nx run web-e2e:lint",
     "format": "nx format --write",
     "prepare": "husky install",
-    "heroku-postbuild": "nx rn api:build"
+    "heroku-postbuild": "nx rn api:build:production"
   },
   "private": true,
   "dependencies": {
