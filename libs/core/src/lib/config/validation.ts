@@ -12,4 +12,5 @@ export const ConfigSchema = z.object({
     }),
   PORT: z.string().default('3001'),
   DATABASE_NAME: z.string().min(1),
+  PROCFILE: z.string().default('/apps/api/Procfile'),
 });
