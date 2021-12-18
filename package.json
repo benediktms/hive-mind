@@ -2,6 +2,9 @@
   "name": "grp-org",
   "version": "0.0.0",
   "license": "MIT",
+  "engines": {
+    "node": "16"
+  },
   "scripts": {
     "predev": "docker-compose up -d",
     "start:api": "nx run api:serve",
