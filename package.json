@@ -25,6 +25,7 @@
     "@nrwl/next": "^13.3.6",
     "@prisma/client": "^3.6.0",
     "apollo-server-express": "^3.5.0",
+    "argon2": "^0.28.3",
     "class-validator": "^0.13.2",
     "core-js": "^3.6.5",
     "graphql": "^15",

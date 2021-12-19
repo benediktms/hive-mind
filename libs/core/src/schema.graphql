@@ -2,6 +2,41 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input LoginDTO {
+  email: String!
+  password: String!
+}
+
+type LoginResponse {
+  user: User!
+}
+
+type Mutation {
+  """Allows the user to log in"""
+  login(input: LoginDTO!): LoginResponse!
+
+  """Registers a new User"""
+  register(input: RegisterDTO!): RegisterResponse!
+}
+
 type Query {
   uptime: Float!
+}
+
+input RegisterDTO {
+  email: String!
+  firstName: String!
+  lastName: String!
+  password: String!
+}
+
+type RegisterResponse {
+  user: User!
+}
+
+type User {
+  email: String!
+  firstName: String!
+  id: Float!
+  lastName: String!
 }

@@ -2,6 +2,7 @@
   "version": 2,
   "projects": {
     "api": "apps/api",
+    "auth": "libs/auth",
     "core": "libs/core",
     "data": "libs/data",
     "web": "apps/web",
