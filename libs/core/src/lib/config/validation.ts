@@ -11,6 +11,6 @@ export const ConfigSchema = z.object({
       message: 'Unexpected node environment encountered',
     }),
   PORT: z.string().default('3001'),
-  DATABASE_NAME: z.string().min(1),
+  DATABASE_URL: z.string().min(1),
   PROCFILE: z.string().default('/apps/api/Procfile'),
 });
