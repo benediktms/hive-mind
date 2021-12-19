@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { configuration } from './config/configuration';
 import { ConfigSchema } from './config/validation';
@@ -17,6 +17,14 @@ import { join } from 'path';
       autoSchemaFile: join(process.cwd(), '/libs/core/src/schema.graphql'),
       sortSchema: true,
       playground: true,
+      formatResponse: (res, ctx) => {
+        const logger = new Logger();
+
+        logger.log(ctx.request.query, 'GraphQL');
+        logger.log(res.data, 'Response');
+
+        return res;
+      },
     }),
   ],
   controllers: [],
