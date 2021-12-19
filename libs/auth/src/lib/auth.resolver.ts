@@ -1,7 +1,7 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import AuthService from './auth.service';
-import LoginDTO from './dto/login.dto';
-import RegisterDTO from './dto/register.dto';
+import LoginDto from './dto/login.dto';
+import RegisterDto from './dto/register.dto';
 import LoginResponse from './response/login.response';
 import RegisterResponse from './response/register.response';
 
@@ -12,14 +12,14 @@ export class AuthResolver {
   @Mutation(() => RegisterResponse, {
     description: 'Registers a new User',
   })
-  public async register(@Args('input') input: RegisterDTO) {
+  public async register(@Args('input') input: RegisterDto) {
     return await this.authService.register(input);
   }
 
   @Mutation(() => LoginResponse, {
     description: 'Allows the user to log in',
   })
-  public async login(@Args('input') input: LoginDTO) {
+  public async login(@Args('input') input: LoginDto) {
     return await this.authService.login(input.email, input.password);
   }
 }

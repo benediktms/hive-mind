@@ -8,10 +8,15 @@ import { randomBytes } from 'crypto';
 import { FailedToAuthenticateError } from '../utils/failed-to-authenticate-error';
 import LoginResponse from './response/register.response';
 import RegisterResponse from './response/register.response';
+import { JwtService } from '@nestjs/jwt';
+import { JwtDto } from './dto/jwt.dto';
 
 @Injectable()
 export default class AuthService {
-  constructor(private readonly dataService: DataService) {}
+  constructor(
+    private readonly dataService: DataService,
+    private readonly jwtService: JwtService
+  ) {}
 
   public async login(email: string, password: string) {
     const user = await this.dataService.user.findUnique({ where: { email } });
@@ -22,7 +27,9 @@ export default class AuthService {
 
     await this.validatePassword(user.passwordHash, password);
 
-    return new LoginResponse(user);
+    const token = await this.signToken(user.id);
+
+    return new LoginResponse(user, token);
   }
 
   public async register(input: RegisterDTO) {
@@ -38,10 +45,23 @@ export default class AuthService {
         },
       });
 
-      return new RegisterResponse(user);
+      const token = await this.signToken(user.id);
+
+      return new RegisterResponse(user, token);
     } catch (e) {
       throw new FailedToAuthenticateError(e as Error);
     }
+  }
+
+  public async validateUser(id: number) {
+    return await this.dataService.user.findUnique({
+      where: { id },
+    });
+  }
+
+  private async signToken(userId: number) {
+    const payload: JwtDto = { userId };
+    return this.jwtService.sign(payload);
   }
 
   private async createPassword(userInput: string): Promise<string> {

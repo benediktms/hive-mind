@@ -2,28 +2,33 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-input LoginDTO {
+input LoginDto {
   email: String!
   password: String!
 }
 
 type LoginResponse {
+  token: String!
   user: User!
 }
 
 type Mutation {
-  """Allows the user to log in"""
-  login(input: LoginDTO!): LoginResponse!
+  """
+  Allows the user to log in
+  """
+  login(input: LoginDto!): LoginResponse!
 
-  """Registers a new User"""
-  register(input: RegisterDTO!): RegisterResponse!
+  """
+  Registers a new User
+  """
+  register(input: RegisterDto!): RegisterResponse!
 }
 
 type Query {
   uptime: Float!
 }
 
-input RegisterDTO {
+input RegisterDto {
   email: String!
   firstName: String!
   lastName: String!
@@ -31,6 +36,7 @@ input RegisterDTO {
 }
 
 type RegisterResponse {
+  token: String!
   user: User!
 }
 
