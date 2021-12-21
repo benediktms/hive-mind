@@ -1,10 +1,11 @@
-import { Logger, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { configuration } from './config/configuration';
 import { ConfigSchema } from './config/validation';
 import { GraphQLModule } from '@nestjs/graphql';
 import { CoreResolver } from './core.resolver';
 import { join } from 'path';
+import { loggerMiddleware } from './middleware/logger.middleware';
 
 @Module({
   imports: [
@@ -17,14 +18,15 @@ import { join } from 'path';
       autoSchemaFile: join(process.cwd(), '/libs/core/src/schema.graphql'),
       sortSchema: true,
       playground: true,
-      formatResponse: (res, ctx) => {
-        const logger = new Logger();
+      // formatResponse: (res, ctx) => {
+      //   const logger = new Logger();
 
-        logger.log(ctx.request.query, 'GraphQL');
-        logger.log(res.data, 'Response');
+      //   logger.log(ctx.request.query, 'GraphQL');
+      //   logger.log(res.data, 'Response');
 
-        return res;
-      },
+      //   return res;
+      // },
+      buildSchemaOptions: { fieldMiddleware: [loggerMiddleware] },
     }),
   ],
   controllers: [],

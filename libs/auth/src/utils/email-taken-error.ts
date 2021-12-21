@@ -1,10 +1,10 @@
-import { FAILED_TO_AUTHENTICATE_ERROR } from './constants';
+import { EMAIL_TAKEN_ERROR } from './constants';
 
-export class FailedToAuthenticateError extends Error {
+export class EmailTakenError extends Error {
   constructor(prevErr?: Error) {
     super();
 
-    this.message = FAILED_TO_AUTHENTICATE_ERROR;
+    this.message = EMAIL_TAKEN_ERROR;
     this.name = 'FailedToAuthenticate';
     this.stack = prevErr?.stack;
 

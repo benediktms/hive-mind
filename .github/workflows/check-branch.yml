@@ -4,6 +4,25 @@ on: [push]
 jobs:
   check-branch:
     runs-on: ubuntu-latest
+
+    env:
+      NODE_ENV: test
+      DATABASE_URL: postgresql://prisma:prisma@localhost:5433/tests
+
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          - POSTGRES_USER=prisma
+          - POSTGRES_PASSWORD=prisma
+          - POSTGRES_DB=tests
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     if: ${{ github.event_name != 'pull_request' }}
     steps:
       - uses: actions/checkout@v2

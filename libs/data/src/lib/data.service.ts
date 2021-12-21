@@ -1,15 +1,24 @@
 import { INestApplication, Injectable, OnModuleInit } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class DataService extends PrismaClient implements OnModuleInit {
-  constructor() {
+  constructor(private readonly configService: ConfigService) {
     super();
   }
 
   public async onModuleInit() {
     await this.$connect();
   }
+
+  // public async onModuleDestroy() {
+  //   if (this.configService.get('environment') === 'test') {
+  //     this.$queryRaw`DROP DATABASE tests`;
+  //   }
+
+  //   await this.$disconnect();
+  // }
 
   /**
    * This is required because Prisma handles shutdown signals differently
@@ -19,6 +28,8 @@ export class DataService extends PrismaClient implements OnModuleInit {
    * https://github.com/prisma/prisma/issues/2917#issuecomment-900693387
    */
   public async enableShutdownHooks(app: INestApplication) {
-    this.$on('beforeExit', async () => await app.close());
+    this.$on('beforeExit', async () => {
+      await app.close();
+    });
   }
 }

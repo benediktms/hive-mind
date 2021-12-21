@@ -10,6 +10,7 @@ import LoginResponse from './response/register.response';
 import RegisterResponse from './response/register.response';
 import { JwtService } from '@nestjs/jwt';
 import { JwtDto } from './dto/jwt.dto';
+import { EmailTakenError } from '../utils/email-taken-error';
 
 @Injectable()
 export default class AuthService {
@@ -33,24 +34,28 @@ export default class AuthService {
   }
 
   public async register(input: RegisterDTO) {
-    try {
-      const passwordHash = await this.createPassword(input.password);
+    const taken = await this.dataService.user.findUnique({
+      where: { email: input.email },
+    });
 
-      const user = await this.dataService.user.create({
-        data: {
-          email: input.email,
-          firstName: input.firstName,
-          lastName: input.lastName,
-          passwordHash,
-        },
-      });
-
-      const token = await this.signToken(user.id);
-
-      return new RegisterResponse(user, token);
-    } catch (e) {
-      throw new FailedToAuthenticateError(e as Error);
+    if (taken) {
+      throw new EmailTakenError();
     }
+
+    const passwordHash = await this.createPassword(input.password);
+
+    const user = await this.dataService.user.create({
+      data: {
+        email: input.email,
+        firstName: input.firstName,
+        lastName: input.lastName,
+        passwordHash,
+      },
+    });
+
+    const token = await this.signToken(user.id);
+
+    return new RegisterResponse(user, token);
   }
 
   public async validateUser(id: number) {
