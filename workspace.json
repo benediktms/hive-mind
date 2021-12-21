@@ -5,7 +5,6 @@
     "auth": "libs/auth",
     "core": "libs/core",
     "data": "libs/data",
-    "factory": "libs/factory",
     "web": "apps/web",
     "web-e2e": "apps/web-e2e"
   }

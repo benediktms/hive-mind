@@ -18,8 +18,7 @@
     "paths": {
       "@grp-org/auth": ["libs/auth/src/index.ts"],
       "@grp-org/core": ["libs/core/src/index.ts"],
-      "@grp-org/data": ["libs/data/src/index.ts"],
-      "@grp-org/factory": ["libs/factory/src/index.ts"]
+      "@grp-org/data": ["libs/data/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

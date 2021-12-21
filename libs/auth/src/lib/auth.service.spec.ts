@@ -1,5 +1,9 @@
-import { DataService, truncateTables } from '@grp-org/data';
-import { EntityFactory, mockClass } from '@grp-org/factory';
+import {
+  DataService,
+  EntityFactory,
+  mockClass,
+  truncateTables,
+} from '@grp-org/data';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
