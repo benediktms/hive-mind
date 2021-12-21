@@ -7,16 +7,15 @@ jobs:
 
     env:
       NODE_ENV: test
-      DATABASE_URL: postgresql://prisma:prisma@localhost:5433/tests
+      DATABASE_URL: postgresql://postgres:postgres@localhost/test
 
     services:
       postgres:
         image: postgres:14
         env:
-          POSTGRES_USER: prisma
-          POSTGRES_PASSWORD: prisma
-          POSTGRES_DB: tests
-        ports: ['5432:5432']
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -33,7 +32,18 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '16'
-      - run: yarn install
-      - run: npx nx affected --target=build --parallel --max-parallel=3
-      - run: npx nx affected --target=lint --parallel --max-parallel=2
-      - run: npx nx affected --target=test --parallel --max-parallel=2
+
+      - name: Install packages
+        run: yarn install --frozen-lockfile
+
+      - name: Migrate DB & generate prisma client
+        run: yarn prisma migrate deploy
+
+      - name: Build
+        run: npx nx affected --target=build --parallel --max-parallel=3
+
+      - name: Lint
+        run: npx nx affected --target=lint --parallel --max-parallel=2
+
+      - name: Test
+        run: npx nx affected --target=test --parallel --max-parallel=2
