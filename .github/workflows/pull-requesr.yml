@@ -13,9 +13,9 @@ jobs:
       postgres:
         image: postgres:14
         env:
-          - POSTGRES_USER=prisma
-          - POSTGRES_PASSWORD=prisma
-          - POSTGRES_DB=tests
+          POSTGRES_USER: prisma
+          POSTGRES_PASSWORD: prisma
+          POSTGRES_DB: tests
         ports: ['5432:5432']
         options: >-
           --health-cmd pg_isready
