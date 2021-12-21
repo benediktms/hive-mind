@@ -12,12 +12,12 @@ export class EntityFactory {
       id: 1,
       createdAt: new Date(),
       updatedAt: new Date(),
-      email: this.chance.email(),
-      firstName: this.chance.first(),
-      lastName: this.chance.last(),
+      email: 'test@example.com', //this.chance.email(),
+      firstName: 'First', //this.chance.first(),
+      lastName: 'Last', //this.chance.last(),
       ...opts,
       passwordHash: await hash(
-        (opts && opts.passwordHash) || this.chance.word()
+        (opts && opts.passwordHash) || 'helloworld' //this.chance.word()
       ),
     };
   }

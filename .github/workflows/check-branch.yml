@@ -1,4 +1,4 @@
-name: CI
+name: CI - Check Branch
 on: [push]
 
 jobs:
