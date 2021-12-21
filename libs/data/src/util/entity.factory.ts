@@ -1,21 +1,19 @@
 import { User } from '@prisma/client';
 import { hash } from 'argon2';
-import { Chance } from 'chance';
+import { internet, name } from 'faker';
 
 export class EntityFactory {
-  private chance = new Chance();
-
   public async generateUser(opts?: Partial<User>): Promise<User> {
     return {
       id: 1,
       createdAt: new Date(),
       updatedAt: new Date(),
-      email: this.chance.email(),
-      firstName: this.chance.first(),
-      lastName: this.chance.last(),
+      email: internet.email(),
+      firstName: name.firstName(),
+      lastName: name.lastName(),
       ...opts,
       passwordHash: await hash(
-        (opts && opts.passwordHash) || this.chance.word()
+        (opts && opts.passwordHash) || internet.password()
       ),
     };
   }
