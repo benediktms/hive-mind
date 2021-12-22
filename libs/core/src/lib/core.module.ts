@@ -1,11 +1,10 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { configuration } from './config/configuration';
 import { ConfigSchema } from './config/validation';
 import { GraphQLModule } from '@nestjs/graphql';
 import { CoreResolver } from './core.resolver';
 import { join } from 'path';
-import { loggerMiddleware } from './middleware/logger.middleware';
 
 @Module({
   imports: [
@@ -18,15 +17,16 @@ import { loggerMiddleware } from './middleware/logger.middleware';
       autoSchemaFile: join(process.cwd(), '/libs/core/src/schema.graphql'),
       sortSchema: true,
       playground: true,
-      // formatResponse: (res, ctx) => {
-      //   const logger = new Logger();
-
-      //   logger.log(ctx.request.query, 'GraphQL');
-      //   logger.log(res.data, 'Response');
-
-      //   return res;
-      // },
-      buildSchemaOptions: { fieldMiddleware: [loggerMiddleware] },
+      formatResponse: (res, _ctx) => {
+        /**
+         * NOTE: Logging the request here can expose user passwords and
+         * should NEVER be done without implementing a way to redact
+         * credentials
+         */
+        Logger.log(res.data, 'GQL Response');
+        return res;
+      },
+      context: ({ req, res }) => ({ req, res }),
     }),
   ],
   controllers: [],

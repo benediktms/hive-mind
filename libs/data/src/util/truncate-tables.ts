@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import { DataService } from '..';
 
 export async function truncateTables(dataService: DataService) {
@@ -12,7 +13,7 @@ export async function truncateTables(dataService: DataService) {
           `TRUNCATE TABLE "public"."${tablename}" CASCADE;`
         );
       } catch (error) {
-        console.log({ error });
+        Logger.error(error);
       }
     }
   }

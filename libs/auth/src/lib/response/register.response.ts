@@ -1,5 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import User from '../models/user';
+import User from '../scalars/user';
 
 @ObjectType()
 export default class RegisterResponse {

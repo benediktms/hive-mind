@@ -8,6 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import AuthService from './auth.service';
+import RegisterResponse from './response/register.response';
 
 describe('AuthService', () => {
   let module: TestingModule;
@@ -45,6 +46,26 @@ describe('AuthService', () => {
     beforeEach(async () => await truncateTables(dataService));
 
     it('should not create a new user if the email is already taken', async () => {
+      const taken = await entityFactory.generateUser({
+        email: 'johndoes@example.com',
+        firstName: 'John',
+        lastName: 'Doe',
+        passwordHash: 'helloworld',
+      });
+
+      await dataService.user.create({ data: taken });
+
+      await expect(
+        authService.register({
+          email: taken.email,
+          firstName: taken.firstName,
+          lastName: taken.lastName,
+          password: 'helloworld',
+        })
+      ).rejects.toThrow(/this email is already being used/i);
+    });
+
+    it('should create a user', async () => {
       const user = await entityFactory.generateUser({
         email: 'johndoes@example.com',
         firstName: 'John',
@@ -59,19 +80,16 @@ describe('AuthService', () => {
           lastName: user.lastName,
           password: 'helloworld',
         })
-      ).resolves.toEqual(
-        expect.objectContaining({
-          user: expect.objectContaining({
-            email: user.email,
-            firstName: user.firstName,
-            lastName: user.lastName,
-          }),
-          token: 'token',
-        })
-      );
+      ).resolves.toEqual<RegisterResponse>({
+        token: 'token',
+        user: expect.objectContaining<RegisterResponse['user']>({
+          id: expect.anything(),
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+        }),
+      });
     });
-
-    it.todo('should create a user');
   });
 
   describe('login', () => {
