@@ -7,7 +7,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
-import AuthService from './auth.service';
+import { AuthService } from './auth.service';
 import RegisterResponse from './response/register.response';
 
 describe('AuthService', () => {
