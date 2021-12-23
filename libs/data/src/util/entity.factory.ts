@@ -3,9 +3,8 @@ import { hash } from 'argon2';
 import { internet, name } from 'faker';
 
 export class EntityFactory {
-  public async generateUser(opts?: Partial<User>): Promise<User> {
+  public async generateUser(opts?: Partial<User>): Promise<Omit<User, 'id'>> {
     return {
-      id: 1,
       createdAt: new Date(),
       updatedAt: new Date(),
       email: internet.email(),

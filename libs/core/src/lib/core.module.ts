@@ -26,7 +26,7 @@ import { join } from 'path';
         Logger.log(res.data, 'GQL Response');
         return res;
       },
-      context: ({ req, res }) => ({ req, res }),
+      context: ({ res }) => ({ res }),
     }),
   ],
   controllers: [],

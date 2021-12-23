@@ -94,7 +94,10 @@ export class AuthService {
     res.cookie(COOKIE_NAME, token, { httpOnly: true, path: '/' });
   }
 
-  public async verifyAccessToken(req: Request, res: Response) {
+  public async verifyAccessToken(
+    req: Request,
+    res: Response
+  ): Promise<Response> {
     const token = req.cookies[COOKIE_NAME];
 
     if (!token) {

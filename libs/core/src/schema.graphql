@@ -17,11 +17,15 @@ type LogoutResponse {
 }
 
 type Mutation {
-  """Allows the user to log in"""
+  """
+  Allows the user to log in
+  """
   login(input: LoginDto!): LoginResponse!
   logout: LogoutResponse!
 
-  """Registers a new User"""
+  """
+  Registers a new User
+  """
   register(input: RegisterDto!): RegisterResponse!
 }
 
