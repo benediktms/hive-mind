@@ -42,6 +42,9 @@ jobs:
       - name: Migrate DB & generate prisma client
         run: yarn prisma migrate deploy
 
+      - name: Start agents
+        run: npx nx-cloud start-ci-run
+
       - name: Build
         run: npx nx affected --target=build --parallel --max-parallel=3
 
@@ -51,13 +54,16 @@ jobs:
       - name: Test
         run: npx nx affected --target=test --parallel --max-parallel=2
 
- agents:
+      - name: Stop agents
+        run: npx nx-cloud stop-all-agents
+
+  agents:
     runs-on: ubuntu-latest
     name: Agent 1
     timeout-minutes: 60
     strategy:
       matrix:
-        agent: [ 1, 2, 3 ]
+        agent: [1, 2, 3]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
