@@ -7,6 +7,8 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
+import { User } from '@prisma/client';
+import { internet } from 'faker';
 import { AuthService } from './auth.service';
 import RegisterResponse from './response/register.response';
 
@@ -16,7 +18,7 @@ describe('AuthService', () => {
   let dataService: DataService;
   const entityFactory = new EntityFactory();
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     module = await Test.createTestingModule({
       providers: [
         AuthService,
@@ -37,23 +39,30 @@ describe('AuthService', () => {
     await dataService.$connect();
   });
 
-  afterEach(async () => {
+  afterAll(async () => {
     await dataService.$disconnect();
     await module.close();
   });
+
+  async function setupUser(
+    password: string,
+    email = 'john-doe@example.com'
+  ): Promise<User> {
+    const user = await entityFactory.generateUser({
+      email,
+      firstName: 'John',
+      lastName: 'Doe',
+      passwordHash: password,
+    });
+
+    return await dataService.user.create({ data: user });
+  }
 
   describe('register', () => {
     beforeEach(async () => await truncateTables(dataService));
 
     it('should not create a new user if the email is already taken', async () => {
-      const taken = await entityFactory.generateUser({
-        email: 'johndoes@example.com',
-        firstName: 'John',
-        lastName: 'Doe',
-        passwordHash: 'helloworld',
-      });
-
-      await dataService.user.create({ data: taken });
+      const taken = await setupUser('helloworld');
 
       await expect(
         authService.register({
@@ -67,10 +76,9 @@ describe('AuthService', () => {
 
     it('should create a user', async () => {
       const user = await entityFactory.generateUser({
-        email: 'johndoes@example.com',
+        email: 'john-doe@example.com',
         firstName: 'John',
         lastName: 'Doe',
-        passwordHash: 'helloworld',
       });
 
       await expect(
@@ -96,20 +104,35 @@ describe('AuthService', () => {
     beforeEach(async () => await truncateTables(dataService));
 
     it('should log the user in', async () => {
-      const password = 'helloworld';
-      const user = await entityFactory.generateUser({
-        email: 'login@example.com',
-        passwordHash: password,
-      });
+      const user = await setupUser('helloworld');
 
-      await dataService.user.create({ data: user });
-
-      await expect(authService.login(user.email, password)).resolves.toEqual(
+      await expect(
+        authService.login(user.email, 'helloworld')
+      ).resolves.toEqual(
         expect.objectContaining({
-          user: expect.objectContaining({ email: 'login@example.com' }),
+          user: expect.objectContaining({ email: 'john-doe@example.com' }),
           token: 'token',
         })
       );
     });
+
+    it('should not log the user in if credentials are incorrect', async () => {
+      const user = await setupUser('helloworld');
+
+      await expect(authService.login(user.email, 'wrong')).rejects.toThrow(
+        /something went wrong/i
+      );
+    });
+  });
+
+  describe('verifyAccessToken', () => {
+    beforeAll(async () => await setupUser('helloworld', internet.email()));
+    afterAll(async () => await truncateTables(dataService));
+
+    it.todo('should not send a token if the cookie is not set');
+    it.todo('should not send a token if the user is not found');
+    it.todo('should not send a token if the token version is invalid');
+    it.todo('should set a refres token on the cookie');
+    it.todo('should return a new access token');
   });
 });
