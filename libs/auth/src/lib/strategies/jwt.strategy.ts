@@ -1,8 +1,8 @@
+import { JwtPayload } from '@grp-org/types';
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 import { AuthService } from '../auth.service';
-import { JwtDto } from '../dto/jwt.dto';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -14,7 +14,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  public async validate(payload: JwtDto) {
+  public async validate(payload: JwtPayload) {
     return await this.authService.validateUser(payload.userId);
   }
 }

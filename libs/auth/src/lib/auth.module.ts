@@ -7,10 +7,17 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { GraphQLAuthGuard } from './guards/graphql-auth.guard';
 import { AuthController } from './auth.controller';
+import { LogoutResolver } from './logout.resolver';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthResolver, AuthService, JwtStrategy, GraphQLAuthGuard],
+  providers: [
+    AuthResolver,
+    AuthService,
+    JwtStrategy,
+    GraphQLAuthGuard,
+    LogoutResolver,
+  ],
   exports: [],
   imports: [
     DataModule,

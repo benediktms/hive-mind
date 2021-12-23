@@ -1,7 +1,7 @@
 import { DataService } from '@grp-org/data';
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { Response, Request } from 'express';
-import { SALT_LENGTH, SALT_ROUNDS } from '../utils/constants';
+import { COOKIE_NAME, SALT_LENGTH, SALT_ROUNDS } from '../utils/constants';
 import RegisterDTO from './dto/register.dto';
 import { hash, verify } from 'argon2';
 import { randomBytes } from 'crypto';
@@ -9,10 +9,11 @@ import { FailedToAuthenticateError } from '../utils/failed-to-authenticate-error
 import LoginResponse from './response/register.response';
 import RegisterResponse from './response/register.response';
 import { JwtService } from '@nestjs/jwt';
-import { JwtDto } from './dto/jwt.dto';
 import { EmailTakenError } from '../utils/email-taken-error';
 import { ConfigService } from '@nestjs/config';
 import { User } from '.prisma/client';
+import { JwtPayload } from '@grp-org/types';
+import { VerifyTokenResponse } from './response/verify-token.response';
 
 @Injectable()
 export class AuthService {
@@ -31,7 +32,7 @@ export class AuthService {
 
     await this.validatePassword(user.passwordHash, password);
 
-    const token = this.signAccessToken(user.id);
+    const token = this.signAccessToken(user.id, user.refreshTokenVersion);
 
     return new LoginResponse(user, token);
   }
@@ -56,7 +57,7 @@ export class AuthService {
       },
     });
 
-    const token = await this.signAccessToken(user.id);
+    const token = await this.signAccessToken(user.id, user.refreshTokenVersion);
 
     return new RegisterResponse(user, token);
   }
@@ -73,16 +74,16 @@ export class AuthService {
     return user;
   }
 
-  private signAccessToken(userId: number) {
-    const payload: JwtDto = { userId };
+  private signAccessToken(userId: number, tokenVersion: number) {
+    const payload: JwtPayload = { userId, tokenVersion };
     return this.jwtService.sign(payload, {
       secret: this.configService.get('jwtSecret'),
       expiresIn: '15m',
     });
   }
 
-  private signRefreshToken(userId: number) {
-    const payload: JwtDto = { userId };
+  private signRefreshToken(userId: number, tokenVersion: number) {
+    const payload: JwtPayload = { userId, tokenVersion };
     return this.jwtService.sign(payload, {
       secret: this.configService.get('jwtSecret'),
       expiresIn: '7d',
@@ -90,18 +91,18 @@ export class AuthService {
   }
 
   public sendAccessToken(res: Response, token: string) {
-    res.cookie('ilvad', token, { httpOnly: true, path: '/' });
+    res.cookie(COOKIE_NAME, token, { httpOnly: true, path: '/' });
   }
 
   public async verifyAccessToken(req: Request, res: Response) {
-    const token = req.cookies.ilvad;
+    const token = req.cookies[COOKIE_NAME];
 
     if (!token) {
-      return res.send({ ok: false, accessToken: '' });
+      return res.send(new VerifyTokenResponse(false, ''));
     }
 
     try {
-      const payload: JwtDto = this.jwtService.verify(token, {
+      const payload: JwtPayload = this.jwtService.verify(token, {
         secret: this.configService.get('jwtSecret'),
       });
 
@@ -109,16 +110,32 @@ export class AuthService {
         where: { id: payload.userId },
       });
 
-      if (!user) {
-        return res.send({ ok: false, accessToken: '' });
+      if (!user || payload.tokenVersion !== user.refreshTokenVersion) {
+        return res.send(new VerifyTokenResponse(false, ''));
       }
 
-      this.sendAccessToken(res, this.signRefreshToken(user.id));
+      this.sendAccessToken(
+        res,
+        this.signRefreshToken(user.id, user.refreshTokenVersion)
+      );
 
-      return res.send({ ok: true, accessToken: this.signAccessToken(user.id) });
+      return res.send(
+        new VerifyTokenResponse(
+          true,
+          this.signAccessToken(user.id, user.refreshTokenVersion)
+        )
+      );
     } catch (e) {
       Logger.error(e);
+      throw e;
     }
+  }
+
+  public async revokeRefreshToken(userId: number) {
+    await this.dataService.user.update({
+      where: { id: userId },
+      data: { refreshTokenVersion: { increment: 1 } },
+    });
   }
 
   private async createPassword(userInput: string): Promise<string> {

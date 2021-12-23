@@ -15,6 +15,7 @@ export class EntityFactory {
       passwordHash: await hash(
         (opts && opts.passwordHash) || internet.password()
       ),
+      refreshTokenVersion: 0,
     };
   }
 }

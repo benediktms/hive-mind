@@ -40,9 +40,4 @@ export class AuthResolver {
 
     return registerRes;
   }
-
-  @Mutation()
-  public async logout() {
-    throw new Error('unimplemented');
-  }
 }
