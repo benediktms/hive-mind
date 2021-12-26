@@ -1,6 +1,6 @@
-import { AuthModule } from '@grp-org/auth';
-import { CoreModule } from '@grp-org/core';
-import { DataModule } from '@grp-org/data';
+import { AuthModule } from '@grp-org/server-auth';
+import { CoreModule } from '@grp-org/server-core';
+import { DataModule } from '@grp-org/server-data';
 import { Module } from '@nestjs/common';
 
 import { AppController } from './app.controller';

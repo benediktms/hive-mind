@@ -1,4 +1,4 @@
-import { DataService } from '@grp-org/data';
+import { DataService } from '@grp-org/server-data';
 import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
