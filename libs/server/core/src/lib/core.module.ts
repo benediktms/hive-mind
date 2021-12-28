@@ -14,7 +14,10 @@ import { join } from 'path';
       validate: (configuration) => ConfigSchema.parse(configuration),
     }),
     GraphQLModule.forRoot({
-      autoSchemaFile: join(process.cwd(), '/libs/core/src/schema.graphql'),
+      autoSchemaFile: join(
+        process.cwd(),
+        '/libs/server/core/src/schema.graphql'
+      ),
       sortSchema: true,
       playground: true,
       formatResponse: (res, _ctx) => {
