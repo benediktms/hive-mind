@@ -2,8 +2,10 @@
   "version": 2,
   "projects": {
     "api": "apps/api",
-    "core": "libs/core",
-    "data": "libs/data",
+    "server-auth": "libs/server/auth",
+    "server-core": "libs/server/core",
+    "server-data": "libs/server/data",
+    "types": "libs/types",
     "web": "apps/web",
     "web-e2e": "apps/web-e2e"
   }

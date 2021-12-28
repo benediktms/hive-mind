@@ -10,14 +10,16 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "es2015",
-    "module": "esnext",
+    "module": "ESNext",
     "lib": ["es2017", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@grp-org/core": ["libs/core/src/index.ts"],
-      "@grp-org/data": ["libs/data/src/index.ts"]
+      "@grp-org/server-auth": ["libs/server/auth/src/index.ts"],
+      "@grp-org/server-core": ["libs/server/core/src/index.ts"],
+      "@grp-org/server-data": ["libs/server/data/src/index.ts"],
+      "@grp-org/types": ["libs/types/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

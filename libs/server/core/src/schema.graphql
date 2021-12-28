@@ -1,0 +1,53 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input LoginDto {
+  email: String!
+  password: String!
+}
+
+type LoginResponse {
+  token: String!
+  user: User!
+}
+
+type LogoutResponse {
+  message: String!
+}
+
+type Mutation {
+  """
+  Allows the user to log in
+  """
+  login(input: LoginDto!): LoginResponse!
+  logout: LogoutResponse!
+
+  """
+  Registers a new User
+  """
+  register(input: RegisterDto!): RegisterResponse!
+}
+
+type Query {
+  uptime: Float!
+}
+
+input RegisterDto {
+  email: String!
+  firstName: String!
+  lastName: String!
+  password: String!
+}
+
+type RegisterResponse {
+  token: String!
+  user: User!
+}
+
+type User {
+  email: String!
+  firstName: String!
+  id: Float!
+  lastName: String!
+}

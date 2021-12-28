@@ -1,9 +1,30 @@
-name: CI
+name: CI - Check Branch
 on: [push]
+
+env:
+  NX_CLOUD_DISTRIBUTED_EXECUTION: true
 
 jobs:
   check-branch:
     runs-on: ubuntu-latest
+
+    env:
+      NODE_ENV: test
+      DATABASE_URL: postgresql://postgres:postgres@localhost/test
+
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     if: ${{ github.event_name != 'pull_request' }}
     steps:
       - uses: actions/checkout@v2
@@ -14,7 +35,40 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '16'
-      - run: yarn install
-      - run: npx nx affected --target=build --parallel --max-parallel=3
-      - run: npx nx affected --target=lint --parallel --max-parallel=2
-      - run: npx nx affected --target=test --parallel --max-parallel=2
+
+      - name: Install packages
+        run: yarn install --frozen-lockfile
+
+      - name: Migrate DB & generate prisma client
+        run: yarn prisma migrate deploy
+
+      - name: Start agents
+        run: npx nx-cloud start-ci-run
+
+      - name: Build
+        run: npx nx affected --target=build --parallel --max-parallel=3
+
+      - name: Lint
+        run: npx nx affected --target=lint --parallel --max-parallel=2
+
+      - name: Test
+        run: npx nx affected --target=test --parallel --max-parallel=2
+
+      - name: Stop agents
+        run: npx nx-cloud stop-all-agents
+
+  agents:
+    runs-on: ubuntu-latest
+    name: Agent 1
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        agent: [1, 2, 3]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '16'
+      - run: yarn install --frozen-lockfile
+      - name: Start Nx Agent ${{ matrix.agent }}
+        run: npx nx-cloud start-agent
