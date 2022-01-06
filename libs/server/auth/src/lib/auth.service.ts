@@ -39,7 +39,7 @@ export class AuthService {
 
   public async register(input: RegisterDTO) {
     const taken = await this.dataService.user.findUnique({
-      where: { email: input.email },
+      where: { email: input.email.toLowerCase() },
     });
 
     if (taken) {
@@ -50,9 +50,9 @@ export class AuthService {
 
     const user = await this.dataService.user.create({
       data: {
-        email: input.email,
-        firstName: input.firstName,
-        lastName: input.lastName,
+        email: input.email.toLowerCase(),
+        firstName: input.firstName.trim(),
+        lastName: input.lastName.trim(),
         passwordHash,
       },
     });
