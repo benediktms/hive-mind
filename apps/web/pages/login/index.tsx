@@ -1,7 +1,7 @@
 import { Heading } from '@chakra-ui/react';
 import Link from 'next/link';
-import { Form, LabeledTextField } from '@grp-org/components';
-import { LoginSchema } from './validation';
+import { Form, LabeledTextField } from '@grp-org/client-components';
+import { LoginSchema } from '@grp-org/client/validation';
 
 export function login() {
   return (

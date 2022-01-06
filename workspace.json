@@ -2,7 +2,8 @@
   "version": 2,
   "projects": {
     "api": "apps/api",
-    "components": "libs/components",
+    "client-components": "libs/client/components",
+    "client-validation": "libs/client/validation",
     "server-auth": "libs/server/auth",
     "server-core": "libs/server/core",
     "server-data": "libs/server/data",

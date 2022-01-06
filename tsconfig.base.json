@@ -16,7 +16,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@grp-org/components": ["libs/components/src/index.ts"],
+      "@grp-org/client-components": ["libs/client/components/src/index.ts"],
+      "@grp-org/client/validation": ["libs/client/validation/src/index.ts"],
       "@grp-org/server-auth": ["libs/server/auth/src/index.ts"],
       "@grp-org/server-core": ["libs/server/core/src/index.ts"],
       "@grp-org/server-data": ["libs/server/data/src/index.ts"],

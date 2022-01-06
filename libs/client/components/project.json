@@ -1,6 +1,6 @@
 {
-  "root": "libs/components",
-  "sourceRoot": "libs/components/src",
+  "root": "libs/client/components",
+  "sourceRoot": "libs/client/components/src",
   "projectType": "library",
   "tags": [],
   "targets": {
@@ -8,14 +8,14 @@
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["libs/components/**/*.{ts,tsx,js,jsx}"]
+        "lintFilePatterns": ["libs/client/components/**/*.{ts,tsx,js,jsx}"]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/libs/components"],
+      "outputs": ["coverage/libs/client/components"],
       "options": {
-        "jestConfig": "libs/components/jest.config.js",
+        "jestConfig": "libs/client/components/jest.config.js",
         "passWithNoTests": true
       }
     }
