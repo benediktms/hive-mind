@@ -1,9 +1,31 @@
-import { Heading } from '@chakra-ui/react';
+import { Heading, useToast } from '@chakra-ui/react';
 import Link from 'next/link';
 import { Form, LabeledTextField } from '@grp-org/client-components';
 import { LoginSchema } from '@grp-org/client/validation';
+import { useLoginMutation, LoginInput } from '@grp-org/client/gql';
 
-export function login() {
+export function Login() {
+  const [loginMutation] = useLoginMutation();
+  const toast = useToast();
+
+  const handleSubmit = async (input: LoginInput) => {
+    try {
+      await loginMutation({
+        variables: {
+          input,
+        },
+      });
+
+      toast({
+        title: 'Login Successful',
+        description: 'Welcome back!',
+        status: 'success',
+      });
+    } catch (e) {
+      toast({ title: 'Login Failed', description: e.message, status: 'error' });
+    }
+  };
+
   return (
     <div>
       <Heading>login</Heading>
@@ -11,7 +33,7 @@ export function login() {
       <Form
         schema={LoginSchema}
         submitText="Login"
-        onSubmit={console.log}
+        onSubmit={handleSubmit}
         initialValues={{ email: '', password: '' }}
       >
         <LabeledTextField name="email" label="Email" type="email" />
@@ -21,4 +43,4 @@ export function login() {
   );
 }
 
-export default login;
+export default Login;

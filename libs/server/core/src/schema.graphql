@@ -2,7 +2,7 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-input LoginDto {
+input LoginInput {
   email: String!
   password: String!
 }
@@ -20,20 +20,20 @@ type Mutation {
   """
   Allows the user to log in
   """
-  login(input: LoginDto!): LoginResponse!
+  login(input: LoginInput!): LoginResponse!
   logout: LogoutResponse!
 
   """
   Registers a new User
   """
-  register(input: RegisterDto!): RegisterResponse!
+  register(input: RegisterInput!): RegisterResponse!
 }
 
 type Query {
   uptime: Float!
 }
 
-input RegisterDto {
+input RegisterInput {
   email: String!
   firstName: String!
   lastName: String!

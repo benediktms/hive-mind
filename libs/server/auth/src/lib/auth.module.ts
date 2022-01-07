@@ -22,7 +22,6 @@ import { LogoutResolver } from './logout.resolver';
   imports: [
     DataModule,
     JwtModule.registerAsync({
-      imports: [ConfigService],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         secret: configService.get('jwtSecret'),

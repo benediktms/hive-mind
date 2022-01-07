@@ -1,6 +1,9 @@
+import { ApolloProvider } from '@apollo/client';
 import { ChakraProvider } from '@chakra-ui/react';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
+import React from 'react';
+import apolloClient from '../apollo-client';
 
 function CustomApp({ Component, pageProps }: AppProps) {
   return (
@@ -9,9 +12,11 @@ function CustomApp({ Component, pageProps }: AppProps) {
         <title>Welcome to web!</title>
       </Head>
 
-      <ChakraProvider>
-        <Component {...pageProps} />
-      </ChakraProvider>
+      <ApolloProvider client={apolloClient}>
+        <ChakraProvider>
+          <Component {...pageProps} />
+        </ChakraProvider>
+      </ApolloProvider>
     </>
   );
 }

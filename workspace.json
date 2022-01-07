@@ -3,6 +3,7 @@
   "projects": {
     "api": "apps/api",
     "client-components": "libs/client/components",
+    "client-gql": "libs/client/gql",
     "client-validation": "libs/client/validation",
     "server-auth": "libs/server/auth",
     "server-core": "libs/server/core",
