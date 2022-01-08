@@ -10,7 +10,6 @@ jobs:
 
     env:
       NODE_ENV: test
-      DATABASE_URL: postgresql://postgres:postgres@localhost/test
 
     services:
       postgres:
@@ -52,6 +51,8 @@ jobs:
         run: npx nx affected --target=lint --parallel --max-parallel=2
 
       - name: Test
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost/test
         run: npx nx affected --target=test --parallel --max-parallel=2
 
       - name: Stop agents

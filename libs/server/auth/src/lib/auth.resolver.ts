@@ -1,10 +1,15 @@
-import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import LoginInput from './dto/login.dto';
 import RegisterInput from './dto/register.dto';
 import LoginResponse from './response/login.response';
 import RegisterResponse from './response/register.response';
-import { GraphQLContext } from '@grp-org/types';
+import { GraphQLContext } from '@grp-org/shared';
+import { UseGuards } from '@nestjs/common';
+import { GraphQLAuthGuard } from './guards/graphql-auth.guard';
+import { CurrentUser } from './decorators/current-user.decorator';
+import User from './models/user';
+import { LogoutResponse } from './response/logout.response';
 
 @Resolver()
 export class AuthResolver {
@@ -39,5 +44,19 @@ export class AuthResolver {
     this.authService.sendAccessToken(context.res, registerRes.token);
 
     return registerRes;
+  }
+
+  @Mutation(() => LogoutResponse)
+  @UseGuards(GraphQLAuthGuard)
+  public async logout(@CurrentUser() user: User): Promise<LogoutResponse> {
+    await this.authService.revokeRefreshToken(user.id);
+
+    return new LogoutResponse('Logged out successfully');
+  }
+
+  @Query(() => User)
+  @UseGuards(GraphQLAuthGuard)
+  public async currentUser(@CurrentUser() user: User): Promise<User> {
+    return user;
   }
 }

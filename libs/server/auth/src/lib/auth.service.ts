@@ -1,7 +1,7 @@
 import { DataService } from '@grp-org/server-data';
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { Response, Request } from 'express';
-import { COOKIE_NAME, SALT_LENGTH, SALT_ROUNDS } from '../utils/constants';
+import { SALT_LENGTH, SALT_ROUNDS } from '../utils/constants';
 import RegisterDTO from './dto/register.dto';
 import { hash, verify } from 'argon2';
 import { randomBytes } from 'crypto';
@@ -12,8 +12,8 @@ import { JwtService } from '@nestjs/jwt';
 import { EmailTakenError } from '../utils/email-taken-error';
 import { ConfigService } from '@nestjs/config';
 import { User } from '.prisma/client';
-import { JwtPayload } from '@grp-org/types';
 import { VerifyTokenResponse } from './response/verify-token.response';
+import { COOKIE_NAME, JwtPayload } from '@grp-org/shared';
 
 @Injectable()
 export class AuthService {
@@ -57,7 +57,7 @@ export class AuthService {
       },
     });
 
-    const token = await this.signAccessToken(user.id, user.refreshTokenVersion);
+    const token = this.signAccessToken(user.id, user.refreshTokenVersion);
 
     return new RegisterResponse(user, token);
   }

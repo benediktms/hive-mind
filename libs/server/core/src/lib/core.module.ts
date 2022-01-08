@@ -30,7 +30,6 @@ import { join } from 'path';
       //   return res;
       // },
       context: ({ res }) => ({ res }),
-      // introspection: true,
     }),
   ],
   controllers: [],

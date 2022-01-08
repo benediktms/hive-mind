@@ -1,0 +1,23 @@
+{
+  "root": "libs/client/data-access-gql",
+  "sourceRoot": "libs/client/data-access-gql/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/client/data-access-gql/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/client/data-access-gql"],
+      "options": {
+        "jestConfig": "libs/client/data-access-gql/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  }
+}
