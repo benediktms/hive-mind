@@ -3,16 +3,16 @@ import { LoginInput, useLoginMutation } from '@grp-org/client-data-access-gql';
 import { Form, LabeledTextField } from '@grp-org/client-ui-form';
 import { LoginSchema } from '@grp-org/client/validation';
 import Link from 'next/link';
-import { useAuth } from './auth';
+import { useAuthContext } from '../hooks/useAuthContext';
 
 export const LoginForm = () => {
-  const { setToken } = useAuth();
+  const { setToken } = useAuthContext();
   const [loginMutation] = useLoginMutation();
   const toast = useToast();
 
   const handleSubmit = async (input: LoginInput) => {
     try {
-      const { data } = await loginMutation({
+      const { data, errors } = await loginMutation({
         variables: { input },
       });
 
@@ -24,6 +24,8 @@ export const LoginForm = () => {
           description: 'Welcome back!',
           status: 'success',
         });
+      } else {
+        throw errors;
       }
     } catch (e) {
       toast({

@@ -2,9 +2,12 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import React from 'react';
-import { AuthProvider } from '@grp-org/client-data-access-auth';
+import { AuthProvider, useProvideAuth } from '@grp-org/client-data-access-auth';
+import { ApolloProvider } from '@apollo/client';
 
 function CustomApp({ Component, pageProps }: AppProps) {
+  const auth = useProvideAuth();
+
   return (
     <>
       <Head>
@@ -12,9 +15,11 @@ function CustomApp({ Component, pageProps }: AppProps) {
       </Head>
 
       <AuthProvider>
-        <ChakraProvider>
-          <Component {...pageProps} />
-        </ChakraProvider>
+        <ApolloProvider client={auth.createApolloClient()}>
+          <ChakraProvider>
+            <Component {...pageProps} />
+          </ChakraProvider>
+        </ApolloProvider>
       </AuthProvider>
     </>
   );

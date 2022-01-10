@@ -14,6 +14,7 @@ import { ConfigService } from '@nestjs/config';
 import { User } from '.prisma/client';
 import { VerifyTokenResponse } from './response/verify-token.response';
 import { COOKIE_NAME, JwtPayload } from '@grp-org/shared';
+import dayjs from 'dayjs';
 
 @Injectable()
 export class AuthService {
@@ -86,19 +87,25 @@ export class AuthService {
     const payload: JwtPayload = { userId, tokenVersion };
     return this.jwtService.sign(payload, {
       secret: this.configService.get('jwtSecret'),
-      expiresIn: '7d',
+      expiresIn: '3d',
     });
   }
 
   public sendAccessToken(res: Response, token: string) {
-    res.cookie(COOKIE_NAME, token, { httpOnly: true, path: '/' });
+    res.cookie(COOKIE_NAME, token, {
+      httpOnly: true,
+      secure: true,
+      signed: true,
+      expires: dayjs().add(12, 'm').toDate(),
+      // TODO: add domain for next.js SSR to work in prod
+    });
   }
 
   public async verifyAccessToken(
     req: Request,
     res: Response
   ): Promise<Response> {
-    const token = req.cookies[COOKIE_NAME];
+    const token = req.signedCookies[COOKIE_NAME];
 
     if (!token) {
       return res.send(new VerifyTokenResponse(false, ''));
@@ -117,24 +124,21 @@ export class AuthService {
         return res.send(new VerifyTokenResponse(false, ''));
       }
 
-      this.sendAccessToken(
-        res,
-        this.signRefreshToken(user.id, user.refreshTokenVersion)
+      const refreshToken = this.signRefreshToken(
+        user.id,
+        user.refreshTokenVersion
       );
 
-      return res.send(
-        new VerifyTokenResponse(
-          true,
-          this.signAccessToken(user.id, user.refreshTokenVersion)
-        )
-      );
+      this.sendAccessToken(res, refreshToken);
+
+      return res.send(new VerifyTokenResponse(true, refreshToken));
     } catch (e) {
       Logger.error(e);
       throw e;
     }
   }
 
-  public async revokeRefreshToken(userId: number) {
+  public async invalidateRefreshToken(userId: number) {
     await this.dataService.user.update({
       where: { id: userId },
       data: { refreshTokenVersion: { increment: 1 } },

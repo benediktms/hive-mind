@@ -36,20 +36,17 @@ export class AuthResolver {
     @Args('input') input: LoginInput,
     @Context() context: GraphQLContext
   ): Promise<LoginResponse> {
-    const registerRes = await this.authService.login(
-      input.email,
-      input.password
-    );
+    const loginRes = await this.authService.login(input.email, input.password);
 
-    this.authService.sendAccessToken(context.res, registerRes.token);
+    this.authService.sendAccessToken(context.res, loginRes.token);
 
-    return registerRes;
+    return loginRes;
   }
 
   @Mutation(() => LogoutResponse)
   @UseGuards(GraphQLAuthGuard)
   public async logout(@CurrentUser() user: User): Promise<LogoutResponse> {
-    await this.authService.revokeRefreshToken(user.id);
+    await this.authService.invalidateRefreshToken(user.id);
 
     return new LogoutResponse('Logged out successfully');
   }

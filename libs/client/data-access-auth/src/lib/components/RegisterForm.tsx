@@ -6,16 +6,16 @@ import {
 import { Form, LabeledTextField } from '@grp-org/client-ui-form';
 import { RegisterSchema } from '@grp-org/client/validation';
 import Link from 'next/link';
-import { useAuth } from './auth';
+import { useAuthContext } from '../hooks/useAuthContext';
 
 export const RegisterForm = () => {
   const [registerMutation] = useRegisterMutation();
-  const { setToken } = useAuth();
+  const { setToken } = useAuthContext();
   const toast = useToast();
 
   const handleSubmit = async (input: RegisterInput) => {
     try {
-      const { data } = await registerMutation({
+      const { data, errors } = await registerMutation({
         variables: { input },
       });
 
@@ -27,6 +27,8 @@ export const RegisterForm = () => {
           title: 'Account creation successfull',
           description: 'Welcome to the party! You are now ready to use grp',
         });
+      } else {
+        throw errors;
       }
     } catch (e) {
       toast({
