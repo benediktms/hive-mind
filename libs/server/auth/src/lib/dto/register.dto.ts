@@ -8,7 +8,7 @@ import {
 } from 'class-validator';
 
 @InputType()
-export default class RegisterDto {
+export default class RegisterInput {
   @Field()
   @IsEmail()
   @IsNotEmpty()

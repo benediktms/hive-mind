@@ -7,26 +7,18 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { GraphQLAuthGuard } from './guards/graphql-auth.guard';
 import { AuthController } from './auth.controller';
-import { LogoutResolver } from './logout.resolver';
 
 @Module({
   controllers: [AuthController],
-  providers: [
-    AuthResolver,
-    AuthService,
-    JwtStrategy,
-    GraphQLAuthGuard,
-    LogoutResolver,
-  ],
+  providers: [AuthResolver, AuthService, JwtStrategy, GraphQLAuthGuard],
   exports: [],
   imports: [
     DataModule,
     JwtModule.registerAsync({
-      imports: [ConfigService],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         secret: configService.get('jwtSecret'),
-        signOptions: { expiresIn: '1d' },
+        signOptions: { expiresIn: '60s' },
       }),
     }),
   ],

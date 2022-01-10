@@ -6,6 +6,7 @@
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
+    "esModuleInterop": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
@@ -16,10 +17,18 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@grp-org/client-data-access-auth": [
+        "libs/client/data-access-auth/src/index.ts"
+      ],
+      "@grp-org/client-data-access-gql": [
+        "libs/client/data-access-gql/src/index.ts"
+      ],
+      "@grp-org/client-ui-form": ["libs/client/ui-form/src/index.ts"],
+      "@grp-org/client/validation": ["libs/client/validation/src/index.ts"],
       "@grp-org/server-auth": ["libs/server/auth/src/index.ts"],
       "@grp-org/server-core": ["libs/server/core/src/index.ts"],
       "@grp-org/server-data": ["libs/server/data/src/index.ts"],
-      "@grp-org/types": ["libs/types/src/index.ts"]
+      "@grp-org/shared": ["libs/shared/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

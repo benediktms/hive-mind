@@ -2,10 +2,14 @@
   "version": 2,
   "projects": {
     "api": "apps/api",
+    "client-data-access-auth": "libs/client/data-access-auth",
+    "client-data-access-gql": "libs/client/data-access-gql",
+    "client-ui-form": "libs/client/ui-form",
+    "client-validation": "libs/client/validation",
     "server-auth": "libs/server/auth",
     "server-core": "libs/server/core",
     "server-data": "libs/server/data",
-    "types": "libs/types",
+    "shared": "libs/shared",
     "web": "apps/web",
     "web-e2e": "apps/web-e2e"
   }

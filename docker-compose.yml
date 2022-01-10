@@ -6,7 +6,7 @@ services:
     volumes:
       - data:/var/lib/postgresql/data
     container_name: grp-database
-    env_file: .env
+    env_file: ./apps/api/.env.local
     ports:
       - '5432:5432'
 

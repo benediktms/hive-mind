@@ -1,0 +1,12 @@
+overwrite: true
+schema: 'libs/server/core/src/schema.graphql'
+documents: 'libs/client/data-access-gql/src/{queries,mutations}/*.{ts,gql,graphql}'
+generates:
+  libs/client/data-access-gql/src/generated/graphql.ts:
+    plugins:
+      - 'typescript'
+      - 'typescript-operations'
+      - 'typescript-react-apollo'
+  apps/web/graphql.schema.json:
+    plugins:
+      - 'introspection'

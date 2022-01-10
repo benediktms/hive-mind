@@ -1,4 +1,4 @@
-import { JwtPayload } from '@grp-org/types';
+import { JwtPayload } from '@grp-org/shared';
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, ExtractJwt } from 'passport-jwt';
