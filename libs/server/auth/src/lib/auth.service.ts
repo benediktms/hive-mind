@@ -138,6 +138,7 @@ export class AuthService {
     }
   }
 
+  // Use this for password reset and password change
   public async invalidateRefreshToken(userId: number) {
     await this.dataService.user.update({
       where: { id: userId },

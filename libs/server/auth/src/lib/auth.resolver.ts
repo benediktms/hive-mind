@@ -4,7 +4,7 @@ import LoginInput from './dto/login.dto';
 import RegisterInput from './dto/register.dto';
 import LoginResponse from './response/login.response';
 import RegisterResponse from './response/register.response';
-import { GraphQLContext } from '@grp-org/shared';
+import { COOKIE_NAME, GraphQLContext } from '@grp-org/shared';
 import { UseGuards } from '@nestjs/common';
 import { GraphQLAuthGuard } from './guards/graphql-auth.guard';
 import { CurrentUser } from './decorators/current-user.decorator';
@@ -45,8 +45,11 @@ export class AuthResolver {
 
   @Mutation(() => LogoutResponse)
   @UseGuards(GraphQLAuthGuard)
-  public async logout(@CurrentUser() user: User): Promise<LogoutResponse> {
-    await this.authService.invalidateRefreshToken(user.id);
+  public async logout(
+    @CurrentUser() user: User,
+    @Context() context: GraphQLContext
+  ): Promise<LogoutResponse> {
+    context.res.clearCookie(COOKIE_NAME);
 
     return new LogoutResponse('Logged out successfully');
   }

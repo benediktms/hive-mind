@@ -1,8 +1,8 @@
 overwrite: true
 schema: 'libs/server/core/src/schema.graphql'
-documents: 'libs/client/gql/src/{queries,mutations}/*.{ts,gql,graphql}'
+documents: 'libs/client/data-access-gql/src/{queries,mutations}/*.{ts,gql,graphql}'
 generates:
-  libs/client/gql/src/generated/graphql.ts:
+  libs/client/data-access-gql/src/generated/graphql.ts:
     plugins:
       - 'typescript'
       - 'typescript-operations'

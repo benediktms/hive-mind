@@ -16,9 +16,10 @@ export const useProvideAuth = () => {
     })
       .then(async (res) => {
         const { ok, accessToken } = await res.json();
-        if (ok) setToken(accessToken);
 
-        return accessToken;
+        if (ok && !!accessToken.length) {
+          setToken(accessToken);
+        }
       })
       .catch((e) => {
         console.error(e);
