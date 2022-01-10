@@ -1,7 +1,7 @@
 import { RegisterForm } from '@grp-org/client-data-access-auth';
 import React from 'react';
 
-export function Login() {
+export function Register() {
   return (
     <div>
       <RegisterForm />
@@ -9,4 +9,4 @@ export function Login() {
   );
 }
 
-export default Login;
+export default Register;
