@@ -7,8 +7,8 @@ export const useProvideAuth = () => {
   const [token, setToken] = useState<Token>(null);
 
   useEffect(() => {
-    const apiUrl = process.env['NEXT_PUBLIC_API_URI'];
-    console.log(apiUrl);
+    const apiUrl =
+      process.env['NEXT_PUBLIC_API_URI'] || 'http://localhost:3001';
 
     fetch(`${apiUrl}/refresh_token`, {
       method: 'POST',
@@ -36,7 +36,8 @@ export const useProvideAuth = () => {
   };
 
   const createApolloClient = () => {
-    const apiUrl = process.env['NEXT_PUBLIC_API_URI'];
+    const apiUrl =
+      process.env['NEXT_PUBLIC_API_URI'] || 'http://localhost:3001';
     const graphqlEndpoint = new URL('/graphql', apiUrl);
 
     const link = new HttpLink({

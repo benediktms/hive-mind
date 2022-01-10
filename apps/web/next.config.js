@@ -10,9 +10,6 @@ const nextConfig = {
     // See: https://github.com/gregberge/svgr
     svgr: false,
   },
-  env: {
-    NEXT_PUBLIC_API_URI: process.env.NEXT_PUBLIC_API_URI,
-  },
 };
 
 module.exports = withNx(nextConfig);
