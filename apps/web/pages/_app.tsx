@@ -6,7 +6,7 @@ import { AuthProvider, useProvideAuth } from '@grp-org/client-data-access-auth';
 import { ApolloProvider } from '@apollo/client';
 
 function CustomApp({ Component, pageProps }: AppProps) {
-  const auth = useProvideAuth();
+  const { createApolloClient } = useProvideAuth();
 
   return (
     <>
@@ -15,7 +15,7 @@ function CustomApp({ Component, pageProps }: AppProps) {
       </Head>
 
       <AuthProvider>
-        <ApolloProvider client={auth.createApolloClient()}>
+        <ApolloProvider client={createApolloClient()}>
           <ChakraProvider>
             <Component {...pageProps} />
           </ChakraProvider>

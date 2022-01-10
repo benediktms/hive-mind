@@ -1,26 +1,13 @@
 import { HttpLink, ApolloClient, InMemoryCache } from '@apollo/client';
-import { useEffect, useState } from 'react';
-import { API_URL, GQL_URL } from '../constants';
+import { useState } from 'react';
+import { useGetRefreshToken } from './useGetRefreshToken';
 
 export type Token = string | null;
 
 export const useProvideAuth = () => {
   const [token, setToken] = useState<Token>(null);
 
-  useEffect(() => {
-    fetch(`${API_URL}/refresh_token`, {
-      method: 'POST',
-      credentials: 'include',
-    })
-      .then(async (res) => {
-        const { accessToken } = await res.json();
-        console.log(accessToken);
-        setToken(accessToken);
-      })
-      .catch((e) => {
-        console.error(e);
-      });
-  }, []);
+  useGetRefreshToken(setToken);
 
   const isAuthenticated = () => !!token;
 
@@ -33,10 +20,12 @@ export const useProvideAuth = () => {
   };
 
   const createApolloClient = () => {
+    const apiUrl = process.env['NEXT_PUBLIC_API_URI'];
+    const graphqlEndpoint = new URL('/graphql', apiUrl);
+
     const link = new HttpLink({
-      uri: GQL_URL.href,
+      uri: graphqlEndpoint.href,
       headers: getAuthHeaders(),
-      credentials: 'include',
     });
 
     return new ApolloClient({
