@@ -23,8 +23,8 @@ jobs:
           - 5432:5432
 
     env:
-      NODE_ENV: test
       DATABASE_URL: postgresql://postgres:postgres@localhost/test
+      NEXT_PUBLIC_API_URI: https://grp-app-api.herokuapp.com
 
     if: ${{ github.event_name == 'pull_request' }}
     steps:
