@@ -23,7 +23,6 @@ jobs:
           - 5432:5432
 
     env:
-      NODE_ENV: test
       DATABASE_URL: postgresql://postgres:postgres@localhost/test
 
     if: ${{ github.event_name != 'pull_request' }}

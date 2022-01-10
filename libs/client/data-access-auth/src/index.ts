@@ -4,5 +4,3 @@ export * from './lib/components/LoginForm';
 
 export * from './lib/hooks/useAuthContext';
 export * from './lib/hooks/useProvideAuth';
-
-export * from './lib/constants';
