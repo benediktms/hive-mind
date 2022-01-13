@@ -3,6 +3,7 @@ on: [push]
 
 env:
   NX_CLOUD_DISTRIBUTED_EXECUTION: true
+  NEXT_PUBLIC_API_URI: http://example.com
 
 jobs:
   check-branch:
@@ -24,7 +25,6 @@ jobs:
 
     env:
       DATABASE_URL: postgresql://postgres:postgres@localhost/test
-      NEXT_PUBLIC_API_URI: http://example.com
 
     if: ${{ github.event_name != 'pull_request' }}
     steps:
