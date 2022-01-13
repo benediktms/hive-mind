@@ -21,7 +21,7 @@ export const LoginForm = () => {
 
         toast({
           title: 'Login Successful',
-          description: 'Welcome back!',
+          description: `Welcome back, ${data.login.user.firstName}!`,
           status: 'success',
         });
       } else {
