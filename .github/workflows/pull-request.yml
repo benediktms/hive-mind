@@ -3,6 +3,7 @@ on: [pull_request]
 
 env:
   NX_CLOUD_DISTRIBUTED_EXECUTION: true
+  NEXT_PUBLIC_API_URI: http://example.com
 
 jobs:
   pull-request:

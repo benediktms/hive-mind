@@ -56,7 +56,7 @@ jobs:
         run: npx nx affected --target=test --parallel --max-parallel=2
 
       - name: End-to-end tests
-        uses: cypress-io/github-actions@v2
+        uses: cypress-io/github-action@v2
         with:
           start: yarn start:api
           wait-on: 'http://localhost:3001'
