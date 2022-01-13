@@ -1,8 +1,8 @@
-import { RegisterForm } from '@grp-org/client-data-access-auth';
+import { RegisterPage } from '@grp-org/client/views';
 import React from 'react';
 
 export function Register() {
-  return <RegisterForm />;
+  return <RegisterPage />;
 }
 
 export default Register;

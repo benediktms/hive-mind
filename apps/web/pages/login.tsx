@@ -1,7 +1,8 @@
-import { LoginForm } from '@grp-org/client-data-access-auth';
+import { LoginPage } from '@grp-org/client/views';
+import React from 'react';
 
 export function Login() {
-  return <LoginForm />;
+  return <LoginPage />;
 }
 
 export default Login;

@@ -1,29 +1,43 @@
-import { HttpLink, ApolloClient, InMemoryCache } from '@apollo/client';
-import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { createContext, useEffect, useRef, useState } from 'react';
 
 export type Token = string | null;
 
+type AuthContext = {
+  token: Token;
+  setToken: (newToken: Token) => void;
+};
+
 export const useProvideAuth = () => {
   const [token, setToken] = useState<Token>(null);
+  const mounted = useRef(false);
+
+  const AuthContext = createContext<AuthContext>({
+    token,
+    setToken,
+  });
 
   useEffect(() => {
-    const apiUrl =
-      process.env['NEXT_PUBLIC_API_URI'] || 'http://localhost:3001';
+    const apiUrl = process.env.NEXT_PUBLIC_API_URI || 'http://localhost:3001';
 
-    fetch(`${apiUrl}/refresh_token`, {
-      method: 'POST',
-      credentials: 'include',
-    })
+    axios
+      .post(`${apiUrl}/refresh_token`, undefined, {
+        withCredentials: true,
+      })
       .then(async (res) => {
-        const { ok, accessToken } = await res.json();
+        const { ok, accessToken } = res.data;
 
-        if (ok && !!accessToken.length) {
+        if (ok && !!accessToken.length && !mounted.current) {
           setToken(accessToken);
         }
       })
       .catch((e) => {
         console.error(e);
       });
+
+    return () => {
+      mounted.current = true;
+    };
   }, []);
 
   const isAuthenticated = () => !!token;
@@ -36,27 +50,11 @@ export const useProvideAuth = () => {
     };
   };
 
-  const createApolloClient = () => {
-    const apiUrl =
-      process.env['NEXT_PUBLIC_API_URI'] || 'http://localhost:3001';
-    const graphqlEndpoint = new URL('/graphql', apiUrl);
-
-    const link = new HttpLink({
-      uri: graphqlEndpoint.href,
-      headers: getAuthHeaders(),
-      credentials: 'include',
-    });
-
-    return new ApolloClient({
-      link,
-      cache: new InMemoryCache(),
-    });
-  };
-
   return {
+    AuthContext,
     token,
     setToken,
     isAuthenticated,
-    createApolloClient,
+    getAuthHeaders,
   };
 };

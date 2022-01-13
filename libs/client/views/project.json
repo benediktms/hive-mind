@@ -1,0 +1,23 @@
+{
+  "root": "libs/client/views",
+  "sourceRoot": "libs/client/views/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/client/views/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/client/views"],
+      "options": {
+        "jestConfig": "libs/client/views/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  }
+}

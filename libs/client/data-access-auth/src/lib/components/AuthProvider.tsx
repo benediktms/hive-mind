@@ -1,19 +1,11 @@
-import { createContext } from 'react';
-import { Token, useProvideAuth } from '../hooks/useProvideAuth';
-
-type AuthContext = {
-  token: Token;
-  setToken: (newToken: Token) => void;
-};
-
-export const AuthContext = createContext<AuthContext>({
-  token: null,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setToken: (_newToken: Token) => {},
-});
+import { useProvideAuth } from '../hooks/useProvideAuth';
 
 export const AuthProvider: React.FC = ({ children }) => {
-  const auth = useProvideAuth();
+  const { AuthContext, token, setToken } = useProvideAuth();
 
-  return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ token, setToken }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };

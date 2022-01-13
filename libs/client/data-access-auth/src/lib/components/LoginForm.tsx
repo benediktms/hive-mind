@@ -1,12 +1,12 @@
 import { Container, Heading, useToast } from '@chakra-ui/react';
+import { useProvideAuth } from '../hooks/useProvideAuth';
 import { LoginInput, useLoginMutation } from '@grp-org/client-data-access-gql';
 import { Form, LabeledTextField } from '@grp-org/client-ui-form';
 import { LoginSchema } from '@grp-org/client/validation';
 import Link from 'next/link';
-import { useAuthContext } from '../hooks/useAuthContext';
 
 export const LoginForm = () => {
-  const { setToken } = useAuthContext();
+  const { setToken } = useProvideAuth();
   const [loginMutation] = useLoginMutation();
   const toast = useToast();
 

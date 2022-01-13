@@ -23,10 +23,14 @@ async function bootstrap() {
 
   await app.listen(port);
 
-  Logger.log(
-    `🚀 Application is running in ${env} mode on: http://localhost:${port}`
-  );
-  Logger.log(`GraphQL playground running on http://localhost:${port}/graphql`);
+  if (env === 'development') {
+    Logger.log(
+      `🚀 Application is running in ${env} mode on: http://localhost:${port}`
+    );
+    Logger.log(
+      `GraphQL playground running on http://localhost:${port}/graphql`
+    );
+  }
 }
 
 void bootstrap();
