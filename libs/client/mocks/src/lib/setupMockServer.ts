@@ -1,14 +1,16 @@
 import { RequestHandler, rest } from 'msw';
 import { setupServer } from 'msw/node';
-import '@testing-library/jest-dom';
 
-export function setupMockServer(additionalHandlers?: RequestHandler[]) {
-  const url = process.env.NEXT_PUBLIC_API_URI;
+export function setupMockServer(
+  additionalHandlers?: RequestHandler[],
+  url?: string
+) {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URI || url;
 
-  if (!url) throw new Error('NEXT_PUBLIC_API_URI is not defined');
+  if (!apiUrl) throw new Error('NEXT_PUBLIC_API_URI is not defined');
 
   const handlers: RequestHandler[] = [
-    rest.post(`${url}/refresh_token`, (_req, res, ctx) => {
+    rest.post(`${apiUrl}/refresh_token`, (_req, res, ctx) => {
       return res(
         ctx.status(200),
         ctx.json({
@@ -23,9 +25,5 @@ export function setupMockServer(additionalHandlers?: RequestHandler[]) {
     handlers.push(...additionalHandlers);
   }
 
-  const server = setupServer(...handlers);
-
-  beforeAll(() => server.listen());
-  afterEach(() => server.resetHandlers());
-  afterAll(() => server.close());
+  return setupServer(...handlers);
 }
