@@ -5,9 +5,7 @@ import { setupMockServer } from '@grp-org/client/mocks';
 import { AuthProvider } from '@grp-org/client-data-access-auth';
 
 describe('IndexPage', () => {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URI || 'http://localhost:3000';
-
-  setupMockServer(apiUrl);
+  setupMockServer();
 
   afterEach(() => {
     cleanup();

@@ -6,9 +6,7 @@ import '@testing-library/jest-dom';
 import { AuthProvider } from '@grp-org/client-data-access-auth';
 
 describe('LoginPage ', () => {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URI || 'http://localhost:3000';
-
-  setupMockServer(apiUrl);
+  setupMockServer();
 
   it('should render successfully', async () => {
     render(
