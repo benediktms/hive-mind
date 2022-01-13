@@ -1,0 +1,17 @@
+name: CI - End-to-end tests
+on: [push]
+
+jobs:
+  end-to-end:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cypress run
+        uses: cypress-io/github-action@v2
+        with:
+          project: ./apps/web-e2e
+          build: nx run build:api
+          start: nx run serve:api
+          wait-on: 'http://localhost:3001'
+          wait-on-timeout: 60
