@@ -1,5 +1,5 @@
 import { MockedProvider } from '@apollo/client/testing';
-import { render, screen } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
 import { RegisterPage } from './RegisterPage';
 import '@testing-library/jest-dom';
 import { AuthProvider } from '@grp-org/client-data-access-auth';
@@ -7,6 +7,10 @@ import { setupMockServer } from '@grp-org/client/mocks';
 
 describe('LoginPage ', () => {
   setupMockServer();
+
+  afterEach(() => {
+    cleanup();
+  });
 
   it('should render successfully', async () => {
     render(

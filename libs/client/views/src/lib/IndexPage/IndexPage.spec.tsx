@@ -11,7 +11,7 @@ describe('IndexPage', () => {
     cleanup();
   });
 
-  it('should render successfully', async () => {
+  it('should render successfully', () => {
     render(
       <AuthProvider>
         <MockedProvider>
