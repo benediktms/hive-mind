@@ -1,12 +1,10 @@
 import { IndexPage } from './IndexPage';
 import { MockedProvider } from '@apollo/client/testing';
 import { cleanup, render, screen } from '@testing-library/react';
-import { setupMockServer } from '@grp-org/client/mocks';
 import { AuthProvider } from '@grp-org/client-data-access-auth';
+import '@testing-library/jest-dom';
 
 describe('IndexPage', () => {
-  setupMockServer();
-
   afterEach(() => {
     cleanup();
   });
