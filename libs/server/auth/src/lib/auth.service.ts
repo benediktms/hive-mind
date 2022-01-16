@@ -15,6 +15,7 @@ import { User } from '.prisma/client';
 import { VerifyTokenResponse } from './response/verify-token.response';
 import { COOKIE_NAME, JwtPayload } from '@grp-org/shared';
 import dayjs from 'dayjs';
+import { nanoid } from 'nanoid';
 
 @Injectable()
 export class AuthService {
@@ -77,22 +78,28 @@ export class AuthService {
 
   private signAccessToken(userId: number, tokenVersion: number) {
     const payload: JwtPayload = { userId, tokenVersion };
-    return this.jwtService.sign(payload, {
+
+    const token = this.jwtService.sign(payload, {
       secret: this.configService.get('jwtSecret'),
       expiresIn: '15m',
+      jwtid: nanoid(),
     });
+
+    return token;
   }
 
   private signRefreshToken(userId: number, tokenVersion: number) {
     const payload: JwtPayload = { userId, tokenVersion };
+
     return this.jwtService.sign(payload, {
       secret: this.configService.get('jwtSecret'),
       expiresIn: '3d',
+      jwtid: nanoid(),
     });
   }
 
   public sendAccessToken(res: Response, token: string) {
-    res.cookie(COOKIE_NAME, token, {
+    return res.cookie(COOKIE_NAME, token, {
       httpOnly: true,
       secure: true,
       signed: true,

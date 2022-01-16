@@ -10,4 +10,6 @@ export const ConfigSchema = z.object({
   JWT_SECRET: z.string().min(1),
   CLIENT_URL: z.string().url(),
   COOKIE_SECRET: z.string().min(1),
+  ANON_KEY: z.string().min(1),
+  SERVICE_KEY: z.string().min(1),
 });
