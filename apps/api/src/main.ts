@@ -1,13 +1,16 @@
 import { DataService } from '@grp-org/server-data';
-import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import cookieParser from 'cookie-parser';
+import { Logger } from 'nestjs-pino';
 
 import { AppModule } from './app/app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  app.useLogger(app.get(Logger));
+
+  const logger = app.get(Logger);
 
   const dataService = app.get(DataService);
   await dataService.enableShutdownHooks(app);
@@ -24,10 +27,10 @@ async function bootstrap() {
   await app.listen(port);
 
   if (env === 'development') {
-    Logger.log(
+    logger.log(
       `🚀 Application is running in ${env} mode on: http://localhost:${port}`
     );
-    Logger.log(
+    logger.log(
       `GraphQL playground running on http://localhost:${port}/graphql`
     );
   }

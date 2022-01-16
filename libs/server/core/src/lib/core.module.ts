@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { configuration } from './config/configuration';
 import { ConfigSchema } from './config/validation';
@@ -22,15 +22,13 @@ import { join } from 'path';
         ),
         sortSchema: true,
         playground: true,
-        // formatResponse: (res, _ctx) => {
-        //   /**
-        //    * NOTE: Logging the request here can expose user passwords and
-        //    * should NEVER be done without implementing a way to redact
-        //    * credentials
-        //    */
-        //   Logger.log(res.data, 'GQL Response');
-        //   return res;
-        // },
+        formatResponse: (res, ctx) => {
+          const req = ctx.request;
+
+          Logger.log(req.variables, `GraphQL Request: ${req.operationName}`);
+          Logger.log(res.data, `GraphQL Response: ${req.operationName}`);
+          return res;
+        },
         context: ({ res }) => ({ res }),
         cors: {
           credentials: true,
