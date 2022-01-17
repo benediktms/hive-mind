@@ -142,7 +142,6 @@ export class AuthService {
       res.send(new VerifyTokenResponse(true, refreshToken));
     } catch (e) {
       Logger.error(e);
-      throw e;
     }
   }
 

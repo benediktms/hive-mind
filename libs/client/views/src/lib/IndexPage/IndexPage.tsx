@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 export const IndexPage = () => {
   const router = useRouter();
   const [logoutMutation] = useLogoutMutation();
-  const { isAuthenticated, setToken } = useProvideAuth();
+  const { setToken } = useProvideAuth();
 
   return (
     <Container>
@@ -17,7 +17,7 @@ export const IndexPage = () => {
         <GridItem>
           <Button
             colorScheme="purple"
-            isDisabled={isAuthenticated()}
+            // isDisabled={isAuthenticated()}
             onClick={async () => await router.push('/login')}
             w="100%"
           >
@@ -27,7 +27,7 @@ export const IndexPage = () => {
         <GridItem>
           <Button
             colorScheme="purple"
-            isDisabled={isAuthenticated()}
+            // isDisabled={isAuthenticated()}
             onClick={async () => await router.push('/register')}
             w="100%"
           >
@@ -44,10 +44,11 @@ export const IndexPage = () => {
           </Button>
           <Button
             colorScheme="purple"
-            isDisabled={!isAuthenticated()}
+            // isDisabled={!isAuthenticated()}
             onClick={async () => {
-              setToken(null);
               await logoutMutation();
+              setToken(null);
+              await router.push('/');
             }}
             w="100%"
             mt={2}

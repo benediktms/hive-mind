@@ -20,6 +20,9 @@
     "prisma:generate": "npx prisma generate",
     "gen": "graphql-codegen --config codegen.yml"
   },
+  "prisma": {
+    "seed": "ts-node ./prisma/seed.ts"
+  },
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.5.6",

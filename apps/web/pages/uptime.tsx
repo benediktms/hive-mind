@@ -5,7 +5,9 @@ import React from 'react';
 export const Uptime = () => {
   const { data, loading, error } = useUptimeQuery();
 
-  if (error) {
+  if (loading) {
+    return <div>Loading...</div>;
+  } else if (error) {
     return (
       <div>
         Error: {error.message}
@@ -13,13 +15,7 @@ export const Uptime = () => {
         <Link href="/">Home</Link>
       </div>
     );
-  }
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (!data) {
+  } else if (!data) {
     return (
       <div>
         No data

@@ -46,10 +46,9 @@ export class AuthResolver {
   @Mutation(() => LogoutResponse)
   @UseGuards(GraphQLAuthGuard)
   public async logout(
-    @CurrentUser() user: User,
     @Context() context: GraphQLContext
   ): Promise<LogoutResponse> {
-    context.res.clearCookie(COOKIE_NAME);
+    context.res.clearCookie(COOKIE_NAME, { httpOnly: true });
 
     return new LogoutResponse('Logged out successfully');
   }

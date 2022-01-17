@@ -1,3 +1,4 @@
+import { User } from '@grp-org/client-data-access-gql';
 import axios from 'axios';
 import { createContext, useEffect, useRef, useState } from 'react';
 
@@ -10,6 +11,7 @@ type AuthContext = {
 
 export const useProvideAuth = () => {
   const [token, setToken] = useState<Token>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const mounted = useRef(false);
 
   const AuthContext = createContext<AuthContext>({
@@ -40,7 +42,11 @@ export const useProvideAuth = () => {
     };
   }, []);
 
-  const isAuthenticated = () => !!token;
+  const isAuthenticated = () => {
+    const isTrue = token !== null && !!currentUser;
+    console.log('isAuthenticated', isTrue);
+    return isTrue;
+  };
 
   const getAuthHeaders = () => {
     if (!token) return null;
@@ -54,6 +60,8 @@ export const useProvideAuth = () => {
     AuthContext,
     token,
     setToken,
+    currentUser,
+    setCurrentUser,
     isAuthenticated,
     getAuthHeaders,
   };
