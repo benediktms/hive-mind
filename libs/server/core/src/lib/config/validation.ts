@@ -9,7 +9,9 @@ export const ConfigSchema = z.object({
   PROCFILE: z.string().default('/apps/api/Procfile'),
   JWT_SECRET: z.string().min(1),
   CLIENT_URL: z.string().url(),
-  COOKIE_SECRET: z.string().min(1),
+  BASE_DOMAIN: z.string().default('localhost'),
+  ACCESS_TOKEN_SECRET: z.string().min(1),
+  REFRESH_TOKEN_SECRET: z.string().min(1),
   ANON_KEY: z.string().min(1),
   SERVICE_KEY: z.string().min(1),
 });

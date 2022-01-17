@@ -3,14 +3,18 @@ import User from '../models/user';
 
 @ObjectType()
 export default class RegisterResponse {
-  constructor(user: User, token: string) {
+  constructor(user: User, accessToken: string, refreshToken: string) {
     this.user = user;
-    this.token = token;
+    this.accessToken = accessToken;
+    this.refreshToken = refreshToken;
   }
 
   @Field(() => User)
   user: User;
 
   @Field()
-  token: string;
+  accessToken: string;
+
+  @Field()
+  refreshToken: string;
 }

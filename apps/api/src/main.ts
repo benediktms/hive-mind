@@ -19,9 +19,8 @@ async function bootstrap() {
   const port = configService.get('port');
   const env = configService.get('environment');
   const clientUrl = configService.get('clientUrl');
-  const cookieSecret = configService.get('cookieSecret');
 
-  app.use(cookieParser(cookieSecret));
+  app.use(cookieParser());
   app.enableCors({ origin: clientUrl, credentials: true });
 
   await app.listen(port);

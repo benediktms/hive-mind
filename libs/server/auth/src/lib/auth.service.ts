@@ -1,21 +1,26 @@
 import { DataService } from '@grp-org/server-data';
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
-import { Response, Request } from 'express';
+import { Response, Request, CookieOptions } from 'express';
 import { SALT_LENGTH, SALT_ROUNDS } from '../utils/constants';
 import RegisterDTO from './dto/register.dto';
 import { hash, verify } from 'argon2';
 import { randomBytes } from 'crypto';
 import { FailedToAuthenticateError } from '../utils/failed-to-authenticate-error';
-import LoginResponse from './response/register.response';
 import RegisterResponse from './response/register.response';
 import { JwtService } from '@nestjs/jwt';
 import { EmailTakenError } from '../utils/email-taken-error';
 import { ConfigService } from '@nestjs/config';
 import { User } from '.prisma/client';
 import { VerifyTokenResponse } from './response/verify-token.response';
-import { COOKIE_NAME, JwtPayload } from '@grp-org/shared';
-import dayjs from 'dayjs';
+import {
+  AccessTokenPayload,
+  Cookies,
+  JwtPayload,
+  RefreshTokenPayload,
+  TokenExpiration,
+} from '@grp-org/shared';
 import { nanoid } from 'nanoid';
+import LoginResponse from './response/login.response';
 
 @Injectable()
 export class AuthService {
@@ -59,9 +64,10 @@ export class AuthService {
       },
     });
 
-    const token = this.signAccessToken(user.id, user.refreshTokenVersion);
+    // const token = this.signAccessToken(user.id, user.refreshTokenVersion);
+    const { accessToken, refreshToken } = await this.buildTokens(user);
 
-    return new RegisterResponse(user, token);
+    return new RegisterResponse(user, accessToken, refreshToken);
   }
 
   public async validateUser(id: number): Promise<User> {
@@ -98,18 +104,35 @@ export class AuthService {
     });
   }
 
-  public sendAccessToken(res: Response, token: string) {
-    return res.cookie(COOKIE_NAME, token, {
-      httpOnly: true,
-      secure: true,
-      signed: true,
-      expires: dayjs().add(12, 'm').toDate(),
-      // TODO: add domain for next.js SSR to work in prod
-    });
+  private isProd = this.configService.get('environment') === 'production';
+
+  private defaultCookieOptions: CookieOptions = {
+    httpOnly: true,
+    secure: this.isProd,
+    sameSite: this.isProd ? 'strict' : 'lax',
+    domain: this.configService.get('baseDomain') as string,
+    path: '/',
+  };
+
+  public setTokens(res: Response, accessToken: string, refreshToken?: string) {
+    const accessTokenOptions: CookieOptions = {
+      ...this.defaultCookieOptions,
+      maxAge: TokenExpiration.Access,
+    };
+
+    const refreshTokenOptions: CookieOptions = {
+      ...this.defaultCookieOptions,
+      maxAge: TokenExpiration.Refresh,
+    };
+
+    res.cookie(Cookies.AccessToken, accessToken, accessTokenOptions);
+
+    if (refreshToken)
+      res.cookie(Cookies.RefreshToken, refreshToken, refreshTokenOptions);
   }
 
   public async verifyAccessToken(req: Request, res: Response): Promise<void> {
-    const token = req.signedCookies[COOKIE_NAME];
+    const token = req.signedCookies[Cookies.AccessToken];
 
     if (!token) {
       res.send(new VerifyTokenResponse(false, ''));
@@ -137,7 +160,7 @@ export class AuthService {
         user.refreshTokenVersion
       );
 
-      this.sendAccessToken(res, refreshToken);
+      this.setTokens(res, refreshToken);
 
       res.send(new VerifyTokenResponse(true, refreshToken));
     } catch (e) {
@@ -168,5 +191,22 @@ export class AuthService {
     if (!attemptIsVerified) {
       throw new FailedToAuthenticateError();
     }
+  }
+
+  private async buildTokens(user: User) {
+    const accessTokenPayload: AccessTokenPayload = { userId: user.id };
+    const refreshTokenPayload: RefreshTokenPayload = {
+      userId: user.id,
+      version: user.refreshTokenVersion,
+    };
+
+    const accessToken = this.jwtService.sign(accessTokenPayload, {
+      jwtid: nanoid(),
+    });
+    const refreshToken = this.jwtService.sign(refreshTokenPayload, {
+      jwtid: nanoid(),
+    });
+
+    return { accessToken, refreshToken };
   }
 }
