@@ -4,6 +4,7 @@ on: [push]
 env:
   NX_CLOUD_DISTRIBUTED_EXECUTION: true
   NEXT_PUBLIC_API_URI: http://example.com
+  DATABASE_URL: postgresql://postgres:postgres@localhost/test?schema=public
 
 jobs:
   check-branch:
@@ -24,8 +25,6 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
-    env:
-      DATABASE_URL: postgresql://postgres:postgres@localhost/test?schema=public
 
     steps:
       - uses: actions/checkout@v2
@@ -35,7 +34,7 @@ jobs:
         uses: nrwl/nx-set-shas@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: '14'
+          node-version: '16'
 
       - name: Install packages
         run: yarn install --frozen-lockfile
