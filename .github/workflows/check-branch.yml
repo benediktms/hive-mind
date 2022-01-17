@@ -55,14 +55,11 @@ jobs:
       - name: Test
         run: npx nx affected --target=test --parallel --max-parallel=2
 
-      - name: Seed database for e2e tests
-        run: yarn prisma db seed
+      # - name: Seed database for e2e tests
+      #   run: yarn prisma db seed
 
-      - name: Start api
-        run: yarn nx serve:api
-
-      - name: End-to-end
-        run: npx nx affected --target=e2e --parallel --max-parallel=2
+      # - name: End-to-end
+      #   run: npx nx affected --target=e2e --parallel --max-parallel=2
 
       # - name: Stop agents
       #   run: npx nx-cloud stop-all-agents
