@@ -5,9 +5,6 @@ describe('web', () => {
   const gqlEndpoint = new URL('/graphql', apiUrl);
 
   beforeEach(() => {
-    cy.visit('/');
-    console.log('hello');
-
     cy.intercept('POST', gqlEndpoint.href, (req) => {
       if (hasOperationName(req, 'Login')) {
         aliasMutation(req, 'Login');
@@ -16,6 +13,12 @@ describe('web', () => {
         });
       }
     });
+
+    cy.intercept('POST', '/refresh_token', {
+      fixture: '../fixtures/refresh_token.json',
+    }).as('refreshToken');
+
+    cy.visit('/');
   });
 
   it('should be able to log in', () => {
