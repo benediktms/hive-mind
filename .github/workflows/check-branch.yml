@@ -4,7 +4,10 @@ on: [push, pull_request]
 env:
   NX_CLOUD_DISTRIBUTED_EXECUTION: true
   NEXT_PUBLIC_API_URI: http://example.com
-  DATABASE_URL: postgresql://postgres:postgres@localhost:5432/grp
+  DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test
+  ANON_KEY: secret
+  SERVICE_KEY: secret
+  JWT_SECRET: secret
 
 jobs:
   check-branch:
