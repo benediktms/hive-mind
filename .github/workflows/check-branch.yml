@@ -1,9 +1,10 @@
 name: CI - Check Branch
-on: [push]
+on: [push, pull_request]
 
 env:
   NX_CLOUD_DISTRIBUTED_EXECUTION: true
   NEXT_PUBLIC_API_URI: http://example.com
+  DATABASE_URL: postgresql://postgres:postgres@localhost:5432/grp
 
 jobs:
   check-branch:
@@ -11,10 +12,13 @@ jobs:
 
     services:
       postgres:
-        image: postgres:14
+        image: postgres:latest
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: grp
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -23,10 +27,6 @@ jobs:
         ports:
           - 5432:5432
 
-    env:
-      DATABASE_URL: postgresql://postgres:postgres@localhost/test
-
-    if: ${{ github.event_name != 'pull_request' }}
     steps:
       - uses: actions/checkout@v2
         with:
