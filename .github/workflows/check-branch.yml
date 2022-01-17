@@ -16,6 +16,8 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -51,6 +53,8 @@ jobs:
 
       - name: Test
         run: npx nx affected --target=test --parallel --max-parallel=2
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost/test?schema=public
 
       - name: End-to-end
         run: npx nx affected --target=e2e --parallel --max-parallel=2
