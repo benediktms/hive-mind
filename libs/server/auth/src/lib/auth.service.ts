@@ -108,14 +108,11 @@ export class AuthService {
     });
   }
 
-  public async verifyAccessToken(
-    req: Request,
-    res: Response
-  ): Promise<Response> {
+  public async verifyAccessToken(req: Request, res: Response): Promise<void> {
     const token = req.signedCookies[COOKIE_NAME];
 
     if (!token) {
-      return res.send(new VerifyTokenResponse(false, ''));
+      res.send(new VerifyTokenResponse(false, ''));
     }
 
     try {
@@ -127,8 +124,12 @@ export class AuthService {
         where: { id: payload.userId },
       });
 
-      if (!user || payload.tokenVersion !== user.refreshTokenVersion) {
-        return res.send(new VerifyTokenResponse(false, ''));
+      if (!user) {
+        throw new Error('User not found');
+      }
+
+      if (payload.tokenVersion !== user.refreshTokenVersion) {
+        res.send(new VerifyTokenResponse(false, ''));
       }
 
       const refreshToken = this.signRefreshToken(
@@ -138,7 +139,7 @@ export class AuthService {
 
       this.sendAccessToken(res, refreshToken);
 
-      return res.send(new VerifyTokenResponse(true, refreshToken));
+      res.send(new VerifyTokenResponse(true, refreshToken));
     } catch (e) {
       Logger.error(e);
       throw e;

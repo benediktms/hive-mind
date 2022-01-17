@@ -7,10 +7,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('refresh_token')
-  async refreshToken(
-    @Req() req: Request,
-    @Res() res: Response
-  ): Promise<Response> {
-    return await this.authService.verifyAccessToken(req, res);
+  async refreshToken(@Req() req: Request, @Res() res: Response): Promise<void> {
+    await this.authService.verifyAccessToken(req, res);
   }
 }
