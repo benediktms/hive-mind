@@ -1,13 +1,10 @@
 name: CI - Check Branch
-on: [push, pull_request]
+on: [push]
 
 env:
   NX_CLOUD_DISTRIBUTED_EXECUTION: true
   NEXT_PUBLIC_API_URI: http://example.com
   DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test
-  ANON_KEY: secret
-  SERVICE_KEY: secret
-  JWT_SECRET: secret
 
 jobs:
   check-branch:
@@ -15,7 +12,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:latest
+        image: postgres:14
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
