@@ -50,10 +50,13 @@ jobs:
         run: npx nx affected --target=lint --parallel --max-parallel=2
 
       - name: Migrate DB & generate prisma client
-        run: yarn prisma migrate deploy && yarn prisma db seed
+        run: yarn prisma migrate deploy
 
       - name: Test
         run: npx nx affected --target=test --parallel --max-parallel=2
+
+      - name: Seed database for e2e tests
+        run: yarn prisma db seed
 
       - name: End-to-end
         run: npx nx affected --target=e2e --parallel --max-parallel=2
