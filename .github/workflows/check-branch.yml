@@ -34,7 +34,7 @@ jobs:
         uses: nrwl/nx-set-shas@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: '16'
+          node-version: '14'
 
       - name: Install packages
         run: yarn install --frozen-lockfile
@@ -53,8 +53,6 @@ jobs:
 
       - name: Test
         run: npx nx affected --target=test --parallel --max-parallel=2
-        env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost/test?schema=public
 
       - name: End-to-end
         run: npx nx affected --target=e2e --parallel --max-parallel=2
