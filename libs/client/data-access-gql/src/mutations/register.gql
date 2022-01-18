@@ -1,6 +1,7 @@
 mutation Register($input: RegisterInput!) {
   register(input: $input) {
-    token
+    accessToken
+    refreshToken
     user {
       id
       email

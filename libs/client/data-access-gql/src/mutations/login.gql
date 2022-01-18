@@ -1,6 +1,7 @@
 mutation Login($input: LoginInput!) {
   login(input: $input) {
-    token
+    accessToken
+    refreshToken
     user {
       id
       firstName

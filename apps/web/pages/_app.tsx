@@ -3,7 +3,11 @@ import { AppProps } from 'next/app';
 import Head from 'next/head';
 import React from 'react';
 import { ApolloProvider } from '@apollo/client';
-import { AuthProvider, useProvideAuth } from '@grp-org/client-data-access-auth';
+import {
+  AuthProvider,
+  useProvideAuth,
+  CurrentUserProvider,
+} from '@grp-org/client-data-access-auth';
 import { createApolloClient } from '@grp-org/client-data-access-gql';
 
 function CustomApp({ Component, pageProps }: AppProps) {
@@ -16,13 +20,15 @@ function CustomApp({ Component, pageProps }: AppProps) {
         <title>Welcome to web!</title>
       </Head>
 
-      <AuthProvider>
-        <ApolloProvider client={client}>
-          <ChakraProvider>
-            <Component {...pageProps} />
-          </ChakraProvider>
-        </ApolloProvider>
-      </AuthProvider>
+      <CurrentUserProvider>
+        <AuthProvider>
+          <ApolloProvider client={client}>
+            <ChakraProvider>
+              <Component {...pageProps} />
+            </ChakraProvider>
+          </ApolloProvider>
+        </AuthProvider>
+      </CurrentUserProvider>
     </>
   );
 }

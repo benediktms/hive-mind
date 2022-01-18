@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 export const LoginForm = () => {
-  const { setToken, setCurrentUser } = useProvideAuth();
+  const { setToken } = useProvideAuth();
   const [loginMutation] = useLoginMutation();
   const toast = useToast();
   const router = useRouter();
@@ -19,8 +19,7 @@ export const LoginForm = () => {
       });
 
       if (data) {
-        setToken(data.login.token);
-        setCurrentUser(data.login.user);
+        setToken(data.login.accessToken);
 
         console.log(data.login.user);
 

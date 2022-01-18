@@ -28,7 +28,8 @@ export type LoginInput = {
 
 export type LoginResponse = {
   __typename?: 'LoginResponse';
-  token: Scalars['String'];
+  accessToken: Scalars['String'];
+  refreshToken: Scalars['String'];
   user: User;
 };
 
@@ -69,7 +70,8 @@ export type RegisterInput = {
 
 export type RegisterResponse = {
   __typename?: 'RegisterResponse';
-  token: Scalars['String'];
+  accessToken: Scalars['String'];
+  refreshToken: Scalars['String'];
   user: User;
 };
 
@@ -89,7 +91,8 @@ export type LoginMutation = {
   __typename?: 'Mutation';
   login: {
     __typename?: 'LoginResponse';
-    token: string;
+    accessToken: string;
+    refreshToken: string;
     user: {
       __typename?: 'User';
       id: number;
@@ -115,7 +118,8 @@ export type RegisterMutation = {
   __typename?: 'Mutation';
   register: {
     __typename?: 'RegisterResponse';
-    token: string;
+    accessToken: string;
+    refreshToken: string;
     user: {
       __typename?: 'User';
       id: number;
@@ -146,7 +150,8 @@ export type UptimeQuery = { __typename?: 'Query'; uptime: number };
 export const LoginDocument = gql`
   mutation Login($input: LoginInput!) {
     login(input: $input) {
-      token
+      accessToken
+      refreshToken
       user {
         id
         firstName
@@ -245,7 +250,8 @@ export type LogoutMutationOptions = Apollo.BaseMutationOptions<
 export const RegisterDocument = gql`
   mutation Register($input: RegisterInput!) {
     register(input: $input) {
-      token
+      accessToken
+      refreshToken
       user {
         id
         email

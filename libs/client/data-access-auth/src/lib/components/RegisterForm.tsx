@@ -20,7 +20,7 @@ export const RegisterForm = () => {
       });
 
       if (data) {
-        setToken(data.register.token);
+        setToken(data.register.accessToken);
 
         toast({
           status: 'success',
