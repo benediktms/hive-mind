@@ -7,7 +7,6 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { GraphQLAuthGuard } from './guards/graphql-auth.guard';
 import { AuthController } from './auth.controller';
-import { nanoid } from 'nanoid';
 
 @Module({
   controllers: [AuthController],
@@ -21,7 +20,6 @@ import { nanoid } from 'nanoid';
         secret: configService.get('jwtSecret'),
         signOptions: {
           expiresIn: '2h',
-          jwtid: nanoid(),
         },
       }),
     }),

@@ -19,7 +19,6 @@ import {
   RefreshTokenPayload,
   TokenExpiration,
 } from '@grp-org/shared';
-import { nanoid } from 'nanoid';
 import LoginResponse from './response/login.response';
 import dayjs from 'dayjs';
 
@@ -86,7 +85,6 @@ export class AuthService {
     return this.jwtService.sign(payload, {
       secret: this.configService.get('accessTokenSecret'),
       expiresIn: TokenExpiration.Access,
-      jwtid: nanoid(),
     });
   }
 
@@ -94,7 +92,6 @@ export class AuthService {
     return this.jwtService.sign(payload, {
       secret: this.configService.get('refreshTokenSecret'),
       expiresIn: TokenExpiration.Refresh,
-      jwtid: nanoid(),
     });
   }
 
@@ -136,7 +133,7 @@ export class AuthService {
 
     const expiration = dayjs(current.exp);
     const now = dayjs();
-    const secondsUntilExpiration = expiration.diff(now, 'seconds');
+    const secondsUntilExpiration = now.diff(expiration, 'seconds');
 
     if (secondsUntilExpiration < TokenExpiration.RefreshIfLessThan) {
       refreshPayload = { userId: current.userId, version };
@@ -181,12 +178,8 @@ export class AuthService {
       version: user.refreshTokenVersion,
     };
 
-    const accessToken = this.jwtService.sign(accessTokenPayload, {
-      jwtid: nanoid(),
-    });
-    const refreshToken = this.jwtService.sign(refreshTokenPayload, {
-      jwtid: nanoid(),
-    });
+    const accessToken = this.jwtService.sign(accessTokenPayload);
+    const refreshToken = this.jwtService.sign(refreshTokenPayload);
 
     return { accessToken, refreshToken };
   }

@@ -25,8 +25,8 @@ import { join } from 'path';
         formatResponse: (res, ctx) => {
           const req = ctx.request;
 
-          Logger.log(req.variables, `GraphQL Request: ${req.operationName}`);
-          Logger.log(res.data, `GraphQL Response: ${req.operationName}`);
+          Logger.log(`${req.operationName}`, req.variables);
+          Logger.log(`${req.operationName}`, res.data);
           return res;
         },
         context: ({ res }) => ({ res }),

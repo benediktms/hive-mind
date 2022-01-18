@@ -46,6 +46,9 @@ export class AuthResolver {
 
     this.authService.setTokens(context.res, accessToken, refreshToken);
 
+    // const res: Response = context.res;
+    // res.redirect('/me');
+
     return new LoginResponse(user, accessToken, refreshToken);
   }
 
