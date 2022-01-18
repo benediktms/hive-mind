@@ -1,6 +1,6 @@
 import { DataService } from '@grp-org/server-data';
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
-import { Response, Request, CookieOptions } from 'express';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Response, CookieOptions } from 'express';
 import { SALT_LENGTH, SALT_ROUNDS } from '../utils/constants';
 import RegisterDTO from './dto/register.dto';
 import { hash, verify } from 'argon2';
@@ -11,16 +11,17 @@ import { JwtService } from '@nestjs/jwt';
 import { EmailTakenError } from '../utils/email-taken-error';
 import { ConfigService } from '@nestjs/config';
 import { User } from '.prisma/client';
-import { VerifyTokenResponse } from './response/verify-token.response';
 import {
+  AccessToken,
   AccessTokenPayload,
   Cookies,
-  JwtPayload,
+  RefreshToken,
   RefreshTokenPayload,
   TokenExpiration,
 } from '@grp-org/shared';
 import { nanoid } from 'nanoid';
 import LoginResponse from './response/login.response';
+import dayjs from 'dayjs';
 
 @Injectable()
 export class AuthService {
@@ -39,9 +40,9 @@ export class AuthService {
 
     await this.validatePassword(user.passwordHash, password);
 
-    const token = this.signAccessToken(user.id, user.refreshTokenVersion);
+    const { accessToken, refreshToken } = await this.buildTokens(user);
 
-    return new LoginResponse(user, token);
+    return new LoginResponse(user, accessToken, refreshToken);
   }
 
   public async register(input: RegisterDTO) {
@@ -64,7 +65,6 @@ export class AuthService {
       },
     });
 
-    // const token = this.signAccessToken(user.id, user.refreshTokenVersion);
     const { accessToken, refreshToken } = await this.buildTokens(user);
 
     return new RegisterResponse(user, accessToken, refreshToken);
@@ -82,24 +82,18 @@ export class AuthService {
     return user;
   }
 
-  private signAccessToken(userId: number, tokenVersion: number) {
-    const payload: JwtPayload = { userId, tokenVersion };
-
-    const token = this.jwtService.sign(payload, {
-      secret: this.configService.get('jwtSecret'),
-      expiresIn: '15m',
+  private signAccessToken(payload: AccessTokenPayload) {
+    return this.jwtService.sign(payload, {
+      secret: this.configService.get('accessTokenSecret'),
+      expiresIn: TokenExpiration.Access,
       jwtid: nanoid(),
     });
-
-    return token;
   }
 
-  private signRefreshToken(userId: number, tokenVersion: number) {
-    const payload: JwtPayload = { userId, tokenVersion };
-
+  private signRefreshToken(payload: RefreshTokenPayload) {
     return this.jwtService.sign(payload, {
-      secret: this.configService.get('jwtSecret'),
-      expiresIn: '3d',
+      secret: this.configService.get('refreshTokenSecret'),
+      expiresIn: TokenExpiration.Refresh,
       jwtid: nanoid(),
     });
   }
@@ -115,57 +109,86 @@ export class AuthService {
   };
 
   public setTokens(res: Response, accessToken: string, refreshToken?: string) {
-    const accessTokenOptions: CookieOptions = {
+    const accessTokenCookieOptions: CookieOptions = {
       ...this.defaultCookieOptions,
-      maxAge: TokenExpiration.Access,
+      maxAge: TokenExpiration.Access * 1000,
     };
 
-    const refreshTokenOptions: CookieOptions = {
+    const refreshTokenCookieOptions: CookieOptions = {
       ...this.defaultCookieOptions,
-      maxAge: TokenExpiration.Refresh,
+      maxAge: TokenExpiration.Refresh * 1000,
     };
 
-    res.cookie(Cookies.AccessToken, accessToken, accessTokenOptions);
+    res.cookie(Cookies.AccessToken, accessToken, accessTokenCookieOptions);
 
-    if (refreshToken)
-      res.cookie(Cookies.RefreshToken, refreshToken, refreshTokenOptions);
+    if (refreshToken) {
+      res.cookie(Cookies.RefreshToken, refreshToken, refreshTokenCookieOptions);
+    }
   }
 
-  public async verifyAccessToken(req: Request, res: Response): Promise<void> {
-    const token = req.signedCookies[Cookies.AccessToken];
+  public refreshTokens(current: RefreshToken, version: number) {
+    if (version !== current.version) throw new Error('Token revoked');
 
-    if (!token) {
-      res.send(new VerifyTokenResponse(false, ''));
+    const accessPayload: AccessTokenPayload = { userId: current.userId };
+    const accessToken = this.signAccessToken(accessPayload);
+
+    let refreshPayload: RefreshTokenPayload | undefined;
+
+    const expiration = dayjs(current.exp);
+    const now = dayjs();
+    const secondsUntilExpiration = expiration.diff(now, 'seconds');
+
+    if (secondsUntilExpiration < TokenExpiration.RefreshIfLessThan) {
+      refreshPayload = { userId: current.userId, version };
     }
 
-    try {
-      const payload: JwtPayload = this.jwtService.verify(token, {
-        secret: this.configService.get('jwtSecret'),
-      });
+    const refreshToken =
+      refreshPayload && this.signRefreshToken(refreshPayload);
 
-      const user = await this.dataService.user.findUnique({
-        where: { id: payload.userId },
-      });
+    return { accessToken, refreshToken };
+  }
 
-      if (!user) {
-        throw new Error('User not found');
-      }
+  public verifyAccessToken(accessToken: string) {
+    return this.jwtService.verify(
+      accessToken,
+      this.configService.get('accessTokenSecret')
+    ) as AccessToken;
+  }
 
-      if (payload.tokenVersion !== user.refreshTokenVersion) {
-        res.send(new VerifyTokenResponse(false, ''));
-      }
+  public verifyRefreshToken(refreshToken: string) {
+    return this.jwtService.verify(
+      refreshToken,
+      this.configService.get('refreshTokenSecret')
+    ) as RefreshToken;
+  }
 
-      const refreshToken = this.signRefreshToken(
-        user.id,
-        user.refreshTokenVersion
-      );
+  public clearTokens(res: Response) {
+    res.cookie(Cookies.AccessToken, '', {
+      ...this.defaultCookieOptions,
+      maxAge: 0,
+    });
 
-      this.setTokens(res, refreshToken);
+    res.cookie(Cookies.RefreshToken, '', {
+      ...this.defaultCookieOptions,
+      maxAge: 0,
+    });
+  }
 
-      res.send(new VerifyTokenResponse(true, refreshToken));
-    } catch (e) {
-      Logger.error(e);
-    }
+  private async buildTokens(user: User) {
+    const accessTokenPayload: AccessTokenPayload = { userId: user.id };
+    const refreshTokenPayload: RefreshTokenPayload = {
+      userId: user.id,
+      version: user.refreshTokenVersion,
+    };
+
+    const accessToken = this.jwtService.sign(accessTokenPayload, {
+      jwtid: nanoid(),
+    });
+    const refreshToken = this.jwtService.sign(refreshTokenPayload, {
+      jwtid: nanoid(),
+    });
+
+    return { accessToken, refreshToken };
   }
 
   // Use this for password reset and password change
@@ -191,22 +214,5 @@ export class AuthService {
     if (!attemptIsVerified) {
       throw new FailedToAuthenticateError();
     }
-  }
-
-  private async buildTokens(user: User) {
-    const accessTokenPayload: AccessTokenPayload = { userId: user.id };
-    const refreshTokenPayload: RefreshTokenPayload = {
-      userId: user.id,
-      version: user.refreshTokenVersion,
-    };
-
-    const accessToken = this.jwtService.sign(accessTokenPayload, {
-      jwtid: nanoid(),
-    });
-    const refreshToken = this.jwtService.sign(refreshTokenPayload, {
-      jwtid: nanoid(),
-    });
-
-    return { accessToken, refreshToken };
   }
 }

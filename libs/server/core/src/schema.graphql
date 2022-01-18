@@ -8,7 +8,8 @@ input LoginInput {
 }
 
 type LoginResponse {
-  token: String!
+  accessToken: String!
+  refreshToken: String!
   user: User!
 }
 
@@ -17,11 +18,15 @@ type LogoutResponse {
 }
 
 type Mutation {
-  """Allows the user to log in"""
+  """
+  Allows the user to log in
+  """
   login(input: LoginInput!): LoginResponse!
   logout: LogoutResponse!
 
-  """Registers a new User"""
+  """
+  Registers a new User
+  """
   register(input: RegisterInput!): RegisterResponse!
 }
 
