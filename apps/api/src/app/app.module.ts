@@ -19,9 +19,12 @@ import { LoggerModule } from 'nestjs-pino';
         redact: ['password', 'input.password'],
         prettyPrint:
           process.env.NODE_ENV !== 'production'
-            ? { colorize: true, singleLine: true, translateTime: true }
+            ? {
+                colorize: true,
+                singleLine: true,
+                translateTime: true,
+              }
             : false,
-        autoLogging: false,
       },
     }),
   ],
