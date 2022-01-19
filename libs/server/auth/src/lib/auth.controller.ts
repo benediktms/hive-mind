@@ -22,6 +22,7 @@ export class AuthController {
   @Post('refresh_token')
   async refreshToken(@Req() req: Request, @Res() res: Response): Promise<void> {
     Logger.log('refreshToken', 'AuthController');
+    console.log(req.cookies);
 
     try {
       const current = this.authService.verifyRefreshToken(
@@ -44,8 +45,9 @@ export class AuthController {
       res.send();
     } catch (e) {
       this.authService.clearTokens(res);
-      throw new UnauthorizedException('Unauthorized');
     }
+
+    res.end();
   }
 
   @Get('me')
@@ -68,12 +70,7 @@ export class AuthController {
         lastName: user.lastName,
       };
 
-      Logger.log('me', 'AuthController', userRes, token);
-
-      return res.json({
-        user: userRes,
-        token: req.cookies[Cookies.AccessToken],
-      });
+      res.send(userRes);
     } catch (e) {
       throw new UnauthorizedException('Unauthorized');
     }

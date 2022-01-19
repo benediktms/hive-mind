@@ -2,32 +2,26 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import React from 'react';
-import { ApolloProvider } from '@apollo/client';
-import {
-  AuthProvider,
-  useProvideAuth,
-  CurrentUserProvider,
-} from '@grp-org/client-data-access-auth';
-import { createApolloClient } from '@grp-org/client-data-access-gql';
+import { CurrentUserProvider } from '@grp-org/client-data-access-auth';
 
 function CustomApp({ Component, pageProps }: AppProps) {
-  const { getAuthHeaders } = useProvideAuth();
-  const client = createApolloClient(getAuthHeaders());
+  // const { getAuthHeaders } = useProvideAuth();
+  // const client = createApolloClient(getAuthHeaders());
 
   return (
     <>
       <Head>
-        <title>Welcome to web!</title>
+        <title>grp</title>
       </Head>
 
-      <CurrentUserProvider>
-        <AuthProvider>
-          <ApolloProvider client={client}>
-            <ChakraProvider>
-              <Component {...pageProps} />
-            </ChakraProvider>
-          </ApolloProvider>
-        </AuthProvider>
+      <CurrentUserProvider pageProps={pageProps}>
+        {/* <AuthProvider> */}
+        {/* <ApolloProvider client={apolloClient}> */}
+        <ChakraProvider>
+          <Component {...pageProps} />
+        </ChakraProvider>
+        {/* </ApolloProvider> */}
+        {/* </AuthProvider> */}
       </CurrentUserProvider>
     </>
   );

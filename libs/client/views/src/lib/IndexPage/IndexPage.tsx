@@ -1,13 +1,13 @@
 import { Container, Heading, Grid, GridItem } from '@chakra-ui/layout';
 import { Button } from '@chakra-ui/react';
-import { useProvideAuth } from '@grp-org/client-data-access-auth';
+import { useCurrentUser } from '@grp-org/client-data-access-auth';
 import { useLogoutMutation } from '@grp-org/client-data-access-gql';
 import { useRouter } from 'next/router';
 
 export const IndexPage = () => {
   const router = useRouter();
+  const { setUser } = useCurrentUser();
   const [logoutMutation] = useLogoutMutation();
-  const { setToken } = useProvideAuth();
 
   return (
     <Container>
@@ -47,13 +47,24 @@ export const IndexPage = () => {
             // isDisabled={!isAuthenticated()}
             onClick={async () => {
               await logoutMutation();
-              setToken(null);
+              setUser(undefined);
               await router.push('/');
             }}
             w="100%"
             mt={2}
           >
             Logout
+          </Button>
+          <Button
+            colorScheme="purple"
+            // isDisabled={!isAuthenticated()}
+            onClick={async () => {
+              await router.push('/me');
+            }}
+            w="100%"
+            mt={2}
+          >
+            Me
           </Button>
         </GridItem>
       </Grid>

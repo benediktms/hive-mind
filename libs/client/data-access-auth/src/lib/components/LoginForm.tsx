@@ -1,13 +1,13 @@
 import { Container, Heading, useToast } from '@chakra-ui/react';
-import { useProvideAuth } from '../hooks/useProvideAuth';
 import { LoginInput, useLoginMutation } from '@grp-org/client-data-access-gql';
 import { Form, LabeledTextField } from '@grp-org/client-ui-form';
 import { LoginSchema } from '@grp-org/client/validation';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useCurrentUser } from '../context/UserContext';
 
 export const LoginForm = () => {
-  const { setToken } = useProvideAuth();
+  const { setUser } = useCurrentUser();
   const [loginMutation] = useLoginMutation();
   const toast = useToast();
   const router = useRouter();
@@ -19,7 +19,7 @@ export const LoginForm = () => {
       });
 
       if (data) {
-        setToken(data.login.accessToken);
+        setUser(data.login.user);
 
         console.log(data.login.user);
 

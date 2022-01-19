@@ -1,2 +1,2 @@
 export * from './generated/graphql';
-export * from './apollo/createApolloClient';
+export * from './apollo/apolloClient';

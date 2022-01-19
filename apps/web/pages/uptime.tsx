@@ -1,4 +1,4 @@
-import { useUptimeQuery } from '@grp-org/client-data-access-gql';
+import { useUptimeQuery, withApollo } from '@grp-org/client-data-access-gql';
 import Link from 'next/link';
 import React from 'react';
 
@@ -34,4 +34,4 @@ export const Uptime = () => {
   );
 };
 
-export default Uptime;
+export default withApollo({ ssr: false })(Uptime);
