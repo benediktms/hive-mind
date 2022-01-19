@@ -2,19 +2,20 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 
 export type QueryResponse<T> = [error: string | null, data: T | null];
 
-export const refreshTokens = async () => {
-  await axios.post(
-    `${process.env.NEXT_PUBLIC_API_URI}/refresh_token`,
-    undefined,
-    { withCredentials: true }
-  );
-};
 const getError = (error: AxiosError) => {
   if (error.isAxiosError && error.response) {
     return error.response.data;
   }
 
   return 'Unexpected error';
+};
+
+const refreshTokens = async () => {
+  await axios.post(
+    `${process.env.NEXT_PUBLIC_API_URI}/refresh_token`,
+    undefined,
+    { withCredentials: true }
+  );
 };
 
 const handleRequest = async (

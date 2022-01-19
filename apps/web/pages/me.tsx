@@ -12,18 +12,16 @@ export default function Me() {
   const { user, setUser } = useCurrentUser();
   const router = useRouter();
 
+  // TODO: move this up the component tree to set the token for the apollo provider
+  // Investigate how this will have to be handled with the token refresh system
   const getUserAndToken = async () => {
     const [error, data] = await fetcher<UserAndToken>(
       `${process.env.NEXT_PUBLIC_API_URI}/me`
     );
 
-    console.log(data, error);
-
     if (!error && data) {
-      console.log('setting user');
       setUser(data.user);
     } else {
-      console.log('redirecting');
       await router.push('/');
     }
   };
@@ -33,11 +31,12 @@ export default function Me() {
       void getUserAndToken();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [user]);
 
   return (
     <div>
       <h1>Me</h1>
+      {user ? <div>{user.firstName} </div> : <div>Loading...</div>}
     </div>
   );
 }

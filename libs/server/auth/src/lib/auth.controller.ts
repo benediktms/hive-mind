@@ -44,9 +44,7 @@ export class AuthController {
       res.send();
     } catch (e) {
       this.authService.clearTokens(res);
-      const error = new UnauthorizedException('Unauthorized');
-      Logger.log(error);
-      throw error;
+      throw new UnauthorizedException('Unauthorized');
     }
   }
 
@@ -72,16 +70,12 @@ export class AuthController {
 
       Logger.log('me', 'AuthController', userRes, token);
 
-      return res
-        .json({
-          user: userRes,
-          token: req.cookies[Cookies.AccessToken],
-        })
-        .send();
+      return res.json({
+        user: userRes,
+        token: req.cookies[Cookies.AccessToken],
+      });
     } catch (e) {
-      const error = new UnauthorizedException('Unauthorized');
-      Logger.log(error);
-      throw error;
+      throw new UnauthorizedException('Unauthorized');
     }
   }
 }
