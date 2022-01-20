@@ -51,8 +51,8 @@ export const LoginForm = () => {
       <Form
         submitText="Login"
         schema={LoginSchema}
-        initialValues={{ email: '', password: '' }}
-        // initialValues={{ email: 'ben@example.com', password: 'helloworld' }}
+        // initialValues={{ email: '', password: '' }}
+        initialValues={{ email: 'ben@example.com', password: 'helloworld' }}
         onSubmit={handleSubmit}
       >
         <LabeledTextField name="email" label="Email" placeholder="Email" />

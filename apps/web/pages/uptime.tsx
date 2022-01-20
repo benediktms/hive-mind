@@ -1,3 +1,4 @@
+import { WithUser } from '@grp-org/client-data-access-auth';
 import { useUptimeQuery, withApollo } from '@grp-org/client-data-access-gql';
 import Link from 'next/link';
 import React from 'react';
@@ -26,11 +27,11 @@ export const Uptime = () => {
   }
 
   return (
-    <div>
+    <WithUser>
       {data.uptime}
       <br />
       <Link href="/">Home</Link>
-    </div>
+    </WithUser>
   );
 };
 

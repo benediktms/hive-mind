@@ -25,8 +25,8 @@ import { join } from 'path';
         formatResponse: (res, ctx) => {
           const req = ctx.request;
 
-          Logger.log(`${req.operationName}`, req.variables);
-          Logger.log(`${req.operationName}`, res.data);
+          Logger.log(`${req.operationName} Request`, req.variables);
+          Logger.log(`${req.operationName} Response`, res.data);
           return res;
         },
         context: ({ res }) => ({ res }),

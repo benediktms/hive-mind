@@ -2,7 +2,7 @@ import { MockedProvider } from '@apollo/client/testing';
 import { cleanup, render, screen } from '@testing-library/react';
 import { LoginPage } from './LoginPage';
 import '@testing-library/jest-dom';
-import { AuthProvider } from '@grp-org/client-data-access-auth';
+import { CurrentUserProvider } from '@grp-org/client-data-access-auth';
 
 describe('LoginPage ', () => {
   afterEach(() => {
@@ -11,11 +11,11 @@ describe('LoginPage ', () => {
 
   it('should render successfully', async () => {
     render(
-      <AuthProvider>
+      <CurrentUserProvider>
         <MockedProvider>
           <LoginPage />
         </MockedProvider>
-      </AuthProvider>
+      </CurrentUserProvider>
     );
 
     const heading = screen.getByRole('heading');

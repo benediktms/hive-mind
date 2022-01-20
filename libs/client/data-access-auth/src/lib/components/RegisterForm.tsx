@@ -1,5 +1,5 @@
 import { Container, Heading, useToast } from '@chakra-ui/react';
-import { useProvideAuth } from '../hooks/useProvideAuth';
+import { useCurrentUser } from '../context/UserContext';
 import {
   RegisterInput,
   useRegisterMutation,
@@ -10,7 +10,7 @@ import Link from 'next/link';
 
 export const RegisterForm = () => {
   const [registerMutation] = useRegisterMutation();
-  const { setToken } = useProvideAuth();
+  const { setUser } = useCurrentUser();
   const toast = useToast();
 
   const handleSubmit = async (input: RegisterInput) => {
@@ -20,7 +20,7 @@ export const RegisterForm = () => {
       });
 
       if (data) {
-        setToken(data.register.accessToken);
+        setUser(data.register.user);
 
         toast({
           status: 'success',

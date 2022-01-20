@@ -1,3 +1,4 @@
+import { CurrentUser } from '@grp-org/shared';
 import { RequestHandler, rest } from 'msw';
 import { setupServer } from 'msw/node';
 
@@ -14,8 +15,22 @@ export function setupMockServer(
       return res(
         ctx.status(200),
         ctx.json({
-          ok: true,
           accessToken: 'fake-access-token',
+          refreshToken: 'fake-refresh-token',
+        })
+      );
+    }),
+    rest.get(`${apiUrl}/me`, (_req, res, ctx) => {
+      const user: CurrentUser = {
+        email: 'john.doe@example.com',
+        firstName: 'John',
+        lastName: 'Doe',
+      };
+
+      return res(
+        ctx.status(200),
+        ctx.json({
+          user,
         })
       );
     }),

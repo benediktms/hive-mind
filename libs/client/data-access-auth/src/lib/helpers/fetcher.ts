@@ -8,7 +8,7 @@ const getError = (error: AxiosError) => {
     return error.response.data;
   }
 
-  return 'Unexpected error';
+  return error;
 };
 
 const refreshTokens = async () => {

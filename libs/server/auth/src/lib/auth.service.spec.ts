@@ -89,7 +89,8 @@ describe('AuthService', () => {
           password: 'helloworld',
         })
       ).resolves.toEqual<RegisterResponse>({
-        token: 'token',
+        accessToken: 'token',
+        refreshToken: 'token',
         user: expect.objectContaining<RegisterResponse['user']>({
           id: expect.anything(),
           email: user.email,
@@ -111,7 +112,7 @@ describe('AuthService', () => {
       ).resolves.toEqual(
         expect.objectContaining({
           user: expect.objectContaining({ email: 'john-doe@example.com' }),
-          token: 'token',
+          accessToken: 'token',
         })
       );
     });

@@ -24,10 +24,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     `${process.env.NEXT_PUBLIC_API_URI}/me`
   );
 
-  console.log(error);
-
-  if (!user) {
-    return { redirect: { statusCode: 307, destination: '/login' } };
+  if (!user && error) {
+    return { redirect: { statusCode: 307, destination: '/' } };
   }
 
   return {

@@ -10,7 +10,7 @@ const getError = (error: AxiosError) => {
     return error.response.data;
   }
 
-  return 'Unexpected error';
+  return getErrorMessage(error);
 };
 
 const refreshTokens = async (req: IncomingMessage, res: ServerResponse) => {
@@ -37,10 +37,13 @@ const handleRequest = async (
   } catch (error) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if ((error as any)?.response?.status === 401) {
+      console.log(getErrorMessage(error));
+
       try {
         await refreshTokens(req, res);
         return await request();
       } catch (innerError) {
+        console.log(getErrorMessage(innerError));
         getError(innerError as AxiosError);
       }
     }

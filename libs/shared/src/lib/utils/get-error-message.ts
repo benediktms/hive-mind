@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 type ErrorWithMessage = {
   message: string;
 };
@@ -23,6 +25,15 @@ function toErrorWithMessage(maybeError: unknown): ErrorWithMessage {
   }
 }
 
-export function getErrorMessage(error: unknown) {
+export function getErrorMessage(
+  error: unknown,
+  options: { addTimeStamp: boolean } = { addTimeStamp: false }
+) {
+  if (options.addTimeStamp) {
+    const formatedDate = dayjs().format('DD-MM-YYYY HH:mm:ss:SSS');
+
+    return `${formatedDate} - ${toErrorWithMessage(error).message}`;
+  }
+
   return toErrorWithMessage(error).message;
 }

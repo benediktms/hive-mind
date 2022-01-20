@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 
 export const IndexPage = () => {
   const router = useRouter();
-  const { setUser } = useCurrentUser();
+  const { user, setUser } = useCurrentUser();
   const [logoutMutation] = useLogoutMutation();
 
   return (
@@ -17,7 +17,7 @@ export const IndexPage = () => {
         <GridItem>
           <Button
             colorScheme="purple"
-            // isDisabled={isAuthenticated()}
+            isDisabled={!!user}
             onClick={async () => await router.push('/login')}
             w="100%"
           >
@@ -27,7 +27,7 @@ export const IndexPage = () => {
         <GridItem>
           <Button
             colorScheme="purple"
-            // isDisabled={isAuthenticated()}
+            isDisabled={!!user}
             onClick={async () => await router.push('/register')}
             w="100%"
           >
@@ -37,6 +37,7 @@ export const IndexPage = () => {
         <GridItem>
           <Button
             colorScheme="purple"
+            isDisabled={!user}
             onClick={async () => await router.push('/uptime')}
             w="100%"
           >
@@ -44,7 +45,7 @@ export const IndexPage = () => {
           </Button>
           <Button
             colorScheme="purple"
-            // isDisabled={!isAuthenticated()}
+            isDisabled={!user}
             onClick={async () => {
               await logoutMutation();
               setUser(undefined);
@@ -57,7 +58,7 @@ export const IndexPage = () => {
           </Button>
           <Button
             colorScheme="purple"
-            // isDisabled={!isAuthenticated()}
+            isDisabled={!user}
             onClick={async () => {
               await router.push('/me');
             }}
