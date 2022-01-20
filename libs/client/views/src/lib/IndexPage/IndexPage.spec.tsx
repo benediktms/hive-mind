@@ -1,6 +1,6 @@
 import { IndexPage } from './IndexPage';
 import { MockedProvider } from '@apollo/client/testing';
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { CurrentUserProvider } from '@grp-org/client-data-access-auth';
 
@@ -10,15 +10,17 @@ describe('IndexPage', () => {
   });
 
   it('should render successfully', async () => {
-    render(
-      <CurrentUserProvider>
-        <MockedProvider>
-          <IndexPage />
-        </MockedProvider>
-      </CurrentUserProvider>
-    );
+    await waitFor(async () => {
+      render(
+        <CurrentUserProvider>
+          <MockedProvider>
+            <IndexPage />
+          </MockedProvider>
+        </CurrentUserProvider>
+      );
+    });
 
-    const heading = screen.getByRole('heading');
+    const heading = await screen.findByRole('heading');
     expect(heading).toHaveTextContent('index');
   });
 });
