@@ -2,7 +2,6 @@ import { MockedProvider } from '@apollo/client/testing';
 import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import { LoginPage } from './LoginPage';
 import '@testing-library/jest-dom';
-import { CurrentUserProvider } from '@grp-org/client-data-access-auth';
 
 describe('LoginPage ', () => {
   afterEach(() => {
@@ -12,11 +11,9 @@ describe('LoginPage ', () => {
   it('should render successfully', async () => {
     await waitFor(async () => {
       render(
-        <CurrentUserProvider>
-          <MockedProvider>
-            <LoginPage />
-          </MockedProvider>
-        </CurrentUserProvider>
+        <MockedProvider>
+          <LoginPage />
+        </MockedProvider>
       );
     });
 
