@@ -2,14 +2,20 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type CurrentUserResponse {
+  email: String!
+  firstName: String!
+  id: Float!
+  lastName: String!
+}
+
 input LoginInput {
   email: String!
   password: String!
 }
 
 type LoginResponse {
-  token: String!
-  user: User!
+  message: String!
 }
 
 type LogoutResponse {
@@ -30,7 +36,7 @@ type Mutation {
 }
 
 type Query {
-  currentUser: User!
+  currentUser: CurrentUserResponse!
   uptime: Float!
 }
 
@@ -42,7 +48,8 @@ input RegisterInput {
 }
 
 type RegisterResponse {
-  token: String!
+  accessToken: String!
+  refreshToken: String!
   user: User!
 }
 

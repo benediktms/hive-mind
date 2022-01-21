@@ -1,19 +1,24 @@
 import { DataService } from '@grp-org/server-data';
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
-import { Response, Request } from 'express';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Response, CookieOptions } from 'express';
 import { SALT_LENGTH, SALT_ROUNDS } from '../utils/constants';
 import RegisterDTO from './dto/register.dto';
 import { hash, verify } from 'argon2';
 import { randomBytes } from 'crypto';
 import { FailedToAuthenticateError } from '../utils/failed-to-authenticate-error';
-import LoginResponse from './response/register.response';
 import RegisterResponse from './response/register.response';
 import { JwtService } from '@nestjs/jwt';
 import { EmailTakenError } from '../utils/email-taken-error';
 import { ConfigService } from '@nestjs/config';
 import { User } from '.prisma/client';
-import { VerifyTokenResponse } from './response/verify-token.response';
-import { COOKIE_NAME, JwtPayload } from '@grp-org/shared';
+import {
+  AccessToken,
+  AccessTokenPayload,
+  Cookies,
+  RefreshToken,
+  RefreshTokenPayload,
+  TokenExpiration,
+} from '@grp-org/shared';
 import dayjs from 'dayjs';
 
 @Injectable()
@@ -24,6 +29,16 @@ export class AuthService {
     private readonly configService: ConfigService
   ) {}
 
+  public async getUserById(id: number) {
+    const user = await this.dataService.user.findUnique({
+      where: { id },
+    });
+
+    if (!user) throw new Error('User not found');
+
+    return user;
+  }
+
   public async login(email: string, password: string) {
     const user = await this.dataService.user.findUnique({ where: { email } });
 
@@ -33,9 +48,9 @@ export class AuthService {
 
     await this.validatePassword(user.passwordHash, password);
 
-    const token = this.signAccessToken(user.id, user.refreshTokenVersion);
+    const { accessToken, refreshToken } = await this.buildTokens(user);
 
-    return new LoginResponse(user, token);
+    return { accessToken, refreshToken, user };
   }
 
   public async register(input: RegisterDTO) {
@@ -58,9 +73,9 @@ export class AuthService {
       },
     });
 
-    const token = this.signAccessToken(user.id, user.refreshTokenVersion);
+    const { accessToken, refreshToken } = await this.buildTokens(user);
 
-    return new RegisterResponse(user, token);
+    return new RegisterResponse(user, accessToken, refreshToken);
   }
 
   public async validateUser(id: number): Promise<User> {
@@ -75,67 +90,107 @@ export class AuthService {
     return user;
   }
 
-  private signAccessToken(userId: number, tokenVersion: number) {
-    const payload: JwtPayload = { userId, tokenVersion };
+  private signAccessToken(payload: AccessTokenPayload) {
     return this.jwtService.sign(payload, {
-      secret: this.configService.get('jwtSecret'),
-      expiresIn: '15m',
+      secret: this.configService.get('accessTokenSecret'),
+      expiresIn: TokenExpiration.Access,
     });
   }
 
-  private signRefreshToken(userId: number, tokenVersion: number) {
-    const payload: JwtPayload = { userId, tokenVersion };
+  private signRefreshToken(payload: RefreshTokenPayload) {
     return this.jwtService.sign(payload, {
-      secret: this.configService.get('jwtSecret'),
-      expiresIn: '3d',
+      secret: this.configService.get('refreshTokenSecret'),
+      expiresIn: TokenExpiration.Refresh,
     });
   }
 
-  public sendAccessToken(res: Response, token: string) {
-    res.cookie(COOKIE_NAME, token, {
-      httpOnly: true,
-      secure: true,
-      signed: true,
-      expires: dayjs().add(12, 'm').toDate(),
-      // TODO: add domain for next.js SSR to work in prod
-    });
+  private isProd = this.configService.get('environment') === 'production';
+
+  private defaultCookieOptions: CookieOptions = {
+    httpOnly: true,
+    secure: this.isProd,
+    sameSite: this.isProd ? 'strict' : 'lax',
+    domain: this.configService.get('baseDomain') as string,
+    path: '/',
+  };
+
+  public setTokens(res: Response, accessToken: string, refreshToken?: string) {
+    const accessTokenCookieOptions: CookieOptions = {
+      ...this.defaultCookieOptions,
+      maxAge: TokenExpiration.Access * 1000,
+    };
+
+    const refreshTokenCookieOptions: CookieOptions = {
+      ...this.defaultCookieOptions,
+      maxAge: TokenExpiration.Refresh * 1000,
+    };
+
+    res.cookie(Cookies.AccessToken, accessToken, accessTokenCookieOptions);
+
+    if (refreshToken) {
+      res.cookie(Cookies.RefreshToken, refreshToken, refreshTokenCookieOptions);
+    }
   }
 
-  public async verifyAccessToken(
-    req: Request,
-    res: Response
-  ): Promise<Response> {
-    const token = req.signedCookies[COOKIE_NAME];
+  public refreshTokens(current: RefreshToken, version: number) {
+    if (version !== current.version) throw new Error('Token revoked');
 
-    if (!token) {
-      return res.send(new VerifyTokenResponse(false, ''));
+    const accessPayload: AccessTokenPayload = { userId: current.userId };
+    const accessToken = this.signAccessToken(accessPayload);
+
+    let refreshPayload: RefreshTokenPayload | undefined;
+
+    const expiration = dayjs(current.exp);
+    const now = dayjs();
+    const secondsUntilExpiration = now.diff(expiration, 'seconds');
+
+    if (secondsUntilExpiration < TokenExpiration.RefreshIfLessThan) {
+      refreshPayload = { userId: current.userId, version };
     }
 
-    try {
-      const payload: JwtPayload = this.jwtService.verify(token, {
-        secret: this.configService.get('jwtSecret'),
-      });
+    const refreshToken =
+      refreshPayload && this.signRefreshToken(refreshPayload);
 
-      const user = await this.dataService.user.findUnique({
-        where: { id: payload.userId },
-      });
+    return { accessToken, refreshToken };
+  }
 
-      if (!user || payload.tokenVersion !== user.refreshTokenVersion) {
-        return res.send(new VerifyTokenResponse(false, ''));
-      }
+  public verifyAccessToken(accessToken: string) {
+    return this.jwtService.verify(
+      accessToken,
+      this.configService.get('accessTokenSecret')
+    ) as AccessToken;
+  }
 
-      const refreshToken = this.signRefreshToken(
-        user.id,
-        user.refreshTokenVersion
-      );
+  public verifyRefreshToken(refreshToken: string) {
+    return this.jwtService.verify(
+      refreshToken,
+      this.configService.get('refreshTokenSecret')
+    ) as RefreshToken;
+  }
 
-      this.sendAccessToken(res, refreshToken);
+  public clearTokens(res: Response) {
+    res.cookie(Cookies.AccessToken, '', {
+      ...this.defaultCookieOptions,
+      maxAge: 0,
+    });
 
-      return res.send(new VerifyTokenResponse(true, refreshToken));
-    } catch (e) {
-      Logger.error(e);
-      throw e;
-    }
+    res.cookie(Cookies.RefreshToken, '', {
+      ...this.defaultCookieOptions,
+      maxAge: 0,
+    });
+  }
+
+  private async buildTokens(user: User) {
+    const accessTokenPayload: AccessTokenPayload = { userId: user.id };
+    const refreshTokenPayload: RefreshTokenPayload = {
+      userId: user.id,
+      version: user.refreshTokenVersion,
+    };
+
+    const accessToken = this.jwtService.sign(accessTokenPayload);
+    const refreshToken = this.jwtService.sign(refreshTokenPayload);
+
+    return { accessToken, refreshToken };
   }
 
   // Use this for password reset and password change

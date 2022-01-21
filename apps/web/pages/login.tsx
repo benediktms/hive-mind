@@ -1,7 +1,9 @@
-import { LoginForm } from '@grp-org/client-data-access-auth';
+import { withApollo } from '@grp-org/client-data-access-gql';
+import { LoginPage } from '@grp-org/client/views';
+import React from 'react';
 
 export function Login() {
-  return <LoginForm />;
+  return <LoginPage />;
 }
 
-export default Login;
+export default withApollo({ ssr: false })(Login);

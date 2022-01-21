@@ -3,12 +3,13 @@ import { LoginInput, useLoginMutation } from '@grp-org/client-data-access-gql';
 import { Form, LabeledTextField } from '@grp-org/client-ui-form';
 import { LoginSchema } from '@grp-org/client/validation';
 import Link from 'next/link';
-import { useAuthContext } from '../hooks/useAuthContext';
+import { useRouter } from 'next/router';
 
 export const LoginForm = () => {
-  const { setToken } = useAuthContext();
+  // const { setUser } = useCurrentUser();
   const [loginMutation] = useLoginMutation();
   const toast = useToast();
+  const router = useRouter();
 
   const handleSubmit = async (input: LoginInput) => {
     try {
@@ -17,13 +18,13 @@ export const LoginForm = () => {
       });
 
       if (data) {
-        setToken(data.login.token);
-
         toast({
           title: 'Login Successful',
-          description: 'Welcome back!',
+          description: `Welcome back, ${data.login.message}!`,
           status: 'success',
         });
+
+        await router.push('/');
       } else {
         throw errors;
       }
@@ -45,7 +46,8 @@ export const LoginForm = () => {
       <Form
         submitText="Login"
         schema={LoginSchema}
-        initialValues={{ email: '', password: '' }}
+        // initialValues={{ email: '', password: '' }}
+        initialValues={{ email: 'ben@example.com', password: 'helloworld' }}
         onSubmit={handleSubmit}
       >
         <LabeledTextField name="email" label="Email" placeholder="Email" />

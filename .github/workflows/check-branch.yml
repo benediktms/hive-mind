@@ -2,18 +2,21 @@ name: CI - Check Branch
 on: [push]
 
 env:
-  NX_CLOUD_DISTRIBUTED_EXECUTION: true
+  # NX_CLOUD_DISTRIBUTED_EXECUTION: true
+  NEXT_PUBLIC_API_URI: http://example.com
+  DATABASE_URL: postgresql://postgres:postgres@localhost/test?schema=public
 
 jobs:
   check-branch:
     runs-on: ubuntu-latest
-
     services:
       postgres:
         image: postgres:14
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -21,54 +24,51 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
-
-    env:
-      DATABASE_URL: postgresql://postgres:postgres@localhost/test
-
-    if: ${{ github.event_name != 'pull_request' }}
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
       - name: Derive appropriate SHAs for base and head for `nx affected` commands
         uses: nrwl/nx-set-shas@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v2
         with:
           node-version: '16'
-
+          cache: 'yarn'
       - name: Install packages
         run: yarn install --frozen-lockfile
-
-      - name: Migrate DB & generate prisma client
-        run: yarn prisma migrate deploy
-
-      - name: Start agents
-        run: npx nx-cloud start-ci-run
-
+      # - name: Start agents
+      #   run: npx nx-cloud start-ci-run
       - name: Build
         run: npx nx affected --target=build --parallel --max-parallel=3
-
       - name: Lint
         run: npx nx affected --target=lint --parallel --max-parallel=2
-
+      - name: Migrate DB & generate prisma client
+        run: yarn prisma migrate deploy
       - name: Test
         run: npx nx affected --target=test --parallel --max-parallel=2
+      # - name: Seed database for e2e tests
+      #   run: yarn prisma db seed
+      # - name: End-to-end
+      #   run: npx nx affected --target=e2e --parallel --max-parallel=2
+      # - name: Stop agents
+      #   run: npx nx-cloud stop-all-agents
 
-      - name: Stop agents
-        run: npx nx-cloud stop-all-agents
-
-  agents:
-    runs-on: ubuntu-latest
-    name: Agent 1
-    timeout-minutes: 60
-    strategy:
-      matrix:
-        agent: [1, 2, 3]
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: '16'
-      - run: yarn install --frozen-lockfile
-      - name: Start Nx Agent ${{ matrix.agent }}
-        run: npx nx-cloud start-agent
+  # agents:
+  #   env:
+  #     NEXT_PUBLIC_API_URI: http://example.com
+  #     DATABASE_URL: postgresql://postgres:postgres@localhost/test?schema=public
+  #   runs-on: ubuntu-latest
+  #   name: Agent 1
+  #   timeout-minutes: 60
+  #   strategy:
+  #     matrix:
+  #       agent: [1, 2, 3]
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions/setup-node@v2
+  #       with:
+  #         node-version: '16'
+  #         cache: 'yarn'
+  #     - run: yarn install --frozen-lockfile
+  #     - name: Start Nx Agent ${{ matrix.agent }}
+  #       run: npx nx-cloud start-agent

@@ -62,6 +62,7 @@ export function Form<S extends z.ZodType<any, any>>({
                   disabled={submitting || hasValidationErrors}
                   colorScheme="purple"
                   w={fullWidthSubmit ? 'full' : 'auto'}
+                  isLoading={submitting}
                 >
                   {submitText}
                 </Button>

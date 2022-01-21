@@ -4,12 +4,11 @@ import LoginInput from './dto/login.dto';
 import RegisterInput from './dto/register.dto';
 import LoginResponse from './response/login.response';
 import RegisterResponse from './response/register.response';
-import { COOKIE_NAME, GraphQLContext } from '@grp-org/shared';
+import { Cookies, GraphQLContext } from '@grp-org/shared';
 import { UseGuards } from '@nestjs/common';
 import { GraphQLAuthGuard } from './guards/graphql-auth.guard';
-import { CurrentUser } from './decorators/current-user.decorator';
-import User from './models/user';
 import { LogoutResponse } from './response/logout.response';
+import { CurrentUserResponse } from './response/current-user.response';
 
 @Resolver()
 export class AuthResolver {
@@ -22,11 +21,13 @@ export class AuthResolver {
     @Args('input') input: RegisterInput,
     @Context() context: GraphQLContext
   ): Promise<RegisterResponse> {
-    const registerRes = await this.authService.register(input);
+    const { accessToken, refreshToken, user } = await this.authService.register(
+      input
+    );
 
-    this.authService.sendAccessToken(context.res, registerRes.token);
+    this.authService.setTokens(context.res, accessToken, refreshToken);
 
-    return registerRes;
+    return new RegisterResponse(user, accessToken, refreshToken);
   }
 
   @Mutation(() => LoginResponse, {
@@ -36,27 +37,36 @@ export class AuthResolver {
     @Args('input') input: LoginInput,
     @Context() context: GraphQLContext
   ): Promise<LoginResponse> {
-    const loginRes = await this.authService.login(input.email, input.password);
+    const { accessToken, refreshToken, user } = await this.authService.login(
+      input.email,
+      input.password
+    );
 
-    this.authService.sendAccessToken(context.res, loginRes.token);
+    this.authService.setTokens(context.res, accessToken, refreshToken);
 
-    return loginRes;
+    return new LoginResponse(`Welcome back, ${user.firstName}!`);
   }
 
   @Mutation(() => LogoutResponse)
   @UseGuards(GraphQLAuthGuard)
-  public async logout(
-    @CurrentUser() user: User,
-    @Context() context: GraphQLContext
-  ): Promise<LogoutResponse> {
-    context.res.clearCookie(COOKIE_NAME);
+  public logout(@Context() { res }: GraphQLContext): LogoutResponse {
+    this.authService.clearTokens(res);
 
-    return new LogoutResponse('Logged out successfully');
+    return new LogoutResponse('Logged out');
   }
 
-  @Query(() => User)
+  @Query(() => CurrentUserResponse)
   @UseGuards(GraphQLAuthGuard)
-  public async currentUser(@CurrentUser() user: User): Promise<User> {
-    return user;
+  public async currentUser(
+    @Context() context: GraphQLContext
+  ): Promise<CurrentUserResponse> {
+    const { cookies } = context.req;
+    const token: string = cookies[Cookies.AccessToken];
+    const accessToken = this.authService.verifyAccessToken(token);
+
+    const { id, email, firstName, lastName } =
+      await this.authService.getUserById(accessToken.userId);
+
+    return new CurrentUserResponse(id, email, firstName, lastName);
   }
 }

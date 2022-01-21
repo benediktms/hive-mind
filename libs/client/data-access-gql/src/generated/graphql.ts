@@ -21,6 +21,14 @@ export type Scalars = {
   Float: number;
 };
 
+export type CurrentUserResponse = {
+  __typename?: 'CurrentUserResponse';
+  email: Scalars['String'];
+  firstName: Scalars['String'];
+  id: Scalars['Float'];
+  lastName: Scalars['String'];
+};
+
 export type LoginInput = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -28,8 +36,7 @@ export type LoginInput = {
 
 export type LoginResponse = {
   __typename?: 'LoginResponse';
-  token: Scalars['String'];
-  user: User;
+  message: Scalars['String'];
 };
 
 export type LogoutResponse = {
@@ -56,7 +63,7 @@ export type MutationRegisterArgs = {
 
 export type Query = {
   __typename?: 'Query';
-  currentUser: User;
+  currentUser: CurrentUserResponse;
   uptime: Scalars['Float'];
 };
 
@@ -69,7 +76,8 @@ export type RegisterInput = {
 
 export type RegisterResponse = {
   __typename?: 'RegisterResponse';
-  token: Scalars['String'];
+  accessToken: Scalars['String'];
+  refreshToken: Scalars['String'];
   user: User;
 };
 
@@ -87,17 +95,7 @@ export type LoginMutationVariables = Exact<{
 
 export type LoginMutation = {
   __typename?: 'Mutation';
-  login: {
-    __typename?: 'LoginResponse';
-    token: string;
-    user: {
-      __typename?: 'User';
-      id: number;
-      firstName: string;
-      lastName: string;
-      email: string;
-    };
-  };
+  login: { __typename?: 'LoginResponse'; message: string };
 };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never }>;
@@ -115,7 +113,6 @@ export type RegisterMutation = {
   __typename?: 'Mutation';
   register: {
     __typename?: 'RegisterResponse';
-    token: string;
     user: {
       __typename?: 'User';
       id: number;
@@ -131,7 +128,8 @@ export type CurrentUserQueryVariables = Exact<{ [key: string]: never }>;
 export type CurrentUserQuery = {
   __typename?: 'Query';
   currentUser: {
-    __typename?: 'User';
+    __typename?: 'CurrentUserResponse';
+    id: number;
     email: string;
     firstName: string;
     lastName: string;
@@ -145,13 +143,7 @@ export type UptimeQuery = { __typename?: 'Query'; uptime: number };
 export const LoginDocument = gql`
   mutation Login($input: LoginInput!) {
     login(input: $input) {
-      token
-      user {
-        id
-        firstName
-        lastName
-        email
-      }
+      message
     }
   }
 `;
@@ -244,7 +236,6 @@ export type LogoutMutationOptions = Apollo.BaseMutationOptions<
 export const RegisterDocument = gql`
   mutation Register($input: RegisterInput!) {
     register(input: $input) {
-      token
       user {
         id
         email
@@ -297,6 +288,7 @@ export type RegisterMutationOptions = Apollo.BaseMutationOptions<
 export const CurrentUserDocument = gql`
   query CurrentUser {
     currentUser {
+      id
       email
       firstName
       lastName

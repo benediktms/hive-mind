@@ -8,5 +8,8 @@
   "video": true,
   "videosFolder": "../../dist/cypress/apps/web-e2e/videos",
   "screenshotsFolder": "../../dist/cypress/apps/web-e2e/screenshots",
-  "chromeWebSecurity": false
+  "chromeWebSecurity": false,
+  "env": {
+    "apiUrl": "http://localhost:3001"
+  }
 }
