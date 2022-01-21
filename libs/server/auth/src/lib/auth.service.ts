@@ -19,7 +19,6 @@ import {
   RefreshTokenPayload,
   TokenExpiration,
 } from '@grp-org/shared';
-import LoginResponse from './response/login.response';
 import dayjs from 'dayjs';
 
 @Injectable()
@@ -29,6 +28,16 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService
   ) {}
+
+  public async getUserById(id: number) {
+    const user = await this.dataService.user.findUnique({
+      where: { id },
+    });
+
+    if (!user) throw new Error('User not found');
+
+    return user;
+  }
 
   public async login(email: string, password: string) {
     const user = await this.dataService.user.findUnique({ where: { email } });
@@ -41,7 +50,7 @@ export class AuthService {
 
     const { accessToken, refreshToken } = await this.buildTokens(user);
 
-    return new LoginResponse(user, accessToken, refreshToken);
+    return { accessToken, refreshToken, user };
   }
 
   public async register(input: RegisterDTO) {

@@ -4,10 +4,9 @@ import { Form, LabeledTextField } from '@grp-org/client-ui-form';
 import { LoginSchema } from '@grp-org/client/validation';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useCurrentUser } from '../context/UserContext';
 
 export const LoginForm = () => {
-  const { setUser } = useCurrentUser();
+  // const { setUser } = useCurrentUser();
   const [loginMutation] = useLoginMutation();
   const toast = useToast();
   const router = useRouter();
@@ -19,13 +18,9 @@ export const LoginForm = () => {
       });
 
       if (data) {
-        setUser(data.login.user);
-
-        console.log(data.login.user);
-
         toast({
           title: 'Login Successful',
-          description: `Welcome back, ${data.login.user.firstName}!`,
+          description: `Welcome back, ${data.login.message}!`,
           status: 'success',
         });
 
@@ -51,8 +46,8 @@ export const LoginForm = () => {
       <Form
         submitText="Login"
         schema={LoginSchema}
-        initialValues={{ email: '', password: '' }}
-        // initialValues={{ email: 'ben@example.com', password: 'helloworld' }}
+        // initialValues={{ email: '', password: '' }}
+        initialValues={{ email: 'ben@example.com', password: 'helloworld' }}
         onSubmit={handleSubmit}
       >
         <LabeledTextField name="email" label="Email" placeholder="Email" />

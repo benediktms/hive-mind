@@ -4,12 +4,11 @@ import LoginInput from './dto/login.dto';
 import RegisterInput from './dto/register.dto';
 import LoginResponse from './response/login.response';
 import RegisterResponse from './response/register.response';
-import { GraphQLContext } from '@grp-org/shared';
+import { Cookies, GraphQLContext } from '@grp-org/shared';
 import { UseGuards } from '@nestjs/common';
 import { GraphQLAuthGuard } from './guards/graphql-auth.guard';
-import { CurrentUser } from './decorators/current-user.decorator';
-import User from './models/user';
 import { LogoutResponse } from './response/logout.response';
+import { CurrentUserResponse } from './response/current-user.response';
 
 @Resolver()
 export class AuthResolver {
@@ -28,7 +27,6 @@ export class AuthResolver {
 
     this.authService.setTokens(context.res, accessToken, refreshToken);
 
-    // context.res.redirect('/me');
     return new RegisterResponse(user, accessToken, refreshToken);
   }
 
@@ -46,25 +44,29 @@ export class AuthResolver {
 
     this.authService.setTokens(context.res, accessToken, refreshToken);
 
-    // const res: Response = context.res;
-    // res.redirect('/me');
-
-    return new LoginResponse(user, accessToken, refreshToken);
+    return new LoginResponse(`Welcome back, ${user.firstName}!`);
   }
 
   @Mutation(() => LogoutResponse)
   @UseGuards(GraphQLAuthGuard)
-  public async logout(
-    @Context() context: GraphQLContext
-  ): Promise<LogoutResponse> {
-    this.authService.clearTokens(context.res);
+  public logout(@Context() { res }: GraphQLContext): LogoutResponse {
+    this.authService.clearTokens(res);
 
-    return new LogoutResponse('Logged out successfully');
+    return new LogoutResponse('Logged out');
   }
 
-  @Query(() => User)
+  @Query(() => CurrentUserResponse)
   @UseGuards(GraphQLAuthGuard)
-  public async currentUser(@CurrentUser() user: User): Promise<User> {
-    return user;
+  public async currentUser(
+    @Context() context: GraphQLContext
+  ): Promise<CurrentUserResponse> {
+    const { cookies } = context.req;
+    const token: string = cookies[Cookies.AccessToken];
+    const accessToken = this.authService.verifyAccessToken(token);
+
+    const { id, email, firstName, lastName } =
+      await this.authService.getUserById(accessToken.userId);
+
+    return new CurrentUserResponse(id, email, firstName, lastName);
   }
 }

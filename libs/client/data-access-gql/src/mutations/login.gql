@@ -1,12 +1,5 @@
 mutation Login($input: LoginInput!) {
   login(input: $input) {
-    accessToken
-    refreshToken
-    user {
-      id
-      firstName
-      lastName
-      email
-    }
+    message
   }
 }

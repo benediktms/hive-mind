@@ -1,14 +1,7 @@
 import { Response } from 'express';
-import {
-  Controller,
-  Get,
-  Logger,
-  Post,
-  Res,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Controller, Logger, Post, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { Cookies, CurrentUser } from '@grp-org/shared';
+import { Cookies } from '@grp-org/shared';
 import { DataService } from '@grp-org/server-data';
 import { ReqCookies } from './decorators/cookies.decorator';
 
@@ -48,32 +41,5 @@ export class AuthController {
     }
 
     res.end();
-  }
-
-  @Get('me')
-  async me(
-    @ReqCookies(Cookies.AccessToken) token: string,
-    @Res() res: Response
-  ) {
-    Logger.log('me', 'AuthController');
-    try {
-      const accessToken = this.authService.verifyAccessToken(token);
-
-      const user = await this.dataService.user.findUnique({
-        where: { id: accessToken.userId },
-      });
-
-      if (!user) throw new Error('User not found');
-
-      const userRes: CurrentUser = {
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-      };
-
-      res.send(userRes);
-    } catch (e) {
-      throw new UnauthorizedException('Unauthorized');
-    }
   }
 }

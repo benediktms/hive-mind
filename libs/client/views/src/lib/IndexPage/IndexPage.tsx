@@ -1,13 +1,16 @@
 import { Container, Heading, Grid, GridItem } from '@chakra-ui/layout';
 import { Button } from '@chakra-ui/react';
-import { useCurrentUser } from '@grp-org/client-data-access-auth';
-import { useLogoutMutation } from '@grp-org/client-data-access-gql';
+import {
+  useCurrentUserQuery,
+  useLogoutMutation,
+} from '@grp-org/client-data-access-gql';
 import { useRouter } from 'next/router';
 
 export const IndexPage = () => {
   const router = useRouter();
-  const { user, setUser } = useCurrentUser();
-  const [logoutMutation] = useLogoutMutation();
+  const [logoutMutation, { loading: logoutLoding }] = useLogoutMutation();
+  const { data, error } = useCurrentUserQuery();
+  const isAuthenticated: boolean = !!data && !error;
 
   return (
     <Container>
@@ -17,7 +20,7 @@ export const IndexPage = () => {
         <GridItem>
           <Button
             colorScheme="purple"
-            isDisabled={!!user}
+            isDisabled={isAuthenticated}
             onClick={async () => await router.push('/login')}
             w="100%"
           >
@@ -27,7 +30,7 @@ export const IndexPage = () => {
         <GridItem>
           <Button
             colorScheme="purple"
-            isDisabled={!!user}
+            isDisabled={isAuthenticated}
             onClick={async () => await router.push('/register')}
             w="100%"
           >
@@ -37,7 +40,7 @@ export const IndexPage = () => {
         <GridItem>
           <Button
             colorScheme="purple"
-            isDisabled={!user}
+            isDisabled={!isAuthenticated}
             onClick={async () => await router.push('/uptime')}
             w="100%"
           >
@@ -45,11 +48,12 @@ export const IndexPage = () => {
           </Button>
           <Button
             colorScheme="purple"
-            isDisabled={!user}
+            isDisabled={!isAuthenticated}
+            isLoading={logoutLoding}
             onClick={async () => {
               await logoutMutation();
-              setUser(undefined);
-              await router.push('/');
+              await router.replace('/');
+              window.location.reload();
             }}
             w="100%"
             mt={2}
@@ -58,7 +62,7 @@ export const IndexPage = () => {
           </Button>
           <Button
             colorScheme="purple"
-            isDisabled={!user}
+            isDisabled={!isAuthenticated}
             onClick={async () => {
               await router.push('/me');
             }}

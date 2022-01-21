@@ -2,8 +2,6 @@ import { HttpLink, ApolloClient, InMemoryCache } from '@apollo/client';
 import { NextPageContext } from 'next';
 import { createWithApollo } from './createWithApollo';
 
-export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__';
-
 const isServer = typeof window === 'undefined';
 
 export const createApolloClient = (ctx: NextPageContext) => {

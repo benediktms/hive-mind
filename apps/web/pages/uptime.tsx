@@ -4,19 +4,23 @@ import Link from 'next/link';
 import React from 'react';
 
 export const Uptime = () => {
-  const { data, loading, error } = useUptimeQuery();
+  const {
+    data: uptimeData,
+    loading: loadingUptime,
+    error: uptimeError,
+  } = useUptimeQuery();
 
-  if (loading) {
+  if (loadingUptime) {
     return <div>Loading...</div>;
-  } else if (error) {
+  } else if (uptimeError) {
     return (
       <div>
-        Error: {error.message}
+        Error: {uptimeError.message}
         <br />
         <Link href="/">Home</Link>
       </div>
     );
-  } else if (!data) {
+  } else if (!uptimeData) {
     return (
       <div>
         No data
@@ -27,12 +31,20 @@ export const Uptime = () => {
   }
 
   return (
-    <WithUser>
-      {data.uptime}
+    <>
+      {uptimeData.uptime}
       <br />
       <Link href="/">Home</Link>
+    </>
+  );
+};
+
+const OuterUptime = () => {
+  return (
+    <WithUser>
+      <Uptime />
     </WithUser>
   );
 };
 
-export default withApollo({ ssr: false })(Uptime);
+export default withApollo({ ssr: false })(OuterUptime);

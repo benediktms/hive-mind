@@ -1,5 +1,4 @@
 import { Container, Heading, useToast } from '@chakra-ui/react';
-import { useCurrentUser } from '../context/UserContext';
 import {
   RegisterInput,
   useRegisterMutation,
@@ -10,7 +9,6 @@ import Link from 'next/link';
 
 export const RegisterForm = () => {
   const [registerMutation] = useRegisterMutation();
-  const { setUser } = useCurrentUser();
   const toast = useToast();
 
   const handleSubmit = async (input: RegisterInput) => {
@@ -20,8 +18,6 @@ export const RegisterForm = () => {
       });
 
       if (data) {
-        setUser(data.register.user);
-
         toast({
           status: 'success',
           title: 'Account creation successfull',

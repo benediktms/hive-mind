@@ -1,20 +1,11 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import User from '../models/user';
 
 @ObjectType()
 export default class LoginResponse {
-  constructor(user: User, accessToken: string, refreshToken: string) {
-    this.user = user;
-    this.accessToken = accessToken;
-    this.refreshToken = refreshToken;
+  constructor(message: string) {
+    this.message = message;
   }
 
-  @Field(() => User)
-  user: User;
-
-  @Field()
-  accessToken: string;
-
-  @Field()
-  refreshToken: string;
+  @Field(() => String)
+  message: string;
 }
