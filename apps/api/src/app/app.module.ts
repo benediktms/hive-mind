@@ -16,15 +16,18 @@ import { LoggerModule } from 'nestjs-pino';
     LoggerModule.forRoot({
       pinoHttp: {
         level: process.env.NODE_ENV !== 'production' ? 'debug' : 'info',
-        redact: ['password', 'input.password'],
-        prettyPrint:
+        redact: ['password', 'context[*].password'],
+        transport:
           process.env.NODE_ENV !== 'production'
             ? {
-                colorize: true,
-                singleLine: true,
-                translateTime: true,
+                target: 'pino-pretty',
+                options: {
+                  colorize: true,
+                  singleLine: true,
+                  translateTime: 'dd-mm-yyyy HH:mm:ss:ms',
+                },
               }
-            : false,
+            : undefined,
       },
     }),
   ],
