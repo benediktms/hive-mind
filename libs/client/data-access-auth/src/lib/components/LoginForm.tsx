@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 export const LoginForm = () => {
-  // const { setUser } = useCurrentUser();
   const [loginMutation] = useLoginMutation();
   const toast = useToast();
   const router = useRouter();

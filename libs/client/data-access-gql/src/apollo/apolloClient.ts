@@ -5,15 +5,12 @@ import { createWithApollo } from './createWithApollo';
 const isServer = typeof window === 'undefined';
 
 export const createApolloClient = (ctx: NextPageContext) => {
-  const graphqlEndpoint = new URL(
-    '/graphql',
-    process.env.NEXT_PUBLIC_API_URI || 'http://localhost:3001'
-  );
+  const graphqlEndpoint = new URL('/graphql', process.env.NEXT_PUBLIC_API_URI);
 
   const link = new HttpLink({
     uri: graphqlEndpoint.href,
     headers: {
-      cookie: (isServer ? ctx?.req?.headers.cookie : undefined) || '',
+      Cookie: (isServer ? ctx?.req?.headers.cookie : undefined) || '',
     },
     credentials: 'include',
   });
