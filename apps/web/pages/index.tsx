@@ -6,4 +6,4 @@ export function Index() {
   return <IndexPage />;
 }
 
-export default withApollo({ ssr: false })(Index);
+export default withApollo(Index);

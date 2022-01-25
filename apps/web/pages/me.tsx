@@ -20,4 +20,4 @@ function Me() {
   );
 }
 
-export default withApollo({ ssr: false })(Me);
+export default withApollo(Me);

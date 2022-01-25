@@ -6,4 +6,4 @@ export function Login() {
   return <LoginPage />;
 }
 
-export default withApollo({ ssr: false })(Login);
+export default withApollo(Login);

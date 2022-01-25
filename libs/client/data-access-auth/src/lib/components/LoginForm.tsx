@@ -28,6 +28,7 @@ export const LoginForm = () => {
         throw errors;
       }
     } catch (e) {
+      console.log(e);
       toast({
         title: 'Login Failed',
         description: (e as Error).message,

@@ -47,4 +47,4 @@ const OuterUptime = () => {
   );
 };
 
-export default withApollo({ ssr: false })(OuterUptime);
+export default withApollo(OuterUptime);

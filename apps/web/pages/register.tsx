@@ -6,4 +6,4 @@ export function Register() {
   return <RegisterPage />;
 }
 
-export default withApollo({ ssr: false })(Register);
+export default withApollo(Register);
