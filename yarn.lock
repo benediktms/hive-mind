@@ -8649,9 +8649,9 @@ fast-levenshtein@^2.0.6, fast-levenshtein@~2.0.6:
   integrity sha1-PYpcZog6FqMMqGQ+hR8Zuqd5eRc=
 
 fast-redact@^3.0.0:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/fast-redact/-/fast-redact-3.0.2.tgz#c940ba7162dde3aeeefc522926ae8c5231412904"
-  integrity sha512-YN+CYfCVRVMUZOUPeinHNKgytM1wPI/C/UCLEi56EsY2dwwvI00kIJHJoI7pMVqGoMew8SMZ2SSfHKHULHXDsg==
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/fast-redact/-/fast-redact-3.1.0.tgz#37c26cda9cab70bc04393f7ba1feb2d176da6c6b"
+  integrity sha512-dir8LOnvialLxiXDPESMDHGp82CHi6ZEYTVkcvdn5d7psdv9ZkkButXrOeXST4aqreIRR+N7CYlsrwFuorurVg==
 
 fast-safe-stringify@2.1.1, fast-safe-stringify@^2.0.7:
   version "2.1.1"
@@ -12496,9 +12496,9 @@ pino-abstract-transport@^0.5.0, pino-abstract-transport@v0.5.0:
     split2 "^4.0.0"
 
 pino-http@^6.5.0:
-  version "6.5.0"
-  resolved "https://registry.yarnpkg.com/pino-http/-/pino-http-6.5.0.tgz#2211e7cd9f464c61d5200cd0fe55f326715cf013"
-  integrity sha512-kIge9LCb5RvwyfWWVTBfQqU5kdwsh5ahDQ7ojbePujR4bctD5zeLPnGeS0Qpk14ZgobsmoQRzdU5/30Ny9LjWA==
+  version "6.6.0"
+  resolved "https://registry.yarnpkg.com/pino-http/-/pino-http-6.6.0.tgz#d0a1deacada8c93327fdaa48f5bdc94bc43d3407"
+  integrity sha512-PlItaK2MLpoIMLEcClhfb1VQk/o6fKppINl5s6sPE/4rvufkdO3kCSs/92EwrBsB1yssRCQqDV+w1xpYuPVnjg==
   dependencies:
     fast-url-parser "^1.1.3"
     get-caller-file "^2.0.5"
@@ -12506,9 +12506,9 @@ pino-http@^6.5.0:
     pino-std-serializers "^5.0.0"
 
 pino-pretty@^7.5.0:
-  version "7.5.0"
-  resolved "https://registry.yarnpkg.com/pino-pretty/-/pino-pretty-7.5.0.tgz#d3b7219b018af6a92cf1a991681d6258ad7a1a84"
-  integrity sha512-vhGvWhb8SZcmO/q8G0NyWTJ6UTfjHzIzHd6kC5Ob8UJH3FIP6f0nJ5+KglmThYTJXjGaaOGe06ulNrNDohCneQ==
+  version "7.5.1"
+  resolved "https://registry.yarnpkg.com/pino-pretty/-/pino-pretty-7.5.1.tgz#4614b8c1077b718428c5a630749c905247951693"
+  integrity sha512-xEOUJiokdBGcZ9d0v7OY6SqEp+rrVH2drE3bHOUsK8elw44eh9V83InZqeL1dFwgD1IDnd6crUoec3hIXxfdBQ==
   dependencies:
     args "^5.0.1"
     colorette "^2.0.7"
@@ -12529,14 +12529,14 @@ pino-std-serializers@^4.0.0:
   integrity sha512-cK0pekc1Kjy5w9V2/n+8MkZwusa6EyyxfeQCB799CQRhRt/CqYKiWs5adeu8Shve2ZNffvfC/7J64A2PJo1W/Q==
 
 pino-std-serializers@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/pino-std-serializers/-/pino-std-serializers-5.0.0.tgz#ad2a5b9b332efba2cedb4d16d0c2f31ea792107e"
-  integrity sha512-YC5Lv+nNxY51oicb/t8VX/sA3dnecCXeQ7heir+H+c4fbg3LD65NFdrfP3Y2ufR0Y/EYbEs5UDxHIB9NwCmYyQ==
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/pino-std-serializers/-/pino-std-serializers-5.1.0.tgz#2c5a614b0d486505a140c22904431cfaed4a876d"
+  integrity sha512-BlNiiaqALYzQVLDsyRRfb/s/PjxzO7BjfVJo0P9JQEtr995l0A6RFHVLmPZXaGg3v06AC26dpCixUibpwrbWrA==
 
 pino@^7.5.0:
-  version "7.6.3"
-  resolved "https://registry.yarnpkg.com/pino/-/pino-7.6.3.tgz#47841acd2b83d2b0c929966433a5b4abd7299f8e"
-  integrity sha512-TCUDiN0QmzruJ5UE4mIFkTcfCSROV7IVRp5SEUH77UnjDHbeoFntj9jQexvYZhCHp1yhjYCH6vZ8rV85L04KaA==
+  version "7.6.4"
+  resolved "https://registry.yarnpkg.com/pino/-/pino-7.6.4.tgz#f82421fd7a16d82a70b398e1687c4bd86ae48db2"
+  integrity sha512-ktibPg3ttWONxYQ2Efk1zYbIvofD5zdd/ReoujK84ggEp0REflb9TsXavSjt8u1CdT2mMJe9QQ3ZpyOQxUKipA==
   dependencies:
     fast-redact "^3.0.0"
     on-exit-leak-free "^0.2.0"
@@ -14131,17 +14131,10 @@ sockjs@^0.3.21:
     uuid "^8.3.2"
     websocket-driver "^0.7.4"
 
-sonic-boom@^2.2.0:
+sonic-boom@^2.2.0, sonic-boom@^2.2.1:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/sonic-boom/-/sonic-boom-2.6.0.tgz#8786fc78be07c18a90381acd816d1d4afe3537a2"
   integrity sha512-6xYZFRmDEtxGqfOKcDQ4cPLrNa0SPEDI+wlzDAHowXE6YV42NeXqg9mP2KkiM8JVu3lHfZ2iQKYlGOz+kTpphg==
-  dependencies:
-    atomic-sleep "^1.0.0"
-
-sonic-boom@^2.2.1:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/sonic-boom/-/sonic-boom-2.5.0.tgz#269c62cc2255705ab22f3df7c27cafe9b65bac1a"
-  integrity sha512-zqxF6/LwJRn/twgva2GzabvBh2TeSEzstfnZ44kr0nB7+tFJJbixMlm4VUH/1FPjTf0sHQePoH8TlkfYNvXSPA==
   dependencies:
     atomic-sleep "^1.0.0"
 
@@ -14749,9 +14742,9 @@ text-table@^0.2.0:
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
 
 thread-stream@^0.13.0:
-  version "0.13.0"
-  resolved "https://registry.yarnpkg.com/thread-stream/-/thread-stream-0.13.0.tgz#c68054bdea250c5d8d400caa3233a150d5461cca"
-  integrity sha512-kTMZeX4Dzlb1zZ00/01aerGaTw2i8NE4sWF0TvF1uXewRhCiUjCvatQkvxIvFqauWG2ADFS2Wpd3qBeYL9i3dg==
+  version "0.13.1"
+  resolved "https://registry.yarnpkg.com/thread-stream/-/thread-stream-0.13.1.tgz#724e4c6ebaf6f5752a5dce54bef9153ecfdcb6df"
+  integrity sha512-+KNCqNxOSwYfXLtCIRDKQq29x9jvqnOFjYCPdB38sf4pT3QanPSNc8vRqMj+Q3z4tYIctb5opNZrMK/GwmgsAQ==
   dependencies:
     real-require "^0.1.0"
 
