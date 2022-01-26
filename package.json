@@ -14,7 +14,7 @@
     "lint": "nx affected --target=lint --parallel",
     "format": "nx format --write",
     "prepare": "husky install",
-    "heroku-postbuild": "nx build",
+    "heroku-postbuild": "nx run api:build:production",
     "prisma:migrate": "npx prisma migrate dev --name",
     "prisma:migrate:deploy": "yarn prisma migrate deploy",
     "prisma:generate": "npx prisma generate",
