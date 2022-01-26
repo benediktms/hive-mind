@@ -1,0 +1,54 @@
+{
+  "environments": [
+    {
+      "id": "production",
+      "name": "Production",
+      "region": "us-west-2",
+      "source": {
+        "branch": "prod"
+      },
+      "services": [
+        {
+          "id": "grp-org-nestjs-server",
+          "name": "grp-org-nestjs-server",
+          "type": "fargate",
+          "cpu": 0.25,
+          "memory": 512,
+          "minInstances": 1,
+          "maxInstances": 1,
+          "buildCommand": "yarn nx run api:build:production",
+          "startCommand": "yarn nx run api:serve",
+          "envVariables": {
+            "CLIENT_URL": { "fromParameterStore": "CLIENT_URL" },
+            "ANON_KEY": { "fromParameterStore": "ANON_KEY" },
+            "SERVICE_KEY": { "fromParameterStore": "SERVICE_KEY" },
+            "BASE_DOMAIN": { "fromParameterStore": "BASE_DOMAIN" },
+            "ACCESS_TOKEN_SECRET": {
+              "fromParameterStore": "ACCESS_TOKEN_SECRET"
+            },
+            "REFRESH_TOKEN_SECRET": {
+              "fromParameterStore": "REFRESH_TOKEN_SECRET"
+            },
+            "DATABASE_URL": { "fromParameterStore": "DATABASE_URL" }
+          }
+        },
+        {
+          "id": "grp-org-nextjs-client",
+          "name": "grp-org-nextjs-client",
+          "type": "fargate",
+          "cpu": 0.25,
+          "memory": 512,
+          "minInstances": 1,
+          "maxInstances": 1,
+          "buildCommand": "yarn nx run web:build:production",
+          "startCommand": "yarn nx run web:serve",
+          "envVariables": {
+            "NEXT_PUBLIC_API_URI": {
+              "fromParameterStore": "NEXT_PUBLIC_API_URI"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
