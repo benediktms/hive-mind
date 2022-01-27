@@ -1,2 +1,2 @@
 release: npx prisma migrate deploy
-web: node dist/apps/api/main
+web: yarn start:api
