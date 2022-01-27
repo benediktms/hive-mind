@@ -16,8 +16,8 @@
           "memory": 512,
           "minInstances": 1,
           "maxInstances": 1,
-          "buildCommand": "yarn nx run api:build:production",
-          "startCommand": "yarn nx run api:serve",
+          "buildCommand": "yarn build:api:prod",
+          "startCommand": "yarn start:api",
           "envVariables": {
             "CLIENT_URL": { "fromParameterStore": "CLIENT_URL" },
             "ANON_KEY": { "fromParameterStore": "ANON_KEY" },
@@ -40,8 +40,8 @@
           "memory": 512,
           "minInstances": 1,
           "maxInstances": 1,
-          "buildCommand": "yarn nx run web:build:production",
-          "startCommand": "yarn nx run web:serve",
+          "buildCommand": "yarn build:web:prod",
+          "startCommand": "yarn start:web",
           "envVariables": {
             "NEXT_PUBLIC_API_URI": {
               "fromParameterStore": "NEXT_PUBLIC_API_URI"

@@ -9,6 +9,8 @@
     "start:api": "nx run api:serve",
     "start:web": "nx run web:serve",
     "build": "nx affected --target=build --parallel",
+    "build:api:prod": "nx run api:build:production",
+    "build:web:prod": "nx run web:build:production",
     "test": "dotenv -e .env.test -- yarn test:db",
     "test:e2e": "nx e2e web-e2e --headed",
     "lint": "nx affected --target=lint --parallel",
