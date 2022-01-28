@@ -1,5 +1,5 @@
 import { Logger, Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { configuration } from './config/configuration';
 import { ConfigSchema } from './config/validation';
 import { GraphQLModule } from '@nestjs/graphql';
@@ -13,28 +13,22 @@ import { join } from 'path';
       load: [configuration],
       validate: (configuration) => ConfigSchema.parse(configuration),
     }),
-    GraphQLModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        autoSchemaFile: join(
-          process.cwd(),
-          '/libs/server/core/src/schema.graphql'
-        ),
-        sortSchema: true,
-        playground: true,
-        formatResponse: (res, ctx) => {
-          const req = ctx.request;
+    GraphQLModule.forRoot({
+      autoSchemaFile: join(
+        process.cwd(),
+        '/libs/server/core/src/schema.graphql'
+      ),
+      sortSchema: true,
+      playground: true,
+      formatResponse: (res, ctx) => {
+        const req = ctx.request;
 
-          Logger.log(`${req.operationName} Request`, req.variables);
-          Logger.log(`${req.operationName} Response`, res.data);
-          return res;
-        },
-        context: ({ res }) => ({ res }),
-        cors: {
-          credentials: true,
-          origin: configService.get('clientUrl'),
-        },
-      }),
+        Logger.log(`${req.operationName} Request`, req.variables);
+        Logger.log(`${req.operationName} Response`, res.data);
+        return res;
+      },
+      context: ({ res }) => ({ res }),
+      cors: false,
     }),
   ],
   controllers: [],
