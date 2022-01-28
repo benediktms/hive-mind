@@ -1,4 +1,4 @@
-# GrpOrg
+# Hive Mind
 [![CI - Check Branch](https://github.com/benediktms/grp-org/actions/workflows/check-branch.yml/badge.svg?branch=main)](https://github.com/benediktms/grp-org/actions/workflows/check-branch.yml)
 ## Setup
 To set this workspace up you will need to create an `.env` and an `.env.test`, as well as an `.env.local` file in `apps/api/`.
