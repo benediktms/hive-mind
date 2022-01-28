@@ -5,10 +5,14 @@ services:
     image: postgres:latest
     volumes:
       - data:/var/lib/postgresql/data
-    container_name: grp-database
+    container_name: hivemind-database
     env_file: ./apps/api/.env.local
     ports:
       - '5432:5432'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=hivemind
 
 volumes:
   data:
