@@ -1,4 +1,5 @@
-# GrpOrg
+
+# Hive Mind
 
 [![CI - Check Branch](https://github.com/benediktms/hive-mind/actions/workflows/check-branch.yml/badge.svg?branch=main)](https://github.com/benediktms/hive-mind/actions/workflows/check-branch.yml)
 
