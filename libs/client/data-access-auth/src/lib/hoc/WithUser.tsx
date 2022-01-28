@@ -1,5 +1,5 @@
-import { useCurrentUserQuery } from '@grp-org/client-data-access-gql';
-import { getErrorMessage } from '@grp-org/shared';
+import { useCurrentUserQuery } from '@hive-mind/client-data-access-gql';
+import { getErrorMessage } from '@hive-mind/shared';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { FC, useEffect } from 'react';

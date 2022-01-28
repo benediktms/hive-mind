@@ -1,4 +1,4 @@
-import { DataService } from '@grp-org/server-data';
+import { DataService } from '@hive-mind/server-data';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import cookieParser from 'cookie-parser';

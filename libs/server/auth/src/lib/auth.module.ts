@@ -1,4 +1,4 @@
-import { DataModule } from '@grp-org/server-data';
+import { DataModule } from '@hive-mind/server-data';
 import { Module } from '@nestjs/common';
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';

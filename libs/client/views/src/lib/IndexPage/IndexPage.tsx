@@ -3,7 +3,7 @@ import { Button } from '@chakra-ui/react';
 import {
   useCurrentUserQuery,
   useLogoutMutation,
-} from '@grp-org/client-data-access-gql';
+} from '@hive-mind/client-data-access-gql';
 import { useRouter } from 'next/router';
 
 export const IndexPage = () => {

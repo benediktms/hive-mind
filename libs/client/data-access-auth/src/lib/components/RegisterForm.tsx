@@ -2,9 +2,9 @@ import { Container, Heading, useToast } from '@chakra-ui/react';
 import {
   RegisterInput,
   useRegisterMutation,
-} from '@grp-org/client-data-access-gql';
-import { Form, LabeledTextField } from '@grp-org/client-ui-form';
-import { RegisterSchema } from '@grp-org/client/validation';
+} from '@hive-mind/client-data-access-gql';
+import { Form, LabeledTextField } from '@hive-mind/client-ui-form';
+import { RegisterSchema } from '@hive-mind/client/validation';
 import Link from 'next/link';
 
 export const RegisterForm = () => {

@@ -1,4 +1,4 @@
-import { Cookies } from '@grp-org/shared';
+import { Cookies } from '@hive-mind/shared';
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { Request } from 'express';
 

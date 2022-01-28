@@ -4,7 +4,7 @@ import LoginInput from './dto/login.dto';
 import RegisterInput from './dto/register.dto';
 import LoginResponse from './response/login.response';
 import RegisterResponse from './response/register.response';
-import { Cookies, GraphQLContext } from '@grp-org/shared';
+import { Cookies, GraphQLContext } from '@hive-mind/shared';
 import { UseGuards } from '@nestjs/common';
 import { GraphQLAuthGuard } from './guards/graphql-auth.guard';
 import { LogoutResponse } from './response/logout.response';
