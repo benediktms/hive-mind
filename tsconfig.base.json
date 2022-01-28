@@ -12,7 +12,10 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "ESNext",
-    "lib": ["es2017", "dom"],
+    "lib": [
+      "es2017",
+      "dom"
+    ],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
@@ -23,15 +26,34 @@
       "@grp-org/client-data-access-gql": [
         "libs/client/data-access-gql/src/index.ts"
       ],
-      "@grp-org/client-ui-form": ["libs/client/ui-form/src/index.ts"],
-      "@grp-org/client/mocks": ["libs/client/mocks/src/index.ts"],
-      "@grp-org/client/validation": ["libs/client/validation/src/index.ts"],
-      "@grp-org/client/views": ["libs/client/views/src/index.ts"],
-      "@grp-org/server-auth": ["libs/server/auth/src/index.ts"],
-      "@grp-org/server-core": ["libs/server/core/src/index.ts"],
-      "@grp-org/server-data": ["libs/server/data/src/index.ts"],
-      "@grp-org/shared": ["libs/shared/src/index.ts"]
+      "@grp-org/client-ui-form": [
+        "libs/client/ui-form/src/index.ts"
+      ],
+      "@grp-org/client/mocks": [
+        "libs/client/mocks/src/index.ts"
+      ],
+      "@grp-org/client/validation": [
+        "libs/client/validation/src/index.ts"
+      ],
+      "@grp-org/client/views": [
+        "libs/client/views/src/index.ts"
+      ],
+      "@grp-org/server-auth": [
+        "libs/server/auth/src/index.ts"
+      ],
+      "@grp-org/server-core": [
+        "libs/server/core/src/index.ts"
+      ],
+      "@grp-org/server-data": [
+        "libs/server/data/src/index.ts"
+      ],
+      "@grp-org/shared": [
+        "libs/shared/src/index.ts"
+      ]
     }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }

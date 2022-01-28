@@ -15,7 +15,7 @@ import { join } from 'path';
     }),
     GraphQLModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
+      useFactory: () => ({
         autoSchemaFile: join(
           process.cwd(),
           '/libs/server/core/src/schema.graphql'
@@ -30,10 +30,11 @@ import { join } from 'path';
           return res;
         },
         context: ({ res }) => ({ res }),
-        cors: {
-          credentials: true,
-          origin: configService.get('clientUrl'),
-        },
+        cors: false,
+        // {
+        //   credentials: true,
+        //   origin: configService.get('clientUrl'),
+        // },
       }),
     }),
   ],
