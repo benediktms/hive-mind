@@ -1,4 +1,4 @@
-import { DataService } from '@grp-org/server-data';
+import { DataService } from '@hive-mind/server-data';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { Response, CookieOptions } from 'express';
 import { SALT_LENGTH, SALT_ROUNDS } from '../utils/constants';
@@ -18,7 +18,7 @@ import {
   RefreshToken,
   RefreshTokenPayload,
   TokenExpiration,
-} from '@grp-org/shared';
+} from '@hive-mind/shared';
 import dayjs from 'dayjs';
 
 @Injectable()

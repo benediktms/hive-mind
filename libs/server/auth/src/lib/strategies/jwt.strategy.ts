@@ -1,4 +1,4 @@
-import { AccessTokenPayload, Cookies } from '@grp-org/shared';
+import { AccessTokenPayload, Cookies } from '@hive-mind/shared';
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-jwt';

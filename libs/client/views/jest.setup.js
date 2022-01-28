@@ -1,4 +1,4 @@
-import { setupMockServer } from '@grp-org/client/mocks';
+import { setupMockServer } from '@hive-mind/client/mocks';
 
 const server = setupMockServer();
 

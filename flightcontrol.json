@@ -9,8 +9,8 @@
       },
       "services": [
         {
-          "id": "grp-org-nestjs-server",
-          "name": "grp-org-nestjs-server",
+          "id": "hive-mind-nestjs-server",
+          "name": "hive-mind-nestjs-server",
           "type": "fargate",
           "cpu": 0.25,
           "memory": 512,
@@ -33,8 +33,8 @@
           }
         },
         {
-          "id": "grp-org-nextjs-client",
-          "name": "grp-org-nextjs-client",
+          "id": "hive-mind-nextjs-client",
+          "name": "hive-mind-nextjs-client",
           "type": "fargate",
           "cpu": 0.25,
           "memory": 512,

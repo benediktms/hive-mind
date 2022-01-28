@@ -1,8 +1,8 @@
 import { Response } from 'express';
 import { Controller, Logger, Post, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { Cookies } from '@grp-org/shared';
-import { DataService } from '@grp-org/server-data';
+import { Cookies } from '@hive-mind/shared';
+import { DataService } from '@hive-mind/server-data';
 import { ReqCookies } from './decorators/cookies.decorator';
 
 @Controller()

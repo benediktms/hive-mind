@@ -1,4 +1,4 @@
-import { CurrentUser } from '@grp-org/shared';
+import { CurrentUser } from '@hive-mind/shared';
 import { RequestHandler, rest } from 'msw';
 import { setupServer } from 'msw/node';
 

@@ -1,8 +1,8 @@
-import { WithUser } from '@grp-org/client-data-access-auth';
+import { WithUser } from '@hive-mind/client-data-access-auth';
 import {
   useCurrentUserQuery,
   withApollo,
-} from '@grp-org/client-data-access-gql';
+} from '@hive-mind/client-data-access-gql';
 import Link from 'next/link';
 import React from 'react';
 

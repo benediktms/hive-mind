@@ -1,4 +1,4 @@
-import { GraphQLAuthGuard } from '@grp-org/server-auth';
+import { GraphQLAuthGuard } from '@hive-mind/server-auth';
 import { UseGuards } from '@nestjs/common';
 import { Float, Query, Resolver } from '@nestjs/graphql';
 

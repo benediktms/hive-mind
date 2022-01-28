@@ -1,6 +1,6 @@
-import { AuthModule } from '@grp-org/server-auth';
-import { CoreModule } from '@grp-org/server-core';
-import { DataModule } from '@grp-org/server-data';
+import { AuthModule } from '@hive-mind/server-auth';
+import { CoreModule } from '@hive-mind/server-core';
+import { DataModule } from '@hive-mind/server-data';
 import { Module } from '@nestjs/common';
 
 import { AppController } from './app.controller';
@@ -15,6 +15,7 @@ import { LoggerModule } from 'nestjs-pino';
     AuthModule,
     LoggerModule.forRoot({
       pinoHttp: {
+        autoLogging: true,
         level: process.env.NODE_ENV !== 'production' ? 'debug' : 'info',
         redact: ['password', 'context[*].password'],
         transport:
