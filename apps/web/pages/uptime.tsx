@@ -1,5 +1,5 @@
-import { WithUser } from '@grp-org/client-data-access-auth';
-import { useUptimeQuery, withApollo } from '@grp-org/client-data-access-gql';
+import { WithUser } from '@hive-mind/client-data-access-auth';
+import { useUptimeQuery, withApollo } from '@hive-mind/client-data-access-gql';
 import Link from 'next/link';
 import React from 'react';
 

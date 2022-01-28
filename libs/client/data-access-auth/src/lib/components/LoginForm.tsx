@@ -1,7 +1,10 @@
 import { Container, Heading, useToast } from '@chakra-ui/react';
-import { LoginInput, useLoginMutation } from '@grp-org/client-data-access-gql';
-import { Form, LabeledTextField } from '@grp-org/client-ui-form';
-import { LoginSchema } from '@grp-org/client/validation';
+import {
+  LoginInput,
+  useLoginMutation,
+} from '@hive-mind/client-data-access-gql';
+import { Form, LabeledTextField } from '@hive-mind/client-ui-form';
+import { LoginSchema } from '@hive-mind/client/validation';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 

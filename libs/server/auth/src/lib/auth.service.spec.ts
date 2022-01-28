@@ -3,7 +3,7 @@ import {
   EntityFactory,
   mockClass,
   truncateTables,
-} from '@grp-org/server-data';
+} from '@hive-mind/server-data';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';

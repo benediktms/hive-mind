@@ -1,4 +1,4 @@
-import { LoginSchema } from '@grp-org/client/validation';
+import { LoginSchema } from '@hive-mind/client/validation';
 import { render, screen } from '@testing-library/react';
 import { Form } from '../Form/Form';
 import LabeledTextField from './LabeledTextField';
