@@ -21,12 +21,7 @@ async function bootstrap() {
   const clientUrl = configService.get('clientUrl');
 
   app.use(cookieParser());
-  app.enableCors({
-    origin: clientUrl,
-    credentials: true,
-    allowedHeaders: '*',
-    methods: '*',
-  });
+  app.enableCors({ origin: clientUrl, credentials: true });
 
   await app.listen(port);
 
