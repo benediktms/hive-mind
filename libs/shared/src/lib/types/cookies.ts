@@ -1,4 +1,4 @@
 export enum Cookies {
-  AccessToken = '_grp_access',
-  RefreshToken = '_grp_refresh',
+  AccessToken = '_hm_access',
+  RefreshToken = '_hm_refresh',
 }
