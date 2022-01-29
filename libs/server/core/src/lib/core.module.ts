@@ -5,6 +5,8 @@ import { ConfigSchema } from './config/validation';
 import { GraphQLModule } from '@nestjs/graphql';
 import { CoreResolver } from './core.resolver';
 import { join } from 'path';
+import { Request } from 'express';
+import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 
 @Module({
   imports: [
@@ -28,7 +30,18 @@ import { join } from 'path';
         return res;
       },
       context: ({ res }) => ({ res }),
-      cors: false,
+      cors: (
+        req: Request,
+        callback: (error: Error | null, options: CorsOptions) => void
+      ) => {
+        const origin = req.headers['origin'];
+
+        if (origin === process.env.CLIENT_URL) {
+          callback(null, { origin: true, credentials: true });
+        } else {
+          callback(new Error('Not allowed by CORS'), { origin: false });
+        }
+      },
     }),
   ],
   controllers: [],
