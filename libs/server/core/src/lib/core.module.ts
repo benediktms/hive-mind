@@ -27,11 +27,10 @@ import { join } from 'path';
         return res;
       },
       context: ({ res }) => ({ res }),
-      cors: false,
-      // cors: {
-      //   origin: process.env.CLIENT_URL,
-      //   credentials: true,
-      // },
+      cors: {
+        origin: process.env.CLIENT_URL,
+        credentials: true,
+      },
     }),
   ],
   controllers: [],
