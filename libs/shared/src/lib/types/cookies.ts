@@ -1,4 +1,4 @@
 export enum Cookies {
-  AccessToken = '_hm_access',
-  RefreshToken = '_hm_refresh',
+  AccessToken = 'hm_access',
+  RefreshToken = 'hm_refresh',
 }
