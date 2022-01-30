@@ -21,7 +21,6 @@ import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.int
         '/libs/server/core/src/schema.graphql'
       ),
       sortSchema: true,
-      playground: true,
       formatResponse: (res, ctx) => {
         const req = ctx.request;
 
