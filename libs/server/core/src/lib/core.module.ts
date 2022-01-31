@@ -22,6 +22,7 @@ import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.int
       ),
       sortSchema: true,
       playground: true,
+      introspection: true,
       formatResponse: (res, ctx) => {
         const req = ctx.request;
 
