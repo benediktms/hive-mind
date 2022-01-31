@@ -109,7 +109,7 @@ export class AuthService {
   private defaultCookieOptions: CookieOptions = {
     httpOnly: true,
     secure: this.isProd,
-    sameSite: this.isProd ? 'none' : 'lax',
+    sameSite: this.isProd ? 'strict' : 'lax',
     domain: this.configService.get('baseDomain') as string,
     path: '/',
   };
