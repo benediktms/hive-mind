@@ -8,7 +8,7 @@ export const ConfigSchema = z.object({
   DATABASE_URL: z.string().min(1),
   PROCFILE: z.string().default('/apps/api/Procfile'),
   CLIENT_URL: z.string().url(),
-  BASE_DOMAIN: z.string().default('localhost'),
+  BASE_DOMAIN: z.string(),
   ACCESS_TOKEN_SECRET: z.string().min(1),
   REFRESH_TOKEN_SECRET: z.string().min(1),
   ANON_KEY: z.string().min(1),
