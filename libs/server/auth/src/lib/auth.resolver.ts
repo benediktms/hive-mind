@@ -9,10 +9,14 @@ import { UseGuards } from '@nestjs/common';
 import { GraphQLAuthGuard } from './guards/graphql-auth.guard';
 import { LogoutResponse } from './response/logout.response';
 import { CurrentUserResponse } from './response/current-user.response';
+import { TokenService } from './token.service';
 
 @Resolver()
 export class AuthResolver {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly tokenService: TokenService
+  ) {}
 
   @Mutation(() => RegisterResponse, {
     description: 'Registers a new User',
@@ -25,7 +29,7 @@ export class AuthResolver {
       input
     );
 
-    this.authService.setTokens(context.res, accessToken, refreshToken);
+    this.tokenService.setTokens(context.res, accessToken, refreshToken);
 
     return new RegisterResponse(user, accessToken, refreshToken);
   }
@@ -42,7 +46,7 @@ export class AuthResolver {
       input.password
     );
 
-    this.authService.setTokens(context.res, accessToken, refreshToken);
+    this.tokenService.setTokens(context.res, accessToken, refreshToken);
 
     return new LoginResponse(`Welcome back, ${user.firstName}!`);
   }
@@ -50,7 +54,7 @@ export class AuthResolver {
   @Mutation(() => LogoutResponse)
   @UseGuards(GraphQLAuthGuard)
   public logout(@Context() { res }: GraphQLContext): LogoutResponse {
-    this.authService.clearTokens(res);
+    this.tokenService.clearTokens(res);
 
     return new LogoutResponse('Logged out');
   }
@@ -62,7 +66,7 @@ export class AuthResolver {
   ): Promise<CurrentUserResponse> {
     const { cookies } = context.req;
     const token: string = cookies[Cookies.AccessToken];
-    const accessToken = this.authService.verifyAccessToken(token);
+    const accessToken = this.tokenService.verifyAccessToken(token);
 
     const { id, email, firstName, lastName } =
       await this.authService.getUserById(accessToken.userId);
