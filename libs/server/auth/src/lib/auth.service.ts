@@ -20,13 +20,16 @@ import {
   TokenExpiration,
 } from '@hive-mind/shared';
 import dayjs from 'dayjs';
+import { CourierService } from '@hive-mind/server/courier';
+import { nanoid } from 'nanoid';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly dataService: DataService,
     private readonly jwtService: JwtService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    private readonly courierService: CourierService
   ) {}
 
   public async getUserById(id: number) {
@@ -70,10 +73,22 @@ export class AuthService {
         firstName: input.firstName.trim(),
         lastName: input.lastName.trim(),
         passwordHash,
+        authToken: nanoid(),
       },
     });
 
+    if (!user.authToken) {
+      throw new Error('Failed to create auth token');
+    }
+
     const { accessToken, refreshToken } = await this.buildTokens(user);
+
+    await this.courierService.sendConfirmAccountEmail(
+      user.id,
+      user.firstName,
+      user.email,
+      user.authToken
+    );
 
     return new RegisterResponse(user, accessToken, refreshToken);
   }

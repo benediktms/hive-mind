@@ -8,6 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import { GraphQLAuthGuard } from './guards/graphql-auth.guard';
 import { AuthController } from './auth.controller';
 import { PassportModule } from '@nestjs/passport';
+import { CourierModule } from '@hive-mind/server/courier';
 
 @Module({
   controllers: [AuthController],
@@ -28,6 +29,7 @@ import { PassportModule } from '@nestjs/passport';
         },
       }),
     }),
+    CourierModule,
   ],
 })
 export class AuthModule {}

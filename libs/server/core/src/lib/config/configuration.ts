@@ -7,4 +7,8 @@ export const configuration = () => ({
   clientUrl: process.env.CLIENT_URL,
   accessTokenSeret: process.env.ACCESS_TOKEN_SECRET,
   refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET,
+  confirmAccountNotificationId: process.env.CONFIRM_ACCOUNT_NOTIFICATION_ID,
+  courierBrandId: process.env.COURIER_BRAND_ID,
+  courierAuthToken: process.env.COURIER_AUTH_TOKEN,
+  courierGmailProfileEmail: process.env.COURIER_GMAIL_PROFILE_EMAIL,
 });
