@@ -19,4 +19,5 @@ model User {
   lastName            String   @db.VarChar(100)
   passwordHash        String
   refreshTokenVersion Int      @default(0)
+  authToken           String?  @unique @db.VarChar(40)
 }
