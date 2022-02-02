@@ -16,5 +16,4 @@ export const ConfigSchema = z.object({
   CONFIRM_ACCOUNT_NOTIFICATION_ID: z.string().min(1),
   COURIER_BRAND_ID: z.string().min(1),
   COURIER_AUTH_TOKEN: z.string().min(1),
-  COURIER_GMAIL_PROFILE_EMAIL: z.string().email(),
 });

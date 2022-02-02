@@ -10,5 +10,4 @@ export const configuration = () => ({
   confirmAccountNotificationId: process.env.CONFIRM_ACCOUNT_NOTIFICATION_ID,
   courierBrandId: process.env.COURIER_BRAND_ID,
   courierAuthToken: process.env.COURIER_AUTH_TOKEN,
-  courierGmailProfileEmail: process.env.COURIER_GMAIL_PROFILE_EMAIL,
 });

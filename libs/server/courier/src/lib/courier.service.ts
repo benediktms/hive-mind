@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { CourierClient } from '@trycourier/courier';
 import { nanoid } from 'nanoid';
@@ -14,24 +14,32 @@ export class CourierService {
     email: string,
     token: string
   ) {
+    Logger.log('sendConfirmAccountEmail', 'CourierService');
     const eventId = this.configService.get('confirmAccountNotificationId', '');
 
-    await this.courier.send(
-      {
-        eventId,
-        recipientId: `${userId}`,
-        brand: this.configService.get('courierBrandId', ''),
-        data: {
-          firstName,
-          token,
+    try {
+      await this.courier.send(
+        {
+          eventId,
+          recipientId: `${userId}`,
+          brand: this.configService.get('courierBrandId', ''),
+          data: {
+            firstName,
+            token,
+            email,
+          },
+          profile: {
+            email,
+          },
         },
-        profile: {
-          email,
-        },
-      },
-      {
-        idempotencyKey: nanoid(),
-      }
-    );
+        {
+          idempotencyKey: nanoid(),
+        }
+      );
+      Logger.log(`Confirm account email sent to ${email}`, 'CourierService');
+    } catch (error) {
+      Logger.error('Failed to send confirm account email', 'CourierService');
+      throw error;
+    }
   }
 }

@@ -83,6 +83,7 @@ export class AuthService {
 
     const { accessToken, refreshToken } = await this.buildTokens(user);
 
+    // TODO: This should eventually be moved into a task queue
     await this.courierService.sendConfirmAccountEmail(
       user.id,
       user.firstName,
