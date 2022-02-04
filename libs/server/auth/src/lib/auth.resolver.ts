@@ -11,6 +11,8 @@ import { LogoutResponse } from './response/logout.response';
 import { CurrentUserResponse } from './response/current-user.response';
 import { TokenService } from './token.service';
 import { UserService } from './user.service';
+import { ConfirmEmailInput } from './dto/confirm-email.dto';
+import { ConfirmEmailResponse } from './response/confirm-email.response';
 
 @Resolver()
 export class AuthResolver {
@@ -76,10 +78,10 @@ export class AuthResolver {
     return new CurrentUserResponse(id, email, firstName, lastName);
   }
 
-  @Mutation(() => String)
-  public async confirmEmail(@Args('email') email: string) {
-    await this.authService.confirmEmail(email);
+  @Mutation(() => ConfirmEmailResponse)
+  public async confirmEmail(@Args('input') input: ConfirmEmailInput) {
+    await this.authService.confirmEmail(input.email);
 
-    return 'Email confirmed';
+    return new ConfirmEmailResponse('Email confirmed');
   }
 }
