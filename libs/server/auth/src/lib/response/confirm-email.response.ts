@@ -1,4 +1,4 @@
-import { ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class ConfirmEmailResponse {
@@ -6,5 +6,6 @@ export class ConfirmEmailResponse {
     this.message = message;
   }
 
+  @Field()
   message: string;
 }

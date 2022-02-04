@@ -2,6 +2,14 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input ConfirmEmailInput {
+  email: String!
+}
+
+type ConfirmEmailResponse {
+  message: String!
+}
+
 type CurrentUserResponse {
   email: String!
   firstName: String!
@@ -23,6 +31,8 @@ type LogoutResponse {
 }
 
 type Mutation {
+  confirmEmail(input: ConfirmEmailInput!): ConfirmEmailResponse!
+
   """Allows the user to log in"""
   login(input: LoginInput!): LoginResponse!
   logout: LogoutResponse!
@@ -52,6 +62,7 @@ type RegisterResponse {
 type User {
   email: String!
   firstName: String!
+  hasConfirmedEmail: Boolean!
   id: Float!
   lastName: String!
 }
