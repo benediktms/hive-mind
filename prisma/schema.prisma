@@ -20,4 +20,5 @@ model User {
   passwordHash        String
   refreshTokenVersion Int      @default(0)
   authToken           String?  @unique @db.VarChar(40)
+  hasConfirmedEmail   Boolean  @default(true)
 }

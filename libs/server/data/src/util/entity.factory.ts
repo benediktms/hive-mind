@@ -15,6 +15,8 @@ export class EntityFactory {
         (opts && opts.passwordHash) || internet.password()
       ),
       refreshTokenVersion: 0,
+      authToken: null,
+      hasConfirmedEmail: opts?.hasConfirmedEmail ?? false,
     };
   }
 }
