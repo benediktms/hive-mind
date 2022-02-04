@@ -4,18 +4,24 @@ import {
   mockClass,
   truncateTables,
 } from '@hive-mind/server-data';
+import { CourierService } from '@hive-mind/server/courier';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { User } from '@prisma/client';
-import { internet } from 'faker';
 import { AuthService } from './auth.service';
 import RegisterResponse from './response/register.response';
+import { TokenService } from './token.service';
+import { UserService } from './user.service';
 
 describe('AuthService', () => {
   let module: TestingModule;
   let authService: AuthService;
   let dataService: DataService;
+  const courierService = mockClass<CourierService>({
+    sendConfirmAccountEmail: jest.fn(),
+  });
+
   const entityFactory = new EntityFactory();
 
   beforeAll(async () => {
@@ -30,6 +36,12 @@ describe('AuthService', () => {
           }),
         },
         ConfigService,
+        TokenService,
+        UserService,
+        {
+          provide: CourierService,
+          useValue: courierService,
+        },
       ],
     }).compile();
 
@@ -46,13 +58,15 @@ describe('AuthService', () => {
 
   async function setupUser(
     password: string,
-    email = 'john-doe@example.com'
+    email = 'john-doe@example.com',
+    hasConfirmedEmail = true
   ): Promise<User> {
     const user = await entityFactory.generateUser({
       email,
       firstName: 'John',
       lastName: 'Doe',
       passwordHash: password,
+      hasConfirmedEmail,
     });
 
     return await dataService.user.create({ data: user });
@@ -72,6 +86,8 @@ describe('AuthService', () => {
           password: 'helloworld',
         })
       ).rejects.toThrow(/this email is already being used/i);
+
+      expect(courierService.sendConfirmAccountEmail).not.toHaveBeenCalled();
     });
 
     it('should create a user', async () => {
@@ -96,8 +112,11 @@ describe('AuthService', () => {
           email: user.email,
           firstName: user.firstName,
           lastName: user.lastName,
+          hasConfirmedEmail: false,
         }),
       });
+
+      expect(courierService.sendConfirmAccountEmail).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -124,16 +143,13 @@ describe('AuthService', () => {
         /something went wrong/i
       );
     });
-  });
 
-  describe('verifyAccessToken', () => {
-    beforeAll(async () => await setupUser('helloworld', internet.email()));
-    afterAll(async () => await truncateTables(dataService));
+    it('should not log the user in if the email has not been confirmed', async () => {
+      const user = await setupUser('helloworld', 'john@example.com', false);
 
-    it.todo('should not send a token if the cookie is not set');
-    it.todo('should not send a token if the user is not found');
-    it.todo('should not send a token if the token version is invalid');
-    it.todo('should set a refres token on the cookie');
-    it.todo('should return a new access token');
+      await expect(authService.login(user.email, 'helloworld')).rejects.toThrow(
+        /user has not confirmed email/i
+      );
+    });
   });
 });
