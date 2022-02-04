@@ -5,25 +5,30 @@ import RegisterDTO from './dto/register.dto';
 import { hash, verify } from 'argon2';
 import { randomBytes } from 'crypto';
 import { FailedToAuthenticateError } from '../utils/failed-to-authenticate-error';
-import RegisterResponse from './response/register.response';
 import { EmailTakenError } from '../utils/email-taken-error';
 import { CourierService } from '@hive-mind/server/courier';
 import { nanoid } from 'nanoid';
 import { TokenService } from './token.service';
+import { UserService } from './user.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly dataService: DataService,
     private readonly tokenService: TokenService,
-    private readonly courierService: CourierService
+    private readonly courierService: CourierService,
+    private readonly userService: UserService
   ) {}
 
   public async login(email: string, password: string) {
-    const user = await this.dataService.user.findUnique({ where: { email } });
+    const user = await this.userService.getUserByEmail(email);
 
     if (!user) {
       throw new FailedToAuthenticateError();
+    }
+
+    if (!user.hasConfirmedEmail) {
+      throw new Error('User has not confirmed email');
     }
 
     await this.validatePassword(user.passwordHash, password);
@@ -32,7 +37,7 @@ export class AuthService {
       user
     );
 
-    return { accessToken, refreshToken, user };
+    return { user, accessToken, refreshToken };
   }
 
   public async register(input: RegisterDTO) {
@@ -53,6 +58,7 @@ export class AuthService {
         lastName: input.lastName.trim(),
         passwordHash,
         authToken: nanoid(),
+        hasConfirmedEmail: false,
       },
     });
 
@@ -72,7 +78,14 @@ export class AuthService {
       user.authToken
     );
 
-    return new RegisterResponse(user, accessToken, refreshToken);
+    return { user, accessToken, refreshToken };
+  }
+
+  public async confirmEmail(email: string) {
+    await this.dataService.user.update({
+      where: { email },
+      data: { authToken: null, hasConfirmedEmail: true },
+    });
   }
 
   private async createPassword(userInput: string): Promise<string> {
