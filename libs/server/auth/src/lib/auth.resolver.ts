@@ -79,8 +79,17 @@ export class AuthResolver {
   }
 
   @Mutation(() => ConfirmEmailResponse)
-  public async confirmEmail(@Args('input') input: ConfirmEmailInput) {
-    await this.authService.confirmEmail(input.email);
+  public async confirmEmail(
+    @Args('input') input: ConfirmEmailInput,
+    @Context() context: GraphQLContext
+  ) {
+    const res = context.res;
+    const { accessToken, refreshToken } = await this.authService.confirmEmail(
+      input.email,
+      input.token
+    );
+
+    this.tokenService.setTokens(res, accessToken, refreshToken);
 
     return new ConfirmEmailResponse('Email confirmed');
   }

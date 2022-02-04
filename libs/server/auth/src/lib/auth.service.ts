@@ -81,11 +81,23 @@ export class AuthService {
     return { user, accessToken, refreshToken };
   }
 
-  public async confirmEmail(email: string) {
+  public async confirmEmail(email: string, token: string) {
+    const user = await this.userService.getUserByEmail(email);
+
+    if (user.authToken !== token) {
+      throw new Error('Tokens do not match');
+    }
+
     await this.dataService.user.update({
       where: { email },
       data: { authToken: null, hasConfirmedEmail: true },
     });
+
+    const { accessToken, refreshToken } = await this.tokenService.buildTokens(
+      user
+    );
+
+    return { accessToken, refreshToken };
   }
 
   private async createPassword(userInput: string): Promise<string> {

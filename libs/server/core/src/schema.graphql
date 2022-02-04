@@ -4,6 +4,7 @@
 
 input ConfirmEmailInput {
   email: String!
+  token: String!
 }
 
 type ConfirmEmailResponse {
