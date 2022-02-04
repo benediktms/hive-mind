@@ -91,18 +91,7 @@ export type RegisterInput = {
 
 export type RegisterResponse = {
   __typename?: 'RegisterResponse';
-  accessToken: Scalars['String'];
-  refreshToken: Scalars['String'];
-  user: User;
-};
-
-export type User = {
-  __typename?: 'User';
-  email: Scalars['String'];
-  firstName: Scalars['String'];
-  hasConfirmedEmail: Scalars['Boolean'];
-  id: Scalars['Float'];
-  lastName: Scalars['String'];
+  message: Scalars['String'];
 };
 
 export type ConfirmEmailMutationVariables = Exact<{
@@ -136,16 +125,7 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = {
   __typename?: 'Mutation';
-  register: {
-    __typename?: 'RegisterResponse';
-    user: {
-      __typename?: 'User';
-      id: number;
-      email: string;
-      firstName: string;
-      lastName: string;
-    };
-  };
+  register: { __typename?: 'RegisterResponse'; message: string };
 };
 
 export type CurrentUserQueryVariables = Exact<{ [key: string]: never }>;
@@ -311,12 +291,7 @@ export type LogoutMutationOptions = Apollo.BaseMutationOptions<
 export const RegisterDocument = gql`
   mutation Register($input: RegisterInput!) {
     register(input: $input) {
-      user {
-        id
-        email
-        firstName
-        lastName
-      }
+      message
     }
   }
 `;

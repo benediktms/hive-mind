@@ -10,7 +10,6 @@ import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { User } from '@prisma/client';
 import { AuthService } from './auth.service';
-import RegisterResponse from './response/register.response';
 import { TokenService } from './token.service';
 import { UserService } from './user.service';
 
@@ -104,17 +103,9 @@ describe('AuthService', () => {
           lastName: user.lastName,
           password: 'helloworld',
         })
-      ).resolves.toEqual<RegisterResponse>({
-        accessToken: 'token',
-        refreshToken: 'token',
-        user: expect.objectContaining<RegisterResponse['user']>({
-          id: expect.anything(),
-          email: user.email,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          hasConfirmedEmail: false,
-        }),
-      });
+      ).resolves.toEqual(
+        'Sign up successful. Please check your email to confirm your account.'
+      );
 
       expect(courierService.sendConfirmAccountEmail).toHaveBeenCalledTimes(1);
     });

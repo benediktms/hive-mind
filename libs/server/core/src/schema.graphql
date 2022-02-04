@@ -59,15 +59,5 @@ input RegisterInput {
 }
 
 type RegisterResponse {
-  accessToken: String!
-  refreshToken: String!
-  user: User!
-}
-
-type User {
-  email: String!
-  firstName: String!
-  hasConfirmedEmail: Boolean!
-  id: Float!
-  lastName: String!
+  message: String!
 }

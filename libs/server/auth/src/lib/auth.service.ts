@@ -66,10 +66,6 @@ export class AuthService {
       throw new Error('Failed to create auth token');
     }
 
-    const { accessToken, refreshToken } = await this.tokenService.buildTokens(
-      user
-    );
-
     // TODO: This should eventually be moved into a task queue maybe?
     await this.courierService.sendConfirmAccountEmail(
       user.id,
@@ -78,7 +74,7 @@ export class AuthService {
       user.authToken
     );
 
-    return { user, accessToken, refreshToken };
+    return 'Sign up successful. Please check your email to confirm your account.';
   }
 
   public async confirmEmail(email: string, token: string) {
@@ -86,6 +82,10 @@ export class AuthService {
 
     if (user.authToken !== token) {
       throw new Error('Tokens do not match');
+    }
+
+    if (user.hasConfirmedEmail) {
+      throw new Error('User has already confirmed email');
     }
 
     await this.dataService.user.update({

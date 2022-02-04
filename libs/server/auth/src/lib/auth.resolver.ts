@@ -26,16 +26,11 @@ export class AuthResolver {
     description: 'Registers a new User',
   })
   public async register(
-    @Args('input') input: RegisterInput,
-    @Context() context: GraphQLContext
+    @Args('input') input: RegisterInput
   ): Promise<RegisterResponse> {
-    const { accessToken, refreshToken, user } = await this.authService.register(
-      input
-    );
+    const message = await this.authService.register(input);
 
-    this.tokenService.setTokens(context.res, accessToken, refreshToken);
-
-    return new RegisterResponse(user, accessToken, refreshToken);
+    return new RegisterResponse(message);
   }
 
   @Mutation(() => LoginResponse, {
