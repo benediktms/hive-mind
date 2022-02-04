@@ -10,12 +10,14 @@ import { GraphQLAuthGuard } from './guards/graphql-auth.guard';
 import { LogoutResponse } from './response/logout.response';
 import { CurrentUserResponse } from './response/current-user.response';
 import { TokenService } from './token.service';
+import { UserService } from './user.service';
 
 @Resolver()
 export class AuthResolver {
   constructor(
     private readonly authService: AuthService,
-    private readonly tokenService: TokenService
+    private readonly tokenService: TokenService,
+    private readonly userService: UserService
   ) {}
 
   @Mutation(() => RegisterResponse, {
@@ -69,8 +71,15 @@ export class AuthResolver {
     const accessToken = this.tokenService.verifyAccessToken(token);
 
     const { id, email, firstName, lastName } =
-      await this.authService.getUserById(accessToken.userId);
+      await this.userService.getUserById(accessToken.userId);
 
     return new CurrentUserResponse(id, email, firstName, lastName);
+  }
+
+  @Mutation(() => String)
+  public async confirmEmail(@Args('email') email: string) {
+    await this.authService.confirmEmail(email);
+
+    return 'Email confirmed';
   }
 }

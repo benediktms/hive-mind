@@ -6,6 +6,6 @@ export default class LoginResponse {
     this.message = message;
   }
 
-  @Field(() => String)
-  message: string;
+  @Field()
+  message!: string;
 }
