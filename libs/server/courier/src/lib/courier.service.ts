@@ -6,7 +6,10 @@ import { nanoid } from 'nanoid';
 @Injectable()
 export class CourierService {
   constructor(private readonly configService: ConfigService) {}
-  private courier = CourierClient();
+
+  private courier = CourierClient({
+    authorizationToken: this.configService.get('courierAuthToken', 'token'),
+  });
 
   public async sendConfirmAccountEmail(
     userId: number,
