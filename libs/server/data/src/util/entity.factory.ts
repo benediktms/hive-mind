@@ -15,7 +15,8 @@ export class EntityFactory {
         (opts && opts.passwordHash) || internet.password()
       ),
       refreshTokenVersion: 0,
-      authToken: null,
+      authToken: opts?.authToken as string,
+      authTokenExpiresAt: opts?.authTokenExpiresAt as Date,
       hasConfirmedEmail: opts?.hasConfirmedEmail ?? false,
     };
   }

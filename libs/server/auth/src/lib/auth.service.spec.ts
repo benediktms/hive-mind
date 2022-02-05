@@ -9,6 +9,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { User } from '@prisma/client';
+import dayjs from 'dayjs';
 import { AuthService } from './auth.service';
 import { TokenService } from './token.service';
 import { UserService } from './user.service';
@@ -55,10 +56,14 @@ describe('AuthService', () => {
     await module.close();
   });
 
+  beforeEach(async () => await truncateTables(dataService));
+
   async function setupUser(
     password: string,
     email = 'john-doe@example.com',
-    hasConfirmedEmail = true
+    hasConfirmedEmail = true,
+    authToken: string | undefined = undefined,
+    authTokenExpiresAt: Date | undefined = undefined
   ): Promise<User> {
     const user = await entityFactory.generateUser({
       email,
@@ -66,14 +71,14 @@ describe('AuthService', () => {
       lastName: 'Doe',
       passwordHash: password,
       hasConfirmedEmail,
+      authToken,
+      authTokenExpiresAt,
     });
 
     return await dataService.user.create({ data: user });
   }
 
   describe('register', () => {
-    beforeEach(async () => await truncateTables(dataService));
-
     it('should not create a new user if the email is already taken', async () => {
       const taken = await setupUser('helloworld');
 
@@ -112,8 +117,6 @@ describe('AuthService', () => {
   });
 
   describe('login', () => {
-    beforeEach(async () => await truncateTables(dataService));
-
     it('should log the user in', async () => {
       const user = await setupUser('helloworld');
 
@@ -141,6 +144,73 @@ describe('AuthService', () => {
       await expect(authService.login(user.email, 'helloworld')).rejects.toThrow(
         /user has not confirmed email/i
       );
+    });
+  });
+
+  describe('confirmEmail', () => {
+    it('should fail if the token has expired', async () => {
+      const user = await setupUser(
+        'helloworld',
+        'john@example.com',
+        false,
+        'token',
+        dayjs().subtract(1, 'day').toDate()
+      );
+
+      console.log(user.authToken);
+
+      await expect(
+        authService.confirmEmail(user.email, 'token')
+      ).rejects.toThrow(/invalid token/i);
+    });
+
+    it('should fail if the tokens do not match', async () => {
+      const user = await setupUser(
+        'helloworld',
+        'john@example.com',
+        false,
+        'token',
+        dayjs().subtract(1, 'day').toDate()
+      );
+
+      await expect(
+        authService.confirmEmail(user.email, 'wrong_token')
+      ).rejects.toThrow(/tokens do not match/i);
+    });
+
+    it('should fail if the user has already confirmed their email', async () => {
+      const user = await setupUser(
+        'helloworld',
+        'john@example.com',
+        true,
+        'token'
+      );
+
+      await expect(
+        authService.confirmEmail(user.email, 'token')
+      ).rejects.toThrow(/user has already confirmed email/i);
+    });
+
+    it('should remove the users auth token and set "hasConfirmedEmail" to true', async () => {
+      const user = await setupUser(
+        'helloworld',
+        'john@example.com',
+        false,
+        'token',
+        dayjs().add(1, 'day').toDate()
+      );
+
+      await authService.confirmEmail(user.email, 'token');
+
+      const updatedUser = await dataService.user.findUnique({
+        where: { id: user.id },
+      });
+
+      if (!updatedUser) {
+        throw new Error('User not found');
+      }
+
+      expect(updatedUser.hasConfirmedEmail).toBe(true);
     });
   });
 });

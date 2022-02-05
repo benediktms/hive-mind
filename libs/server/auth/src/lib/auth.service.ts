@@ -10,6 +10,7 @@ import { CourierService } from '@hive-mind/server/courier';
 import { nanoid } from 'nanoid';
 import { TokenService } from './token.service';
 import { UserService } from './user.service';
+import dayjs from 'dayjs';
 
 @Injectable()
 export class AuthService {
@@ -58,6 +59,7 @@ export class AuthService {
         lastName: input.lastName.trim(),
         passwordHash,
         authToken: nanoid(),
+        authTokenExpiresAt: dayjs().add(1, 'day').toDate(),
         hasConfirmedEmail: false,
       },
     });
@@ -80,8 +82,14 @@ export class AuthService {
   public async confirmEmail(email: string, token: string) {
     const user = await this.userService.getUserByEmail(email);
 
+    console.log(token, user.authToken);
+
     if (user.authToken !== token) {
       throw new Error('Tokens do not match');
+    }
+
+    if (!user.authToken || dayjs().isAfter(user.authTokenExpiresAt)) {
+      throw new Error('Invalid token');
     }
 
     if (user.hasConfirmedEmail) {
