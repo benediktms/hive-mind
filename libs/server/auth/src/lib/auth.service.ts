@@ -124,4 +124,20 @@ export class AuthService {
       throw new FailedToAuthenticateError();
     }
   }
+  public async requestPasswordReset(email: string) {
+    const user = await this.dataService.user.update({
+      where: { email },
+      data: {
+        authToken: nanoid(),
+        authTokenExpiresAt: dayjs().add(15, 'minute').toDate(),
+      },
+    });
+
+    if (!user.authToken) throw new Error('Failed to create auth token');
+
+    return {
+      token: user.authToken,
+      email: user.email,
+    };
+  }
 }

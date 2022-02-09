@@ -13,6 +13,8 @@ import { TokenService } from './token.service';
 import { UserService } from './user.service';
 import { ConfirmEmailInput } from './dto/confirm-email.dto';
 import { ConfirmEmailResponse } from './response/confirm-email.response';
+import { RequestPasswordResetResponse } from './response/request-password-reset.response';
+import { RequestPasswordResetInput } from './dto/request-password-reset.dto';
 
 @Resolver()
 export class AuthResolver {
@@ -88,4 +90,14 @@ export class AuthResolver {
 
     return new ConfirmEmailResponse('Email confirmed');
   }
+
+  @Mutation(() => RequestPasswordResetResponse)
+  public async requestPasswordReset(
+    @Args('input') input: RequestPasswordResetInput
+  ) {
+    const res = await this.authService.requestPasswordReset(input.email);
+
+    return new RequestPasswordResetResponse(res.token, res.email);
+  }
+
 }
