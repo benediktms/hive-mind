@@ -15,6 +15,8 @@ import { ConfirmEmailInput } from './dto/confirm-email.dto';
 import { ConfirmEmailResponse } from './response/confirm-email.response';
 import { RequestPasswordResetResponse } from './response/request-password-reset.response';
 import { RequestPasswordResetInput } from './dto/request-password-reset.dto';
+import { ResetPasswordInput } from './dto/reset-password.dto';
+import { ResetPasswordResponse } from './response/reset-password.dto';
 
 @Resolver()
 export class AuthResolver {
@@ -100,4 +102,14 @@ export class AuthResolver {
     return new RequestPasswordResetResponse(res.token, res.email);
   }
 
+  @Mutation(() => ResetPasswordResponse)
+  public async resetPassword(@Args('input') input: ResetPasswordInput) {
+    await this.authService.resetPassword(
+      input.email,
+      input.password,
+      input.token
+    );
+
+    return new ResetPasswordResponse('Password reset successfully');
+  }
 }

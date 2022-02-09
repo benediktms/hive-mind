@@ -124,6 +124,7 @@ export class AuthService {
       throw new FailedToAuthenticateError();
     }
   }
+
   public async requestPasswordReset(email: string) {
     const user = await this.dataService.user.update({
       where: { email },
@@ -139,5 +140,18 @@ export class AuthService {
       token: user.authToken,
       email: user.email,
     };
+  }
+
+  public async resetPassword(email: string, password: string, token: string) {
+    const user = await this.userService.getUserByEmail(email);
+
+    if (user.authToken !== token) throw new Error('Invalid token');
+
+    const passwordHash = await this.createPassword(password);
+
+    await this.dataService.user.update({
+      where: { email },
+      data: { passwordHash },
+    });
   }
 }
