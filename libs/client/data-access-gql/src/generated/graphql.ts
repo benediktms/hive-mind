@@ -62,6 +62,8 @@ export type Mutation = {
   logout: LogoutResponse;
   /** Registers a new User */
   register: RegisterResponse;
+  requestPasswordReset: RequestPasswordResetResponse;
+  resetPassword: ResetPasswordResponse;
 };
 
 export type MutationConfirmEmailArgs = {
@@ -74,6 +76,14 @@ export type MutationLoginArgs = {
 
 export type MutationRegisterArgs = {
   input: RegisterInput;
+};
+
+export type MutationRequestPasswordResetArgs = {
+  input: RequestPasswordResetInput;
+};
+
+export type MutationResetPasswordArgs = {
+  input: ResetPasswordInput;
 };
 
 export type Query = {
@@ -91,6 +101,27 @@ export type RegisterInput = {
 
 export type RegisterResponse = {
   __typename?: 'RegisterResponse';
+  message: Scalars['String'];
+};
+
+export type RequestPasswordResetInput = {
+  email: Scalars['String'];
+};
+
+export type RequestPasswordResetResponse = {
+  __typename?: 'RequestPasswordResetResponse';
+  email: Scalars['String'];
+  token: Scalars['String'];
+};
+
+export type ResetPasswordInput = {
+  email: Scalars['String'];
+  password: Scalars['String'];
+  token: Scalars['String'];
+};
+
+export type ResetPasswordResponse = {
+  __typename?: 'ResetPasswordResponse';
   message: Scalars['String'];
 };
 

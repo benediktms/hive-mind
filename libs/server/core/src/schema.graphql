@@ -44,6 +44,10 @@ type Mutation {
   Registers a new User
   """
   register(input: RegisterInput!): RegisterResponse!
+  requestPasswordReset(
+    input: RequestPasswordResetInput!
+  ): RequestPasswordResetResponse!
+  resetPassword(input: ResetPasswordInput!): ResetPasswordResponse!
 }
 
 type Query {
@@ -59,5 +63,24 @@ input RegisterInput {
 }
 
 type RegisterResponse {
+  message: String!
+}
+
+input RequestPasswordResetInput {
+  email: String!
+}
+
+type RequestPasswordResetResponse {
+  email: String!
+  token: String!
+}
+
+input ResetPasswordInput {
+  email: String!
+  password: String!
+  token: String!
+}
+
+type ResetPasswordResponse {
   message: String!
 }
