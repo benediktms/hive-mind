@@ -79,18 +79,26 @@ export class AuthService {
     return 'Sign up successful. Please check your email to confirm your account.';
   }
 
+  private checkAuthTokens(
+    incomingToken: string | null,
+    existingToken: string | null,
+    authTokenExpiresAt: Date | null
+  ) {
+    if (incomingToken !== existingToken) {
+      throw new Error('Tokens do not match');
+    }
+
+    if (!incomingToken || dayjs().isAfter(authTokenExpiresAt)) {
+      throw new Error('Invalid token');
+    }
+  }
+
   public async confirmEmail(email: string, token: string) {
     const user = await this.userService.getUserByEmail(email);
 
     console.log(token, user.authToken);
 
-    if (user.authToken !== token) {
-      throw new Error('Tokens do not match');
-    }
-
-    if (!user.authToken || dayjs().isAfter(user.authTokenExpiresAt)) {
-      throw new Error('Invalid token');
-    }
+    this.checkAuthTokens(token, user.authToken, user.authTokenExpiresAt);
 
     if (user.hasConfirmedEmail) {
       throw new Error('User has already confirmed email');
@@ -145,7 +153,7 @@ export class AuthService {
   public async resetPassword(email: string, password: string, token: string) {
     const user = await this.userService.getUserByEmail(email);
 
-    if (user.authToken !== token) throw new Error('Invalid token');
+    this.checkAuthTokens(token, user.authToken, user.authTokenExpiresAt);
 
     const passwordHash = await this.createPassword(password);
 
