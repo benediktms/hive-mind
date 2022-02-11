@@ -8,7 +8,7 @@ export class CourierService {
   constructor(private readonly configService: ConfigService) {}
 
   private courier = CourierClient({
-    authorizationToken: this.configService.get('courierAuthToken', 'token'),
+    authorizationToken: this.configService.get('COURIER_AUTH_TOKEN', 'token'),
   });
 
   public async sendConfirmAccountEmail(
@@ -18,14 +18,17 @@ export class CourierService {
     token: string
   ) {
     Logger.log('sendConfirmAccountEmail', 'CourierService');
-    const eventId = this.configService.get('confirmAccountNotificationId', '');
+    const eventId = this.configService.get(
+      'CONFIRM_ACCOUNT_NOTIFICATION_ID',
+      ''
+    );
 
     try {
       await this.courier.send(
         {
           eventId,
           recipientId: `${userId}`,
-          brand: this.configService.get('courierBrandId', ''),
+          brand: this.configService.get('COURIER_BRAND_ID', ''),
           data: {
             firstName,
             token,

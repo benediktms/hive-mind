@@ -32,18 +32,18 @@ export class TokenService {
 
   private signRefreshToken(payload: RefreshTokenPayload) {
     return this.jwtService.sign(payload, {
-      secret: this.configService.get('refreshTokenSecret'),
+      secret: this.configService.get('REFRESH_TOKEN_SECRET'),
       expiresIn: TokenExpiration.Refresh,
     });
   }
 
-  private isProd = this.configService.get('environment') === 'production';
+  private isProd = this.configService.get('NODE_ENV') === 'production';
 
   private defaultCookieOptions: CookieOptions = {
     httpOnly: true,
     secure: this.isProd,
     sameSite: this.isProd ? 'strict' : 'lax',
-    domain: this.configService.get('baseDomain') as string,
+    domain: this.configService.get('BASE_DOMAIN') as string,
     path: '/',
   };
 
@@ -97,7 +97,7 @@ export class TokenService {
   public verifyRefreshToken(refreshToken: string) {
     return this.jwtService.verify(
       refreshToken,
-      this.configService.get('refreshTokenSecret')
+      this.configService.get('REFRESH_TOKEN_SECRET')
     ) as RefreshToken;
   }
 

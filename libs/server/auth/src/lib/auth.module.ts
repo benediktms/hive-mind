@@ -32,7 +32,7 @@ import { UserService } from './user.service';
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        secret: configService.get('accessTokenSeret'),
+        secret: configService.get('ACCESS_TOKEN_SECRET'),
         signOptions: {
           expiresIn: '2h',
         },
