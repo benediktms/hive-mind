@@ -144,6 +144,8 @@ export class AuthService {
 
     if (!user.authToken) throw new Error('Failed to create auth token');
 
+    await this.courierService.sendRequestResetEmail(email, user.authToken);
+
     return {
       token: user.authToken,
       email: user.email,

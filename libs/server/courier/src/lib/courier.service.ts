@@ -48,4 +48,36 @@ export class CourierService {
       throw error;
     }
   }
+
+  public async sendRequestResetEmail(email: string, token: string) {
+    Logger.log('sendRequestResetEmail', 'CourierService');
+    const eventId = this.configService.get(
+      'requestResetPasswordNotificationId',
+      ''
+    );
+
+    try {
+      await this.courier.send(
+        {
+          eventId,
+          recipientId: `${email}`,
+          brand: this.configService.get('COURIER_BRAND_ID', ''),
+          data: {
+            token,
+            email,
+          },
+          profile: {
+            email,
+          },
+        },
+        {
+          idempotencyKey: nanoid(),
+        }
+      );
+      Logger.log(`Request reset email sent to ${email}`, 'CourierService');
+    } catch (error) {
+      Logger.error('Failed to send request reset email', 'CourierService');
+      throw error;
+    }
+  }
 }
