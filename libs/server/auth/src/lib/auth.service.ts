@@ -28,9 +28,7 @@ export class AuthService {
       throw new FailedToAuthenticateError();
     }
 
-    if (!user.hasConfirmedEmail) {
-      throw new Error('User has not confirmed email');
-    }
+    this.checkUserHasConfirmedEmail(user.hasConfirmedEmail);
 
     await this.validatePassword(user.passwordHash, password);
 
@@ -93,16 +91,26 @@ export class AuthService {
     }
   }
 
+  private checkUserHasConfirmedEmail(
+    hasConfirmedEmail: boolean,
+    shouldBeConfirmed = false
+  ) {
+    if (!shouldBeConfirmed && !hasConfirmedEmail) {
+      throw new Error('User has not confirmed email');
+    }
+
+    if (shouldBeConfirmed && hasConfirmedEmail) {
+      throw new Error('User has already confirmed email');
+    }
+  }
+
   public async confirmEmail(email: string, token: string) {
     const user = await this.userService.getUserByEmail(email);
 
     console.log(token, user.authToken);
 
     this.checkAuthTokens(token, user.authToken, user.authTokenExpiresAt);
-
-    if (user.hasConfirmedEmail) {
-      throw new Error('User has already confirmed email');
-    }
+    this.checkUserHasConfirmedEmail(user.hasConfirmedEmail, true);
 
     await this.dataService.user.update({
       where: { email },
@@ -142,6 +150,8 @@ export class AuthService {
       },
     });
 
+    this.checkUserHasConfirmedEmail(user.hasConfirmedEmail);
+
     if (!user.authToken) throw new Error('Failed to create auth token');
 
     await this.courierService.sendRequestResetEmail(email, user.authToken);
@@ -154,6 +164,8 @@ export class AuthService {
 
   public async resetPassword(email: string, password: string, token: string) {
     const user = await this.userService.getUserByEmail(email);
+
+    this.checkUserHasConfirmedEmail(user.hasConfirmedEmail);
 
     this.checkAuthTokens(token, user.authToken, user.authTokenExpiresAt);
 
