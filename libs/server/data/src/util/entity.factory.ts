@@ -11,6 +11,7 @@ export class EntityFactory {
       firstName: name.firstName(),
       lastName: name.lastName(),
       ...opts,
+      // NOTE: this could potentially slow down tests
       passwordHash: await hash(
         (opts && opts.passwordHash) || internet.password()
       ),

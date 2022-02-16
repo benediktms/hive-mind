@@ -20,6 +20,7 @@ describe('AuthService', () => {
   let dataService: DataService;
   const courierService = mockClass<CourierService>({
     sendConfirmAccountEmail: jest.fn(),
+    sendRequestResetEmail: jest.fn(),
   });
 
   const entityFactory = new EntityFactory();
@@ -206,11 +207,76 @@ describe('AuthService', () => {
         where: { id: user.id },
       });
 
-      if (!updatedUser) {
-        throw new Error('User not found');
-      }
+      if (!updatedUser) throw new Error('User not found');
 
       expect(updatedUser.hasConfirmedEmail).toBe(true);
+    });
+  });
+
+  describe('requestPasswordReset', () => {
+    it('should fail if the user has not confirmed their email', async () => {
+      const user = await setupUser('helloworld', 'john@example.com', false);
+
+      await expect(
+        authService.requestPasswordReset(user.email)
+      ).rejects.toThrow(/not confirmed email/i);
+    });
+
+    it('should send a password reset email and add authToken data to the user entity', async () => {
+      jest
+        .spyOn(courierService, 'sendRequestResetEmail')
+        .mockImplementationOnce(jest.fn());
+
+      const user = await setupUser('helloworld', 'john@example.com', true);
+
+      const { token } = await authService.requestPasswordReset(user.email);
+
+      const updatedUser = await dataService.user.findUnique({
+        where: { id: user.id },
+      });
+
+      if (!updatedUser) throw new Error('User not found');
+
+      expect(updatedUser.authToken).toEqual(token);
+      expect(courierService.sendRequestResetEmail).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('resetPassword', () => {
+    it('should fail if the user has not confirmed their email', async () => {
+      const user = await setupUser(
+        'helloworld',
+        'john@example.com',
+        false,
+        'token',
+        dayjs().add(1, 'day').toDate()
+      );
+
+      await expect(
+        authService.resetPassword(
+          user.email,
+          'helloworld',
+          user.authToken as string
+        )
+      ).rejects.toThrow(/not confirmed email/i);
+    });
+
+    it('should reset the users password', async () => {
+      const user = await setupUser(
+        'helloworld',
+        'john@example.com',
+        true,
+        'token',
+        dayjs().add(1, 'day').toDate()
+      );
+
+      expect(
+        authService.resetPassword(
+          user.email,
+          'helloworld',
+          user.authToken as string
+        )
+      ).resolves;
     });
   });
 });
