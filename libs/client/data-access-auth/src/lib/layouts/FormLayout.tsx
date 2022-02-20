@@ -13,8 +13,23 @@ import { FC } from 'react';
 import NextLink from 'next/link';
 
 type Props = {
-  forPage: 'signup' | 'login';
+  forPage: 'signup' | 'login' | 'forgot-password' | 'reset-password';
 };
+
+function getPageHeading(title: Props['forPage']): string {
+  switch (title) {
+    case 'signup':
+      return 'Sign up';
+    case 'login':
+      return 'Login';
+    case 'forgot-password':
+      return 'Request Password reset';
+    case 'reset-password':
+      return 'Reset password';
+    default:
+      throw Error('Unknown page title');
+  }
+}
 
 export const FormLayout: FC<Props> = ({ forPage, children }) => {
   const router = useRouter();
@@ -22,7 +37,7 @@ export const FormLayout: FC<Props> = ({ forPage, children }) => {
   return (
     <Container>
       <Heading variant="h1" textAlign="center" my={5}>
-        {forPage === 'signup' ? 'Sign up' : 'Login'}
+        {getPageHeading(forPage)}
       </Heading>
 
       {children}
@@ -35,6 +50,7 @@ export const FormLayout: FC<Props> = ({ forPage, children }) => {
         >
           <BiArrowBack />
         </IconButton>
+
         {forPage === 'login' && (
           <Button
             colorScheme="purple"
@@ -46,6 +62,7 @@ export const FormLayout: FC<Props> = ({ forPage, children }) => {
             Sign up
           </Button>
         )}
+
         {forPage === 'signup' && (
           <Button
             colorScheme="purple"
@@ -58,11 +75,13 @@ export const FormLayout: FC<Props> = ({ forPage, children }) => {
           </Button>
         )}
       </Box>
-      <Text mt={10} align="center">
-        <NextLink href="/forgot-password">
-          <Link>Forgot Password?</Link>
-        </NextLink>
-      </Text>
+      {forPage !== 'forgot-password' && forPage !== 'reset-password' && (
+        <Text mt={10} align="center">
+          <NextLink href="/forgot-password">
+            <Link>Forgot Password?</Link>
+          </NextLink>
+        </Text>
+      )}
     </Container>
   );
 };

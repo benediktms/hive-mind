@@ -107,8 +107,6 @@ export class AuthService {
   public async confirmEmail(email: string, token: string) {
     const user = await this.userService.getUserByEmail(email);
 
-    console.log(token, user.authToken);
-
     this.checkAuthTokens(token, user.authToken, user.authTokenExpiresAt);
     this.checkUserHasConfirmedEmail(user.hasConfirmedEmail, true);
 
@@ -154,7 +152,11 @@ export class AuthService {
 
     if (!user.authToken) throw new Error('Failed to create auth token');
 
-    await this.courierService.sendRequestResetEmail(email, user.authToken);
+    await this.courierService.sendRequestResetEmail(
+      user.id,
+      user.email,
+      user.authToken
+    );
 
     return {
       token: user.authToken,
@@ -168,6 +170,11 @@ export class AuthService {
     this.checkUserHasConfirmedEmail(user.hasConfirmedEmail);
 
     this.checkAuthTokens(token, user.authToken, user.authTokenExpiresAt);
+
+    await this.dataService.user.update({
+      where: { email },
+      data: { authToken: null, authTokenExpiresAt: null },
+    });
 
     const passwordHash = await this.createPassword(password);
 

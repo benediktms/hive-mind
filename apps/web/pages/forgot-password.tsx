@@ -1,12 +1,9 @@
-import { Container } from '@chakra-ui/react';
+import { withApollo } from '@hive-mind/client-data-access-gql';
+import { RequestResetPage } from '@hive-mind/client/views';
 import React from 'react';
 
-export const forgotPassword = () => {
-  return (
-    <Container>
-      <h1>Forgot Password</h1>
-    </Container>
-  );
+export const ForgotPassword = () => {
+  return <RequestResetPage />;
 };
 
-export default forgotPassword;
+export default withApollo({ ssr: false })(ForgotPassword);

@@ -49,10 +49,14 @@ export class CourierService {
     }
   }
 
-  public async sendRequestResetEmail(email: string, token: string) {
+  public async sendRequestResetEmail(
+    userId: number,
+    email: string,
+    token: string
+  ) {
     Logger.log('sendRequestResetEmail', 'CourierService');
     const eventId = this.configService.get(
-      'requestResetPasswordNotificationId',
+      'REQUEST_RESET_PASSWORD_NOTIFICATION_ID',
       ''
     );
 
@@ -60,7 +64,7 @@ export class CourierService {
       await this.courier.send(
         {
           eventId,
-          recipientId: `${email}`,
+          recipientId: `${userId}`,
           brand: this.configService.get('COURIER_BRAND_ID', ''),
           data: {
             token,
