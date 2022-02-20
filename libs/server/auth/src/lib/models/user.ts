@@ -13,4 +13,7 @@ export default class User {
 
   @Field()
   lastName!: string;
+
+  @Field()
+  hasConfirmedEmail!: boolean;
 }

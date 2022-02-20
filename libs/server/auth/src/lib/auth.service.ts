@@ -1,56 +1,42 @@
 import { DataService } from '@hive-mind/server-data';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { Response, CookieOptions } from 'express';
+import { Injectable } from '@nestjs/common';
 import { SALT_LENGTH, SALT_ROUNDS } from '../utils/constants';
 import RegisterDTO from './dto/register.dto';
 import { hash, verify } from 'argon2';
 import { randomBytes } from 'crypto';
 import { FailedToAuthenticateError } from '../utils/failed-to-authenticate-error';
-import RegisterResponse from './response/register.response';
-import { JwtService } from '@nestjs/jwt';
 import { EmailTakenError } from '../utils/email-taken-error';
-import { ConfigService } from '@nestjs/config';
-import { User } from '.prisma/client';
-import {
-  AccessToken,
-  AccessTokenPayload,
-  Cookies,
-  RefreshToken,
-  RefreshTokenPayload,
-  TokenExpiration,
-} from '@hive-mind/shared';
+import { CourierService } from '@hive-mind/server/courier';
+import { nanoid } from 'nanoid';
+import { TokenService } from './token.service';
+import { UserService } from './user.service';
 import dayjs from 'dayjs';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly dataService: DataService,
-    private readonly jwtService: JwtService,
-    private readonly configService: ConfigService
+    private readonly tokenService: TokenService,
+    private readonly courierService: CourierService,
+    private readonly userService: UserService
   ) {}
 
-  public async getUserById(id: number) {
-    const user = await this.dataService.user.findUnique({
-      where: { id },
-    });
-
-    if (!user) throw new Error('User not found');
-
-    return user;
-  }
-
   public async login(email: string, password: string) {
-    const user = await this.dataService.user.findUnique({ where: { email } });
+    const user = await this.userService.getUserByEmail(email);
 
     if (!user) {
       throw new FailedToAuthenticateError();
     }
 
+    this.checkUserHasConfirmedEmail(user.hasConfirmedEmail);
+
     await this.validatePassword(user.passwordHash, password);
 
-    const { accessToken, refreshToken } = await this.buildTokens(user);
+    const { accessToken, refreshToken } = await this.tokenService.buildTokens(
+      user
+    );
 
-    return { accessToken, refreshToken, user };
+    return { user, accessToken, refreshToken };
   }
 
   public async register(input: RegisterDTO) {
@@ -70,135 +56,70 @@ export class AuthService {
         firstName: input.firstName.trim(),
         lastName: input.lastName.trim(),
         passwordHash,
+        authToken: nanoid(),
+        authTokenExpiresAt: dayjs().add(1, 'day').toDate(),
+        hasConfirmedEmail: false,
       },
     });
 
-    const { accessToken, refreshToken } = await this.buildTokens(user);
-
-    return new RegisterResponse(user, accessToken, refreshToken);
-  }
-
-  public async validateUser(id: number): Promise<User> {
-    const user = await this.dataService.user.findUnique({
-      where: { id },
-    });
-
-    if (!user) {
-      throw new UnauthorizedException();
+    if (!user.authToken) {
+      throw new Error('Failed to create auth token');
     }
 
-    return user;
+    // TODO: This should eventually be moved into a task queue maybe?
+    await this.courierService.sendConfirmAccountEmail(
+      user.id,
+      user.firstName,
+      user.email,
+      user.authToken
+    );
+
+    return 'Sign up successful. Please check your email to confirm your account.';
   }
 
-  private signAccessToken(payload: AccessTokenPayload) {
-    return this.jwtService.sign(payload, {
-      secret: this.configService.get('accessTokenSecret'),
-      expiresIn: TokenExpiration.Access,
-    });
-  }
+  private checkAuthTokens(
+    incomingToken: string | null,
+    existingToken: string | null,
+    authTokenExpiresAt: Date | null
+  ) {
+    if (incomingToken !== existingToken) {
+      throw new Error('Tokens do not match');
+    }
 
-  private signRefreshToken(payload: RefreshTokenPayload) {
-    return this.jwtService.sign(payload, {
-      secret: this.configService.get('refreshTokenSecret'),
-      expiresIn: TokenExpiration.Refresh,
-    });
-  }
-
-  private isProd = this.configService.get('environment') === 'production';
-
-  private defaultCookieOptions: CookieOptions = {
-    httpOnly: true,
-    secure: this.isProd,
-    sameSite: this.isProd ? 'strict' : 'lax',
-    domain: this.configService.get('baseDomain') as string,
-    path: '/',
-  };
-
-  public setTokens(res: Response, accessToken: string, refreshToken?: string) {
-    const accessTokenCookieOptions: CookieOptions = {
-      ...this.defaultCookieOptions,
-      maxAge: TokenExpiration.Access * 1000,
-    };
-
-    const refreshTokenCookieOptions: CookieOptions = {
-      ...this.defaultCookieOptions,
-      maxAge: TokenExpiration.Refresh * 1000,
-    };
-
-    res.cookie(Cookies.AccessToken, accessToken, accessTokenCookieOptions);
-
-    if (refreshToken) {
-      res.cookie(Cookies.RefreshToken, refreshToken, refreshTokenCookieOptions);
+    if (!incomingToken || dayjs().isAfter(authTokenExpiresAt)) {
+      throw new Error('Invalid token');
     }
   }
 
-  public refreshTokens(current: RefreshToken, version: number) {
-    if (version !== current.version) throw new Error('Token revoked');
-
-    const accessPayload: AccessTokenPayload = { userId: current.userId };
-    const accessToken = this.signAccessToken(accessPayload);
-
-    let refreshPayload: RefreshTokenPayload | undefined;
-
-    const expiration = dayjs(current.exp);
-    const now = dayjs();
-    const secondsUntilExpiration = now.diff(expiration, 'seconds');
-
-    if (secondsUntilExpiration < TokenExpiration.RefreshIfLessThan) {
-      refreshPayload = { userId: current.userId, version };
+  private checkUserHasConfirmedEmail(
+    hasConfirmedEmail: boolean,
+    shouldBeConfirmed = false
+  ) {
+    if (!shouldBeConfirmed && !hasConfirmedEmail) {
+      throw new Error('User has not confirmed email');
     }
 
-    const refreshToken =
-      refreshPayload && this.signRefreshToken(refreshPayload);
-
-    return { accessToken, refreshToken };
+    if (shouldBeConfirmed && hasConfirmedEmail) {
+      throw new Error('User has already confirmed email');
+    }
   }
 
-  public verifyAccessToken(accessToken: string) {
-    return this.jwtService.verify(
-      accessToken,
-      this.configService.get('accessTokenSecret')
-    ) as AccessToken;
-  }
+  public async confirmEmail(email: string, token: string) {
+    const user = await this.userService.getUserByEmail(email);
 
-  public verifyRefreshToken(refreshToken: string) {
-    return this.jwtService.verify(
-      refreshToken,
-      this.configService.get('refreshTokenSecret')
-    ) as RefreshToken;
-  }
+    this.checkAuthTokens(token, user.authToken, user.authTokenExpiresAt);
+    this.checkUserHasConfirmedEmail(user.hasConfirmedEmail, true);
 
-  public clearTokens(res: Response) {
-    res.cookie(Cookies.AccessToken, '', {
-      ...this.defaultCookieOptions,
-      maxAge: 0,
-    });
-
-    res.cookie(Cookies.RefreshToken, '', {
-      ...this.defaultCookieOptions,
-      maxAge: 0,
-    });
-  }
-
-  private async buildTokens(user: User) {
-    const accessTokenPayload: AccessTokenPayload = { userId: user.id };
-    const refreshTokenPayload: RefreshTokenPayload = {
-      userId: user.id,
-      version: user.refreshTokenVersion,
-    };
-
-    const accessToken = this.jwtService.sign(accessTokenPayload);
-    const refreshToken = this.jwtService.sign(refreshTokenPayload);
-
-    return { accessToken, refreshToken };
-  }
-
-  // Use this for password reset and password change
-  public async invalidateRefreshToken(userId: number) {
     await this.dataService.user.update({
-      where: { id: userId },
-      data: { refreshTokenVersion: { increment: 1 } },
+      where: { email },
+      data: { authToken: null, hasConfirmedEmail: true },
     });
+
+    const { accessToken, refreshToken } = await this.tokenService.buildTokens(
+      user
+    );
+
+    return { accessToken, refreshToken };
   }
 
   private async createPassword(userInput: string): Promise<string> {
@@ -216,5 +137,50 @@ export class AuthService {
     if (!attemptIsVerified) {
       throw new FailedToAuthenticateError();
     }
+  }
+
+  public async requestPasswordReset(email: string) {
+    const user = await this.dataService.user.update({
+      where: { email },
+      data: {
+        authToken: nanoid(),
+        authTokenExpiresAt: dayjs().add(15, 'minute').toDate(),
+      },
+    });
+
+    this.checkUserHasConfirmedEmail(user.hasConfirmedEmail);
+
+    if (!user.authToken) throw new Error('Failed to create auth token');
+
+    await this.courierService.sendRequestResetEmail(
+      user.id,
+      user.email,
+      user.authToken
+    );
+
+    return {
+      token: user.authToken,
+      email: user.email,
+    };
+  }
+
+  public async resetPassword(email: string, password: string, token: string) {
+    const user = await this.userService.getUserByEmail(email);
+
+    this.checkUserHasConfirmedEmail(user.hasConfirmedEmail);
+
+    this.checkAuthTokens(token, user.authToken, user.authTokenExpiresAt);
+
+    await this.dataService.user.update({
+      where: { email },
+      data: { authToken: null, authTokenExpiresAt: null },
+    });
+
+    const passwordHash = await this.createPassword(password);
+
+    await this.dataService.user.update({
+      where: { email },
+      data: { passwordHash },
+    });
   }
 }

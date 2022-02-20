@@ -4,18 +4,25 @@ import {
   mockClass,
   truncateTables,
 } from '@hive-mind/server-data';
+import { CourierService } from '@hive-mind/server/courier';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { User } from '@prisma/client';
-import { internet } from 'faker';
+import dayjs from 'dayjs';
 import { AuthService } from './auth.service';
-import RegisterResponse from './response/register.response';
+import { TokenService } from './token.service';
+import { UserService } from './user.service';
 
 describe('AuthService', () => {
   let module: TestingModule;
   let authService: AuthService;
   let dataService: DataService;
+  const courierService = mockClass<CourierService>({
+    sendConfirmAccountEmail: jest.fn(),
+    sendRequestResetEmail: jest.fn(),
+  });
+
   const entityFactory = new EntityFactory();
 
   beforeAll(async () => {
@@ -30,6 +37,12 @@ describe('AuthService', () => {
           }),
         },
         ConfigService,
+        TokenService,
+        UserService,
+        {
+          provide: CourierService,
+          useValue: courierService,
+        },
       ],
     }).compile();
 
@@ -44,23 +57,29 @@ describe('AuthService', () => {
     await module.close();
   });
 
+  beforeEach(async () => await truncateTables(dataService));
+
   async function setupUser(
     password: string,
-    email = 'john-doe@example.com'
+    email = 'john-doe@example.com',
+    hasConfirmedEmail = true,
+    authToken: string | undefined = undefined,
+    authTokenExpiresAt: Date | undefined = undefined
   ): Promise<User> {
     const user = await entityFactory.generateUser({
       email,
       firstName: 'John',
       lastName: 'Doe',
       passwordHash: password,
+      hasConfirmedEmail,
+      authToken,
+      authTokenExpiresAt,
     });
 
     return await dataService.user.create({ data: user });
   }
 
   describe('register', () => {
-    beforeEach(async () => await truncateTables(dataService));
-
     it('should not create a new user if the email is already taken', async () => {
       const taken = await setupUser('helloworld');
 
@@ -72,6 +91,8 @@ describe('AuthService', () => {
           password: 'helloworld',
         })
       ).rejects.toThrow(/this email is already being used/i);
+
+      expect(courierService.sendConfirmAccountEmail).not.toHaveBeenCalled();
     });
 
     it('should create a user', async () => {
@@ -88,22 +109,15 @@ describe('AuthService', () => {
           lastName: user.lastName,
           password: 'helloworld',
         })
-      ).resolves.toEqual<RegisterResponse>({
-        accessToken: 'token',
-        refreshToken: 'token',
-        user: expect.objectContaining<RegisterResponse['user']>({
-          id: expect.anything(),
-          email: user.email,
-          firstName: user.firstName,
-          lastName: user.lastName,
-        }),
-      });
+      ).resolves.toEqual(
+        'Sign up successful. Please check your email to confirm your account.'
+      );
+
+      expect(courierService.sendConfirmAccountEmail).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('login', () => {
-    beforeEach(async () => await truncateTables(dataService));
-
     it('should log the user in', async () => {
       const user = await setupUser('helloworld');
 
@@ -124,16 +138,145 @@ describe('AuthService', () => {
         /something went wrong/i
       );
     });
+
+    it('should not log the user in if the email has not been confirmed', async () => {
+      const user = await setupUser('helloworld', 'john@example.com', false);
+
+      await expect(authService.login(user.email, 'helloworld')).rejects.toThrow(
+        /user has not confirmed email/i
+      );
+    });
   });
 
-  describe('verifyAccessToken', () => {
-    beforeAll(async () => await setupUser('helloworld', internet.email()));
-    afterAll(async () => await truncateTables(dataService));
+  describe('confirmEmail', () => {
+    it('should fail if the token has expired', async () => {
+      const user = await setupUser(
+        'helloworld',
+        'john@example.com',
+        false,
+        'token',
+        dayjs().subtract(1, 'day').toDate()
+      );
 
-    it.todo('should not send a token if the cookie is not set');
-    it.todo('should not send a token if the user is not found');
-    it.todo('should not send a token if the token version is invalid');
-    it.todo('should set a refres token on the cookie');
-    it.todo('should return a new access token');
+      console.log(user.authToken);
+
+      await expect(
+        authService.confirmEmail(user.email, 'token')
+      ).rejects.toThrow(/invalid token/i);
+    });
+
+    it('should fail if the tokens do not match', async () => {
+      const user = await setupUser(
+        'helloworld',
+        'john@example.com',
+        false,
+        'token',
+        dayjs().subtract(1, 'day').toDate()
+      );
+
+      await expect(
+        authService.confirmEmail(user.email, 'wrong_token')
+      ).rejects.toThrow(/tokens do not match/i);
+    });
+
+    it('should fail if the user has already confirmed their email', async () => {
+      const user = await setupUser(
+        'helloworld',
+        'john@example.com',
+        true,
+        'token'
+      );
+
+      await expect(
+        authService.confirmEmail(user.email, 'token')
+      ).rejects.toThrow(/user has already confirmed email/i);
+    });
+
+    it('should remove the users auth token and set "hasConfirmedEmail" to true', async () => {
+      const user = await setupUser(
+        'helloworld',
+        'john@example.com',
+        false,
+        'token',
+        dayjs().add(1, 'day').toDate()
+      );
+
+      await authService.confirmEmail(user.email, 'token');
+
+      const updatedUser = await dataService.user.findUnique({
+        where: { id: user.id },
+      });
+
+      if (!updatedUser) throw new Error('User not found');
+
+      expect(updatedUser.hasConfirmedEmail).toBe(true);
+    });
+  });
+
+  describe('requestPasswordReset', () => {
+    it('should fail if the user has not confirmed their email', async () => {
+      const user = await setupUser('helloworld', 'john@example.com', false);
+
+      await expect(
+        authService.requestPasswordReset(user.email)
+      ).rejects.toThrow(/not confirmed email/i);
+    });
+
+    it('should send a password reset email and add authToken data to the user entity', async () => {
+      jest
+        .spyOn(courierService, 'sendRequestResetEmail')
+        .mockImplementationOnce(jest.fn());
+
+      const user = await setupUser('helloworld', 'john@example.com', true);
+
+      const { token } = await authService.requestPasswordReset(user.email);
+
+      const updatedUser = await dataService.user.findUnique({
+        where: { id: user.id },
+      });
+
+      if (!updatedUser) throw new Error('User not found');
+
+      expect(updatedUser.authToken).toEqual(token);
+      expect(courierService.sendRequestResetEmail).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('resetPassword', () => {
+    it('should fail if the user has not confirmed their email', async () => {
+      const user = await setupUser(
+        'helloworld',
+        'john@example.com',
+        false,
+        'token',
+        dayjs().add(1, 'day').toDate()
+      );
+
+      await expect(
+        authService.resetPassword(
+          user.email,
+          'helloworld',
+          user.authToken as string
+        )
+      ).rejects.toThrow(/not confirmed email/i);
+    });
+
+    it('should reset the users password', async () => {
+      const user = await setupUser(
+        'helloworld',
+        'john@example.com',
+        true,
+        'token',
+        dayjs().add(1, 'day').toDate()
+      );
+
+      expect(
+        authService.resetPassword(
+          user.email,
+          'helloworld',
+          user.authToken as string
+        )
+      ).resolves;
+    });
   });
 });

@@ -1,0 +1,6 @@
+mutation RequestReset($input: RequestPasswordResetInput!) {
+  requestPasswordReset(input: $input) {
+    email
+    token
+  }
+}

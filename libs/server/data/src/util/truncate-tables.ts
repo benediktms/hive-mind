@@ -13,7 +13,7 @@ export async function truncateTables(dataService: DataService) {
           `TRUNCATE TABLE "public"."${tablename}" CASCADE;`
         );
       } catch (error) {
-        Logger.error(error);
+        Logger.error('Error truncating tables for tests', error);
       }
     }
   }

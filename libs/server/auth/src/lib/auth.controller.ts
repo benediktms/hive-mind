@@ -1,14 +1,14 @@
 import { Response } from 'express';
 import { Controller, Logger, Post, Res } from '@nestjs/common';
-import { AuthService } from './auth.service';
 import { Cookies } from '@hive-mind/shared';
 import { DataService } from '@hive-mind/server-data';
 import { ReqCookies } from './decorators/cookies.decorator';
+import { TokenService } from './token.service';
 
 @Controller()
 export class AuthController {
   constructor(
-    private readonly authService: AuthService,
+    private readonly tokenService: TokenService,
     private readonly dataService: DataService
   ) {}
 
@@ -20,7 +20,7 @@ export class AuthController {
     Logger.log('refreshToken', 'AuthController');
 
     try {
-      const current = this.authService.verifyRefreshToken(token);
+      const current = this.tokenService.verifyRefreshToken(token);
 
       const user = await this.dataService.user.findUnique({
         where: { id: current.userId },
@@ -28,16 +28,16 @@ export class AuthController {
 
       if (!user) throw new Error('User not found');
 
-      const { accessToken, refreshToken } = this.authService.refreshTokens(
+      const { accessToken, refreshToken } = this.tokenService.refreshTokens(
         current,
         user.refreshTokenVersion
       );
 
-      this.authService.setTokens(res, accessToken, refreshToken);
+      this.tokenService.setTokens(res, accessToken, refreshToken);
 
       res.send();
     } catch (e) {
-      this.authService.clearTokens(res);
+      this.tokenService.clearTokens(res);
     }
 
     res.end();

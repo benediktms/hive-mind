@@ -18,6 +18,6 @@ describe('LoginPage ', () => {
     });
 
     const heading = await screen.findByRole('heading');
-    expect(heading).toHaveTextContent('Register');
+    expect(heading).toHaveTextContent('Sign up');
   });
 });

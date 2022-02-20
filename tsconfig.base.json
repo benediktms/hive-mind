@@ -30,6 +30,7 @@
       "@hive-mind/server-auth": ["libs/server/auth/src/index.ts"],
       "@hive-mind/server-core": ["libs/server/core/src/index.ts"],
       "@hive-mind/server-data": ["libs/server/data/src/index.ts"],
+      "@hive-mind/server/courier": ["libs/server/courier/src/index.ts"],
       "@hive-mind/shared": ["libs/shared/src/index.ts"]
     }
   },

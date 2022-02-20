@@ -8,7 +8,7 @@ export class DataService extends PrismaClient implements OnModuleInit {
   }
 
   // public async onModuleDestroy() {
-  //   if (this.configService.get('environment') === 'test') {
+  //   if (this.configService.get('NODE_ENV') === 'test') {
   //     this.$queryRaw`DROP DATABASE tests`;
   //   }
 

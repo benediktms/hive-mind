@@ -1,11 +1,6 @@
 import { z } from 'zod';
-
-const email = z
-  .string()
-  .email()
-  .transform((str) => str.toLowerCase().trim());
-
-export const password = z.string().min(10).max(100);
+import { email } from './shared/email';
+import { password } from './shared/password';
 
 const name = z
   .string()

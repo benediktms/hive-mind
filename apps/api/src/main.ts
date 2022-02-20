@@ -16,13 +16,13 @@ async function bootstrap() {
   await dataService.enableShutdownHooks(app);
 
   const configService = app.get(ConfigService);
-  const port = configService.get('port');
-  const env = configService.get('environment');
-  const clientUrl = configService.get('clientUrl');
+  const port = configService.get('PORT');
+  const env = configService.get('NODE_ENV');
+  const CLIENT_URL = configService.get('CLIENT_URL');
 
   app.use(cookieParser());
   app.enableCors({
-    origin: clientUrl,
+    origin: CLIENT_URL,
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
   });

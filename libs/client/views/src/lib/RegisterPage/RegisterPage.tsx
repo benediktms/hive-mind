@@ -1,10 +1,9 @@
-import { Container } from '@chakra-ui/layout';
-import { RegisterForm } from '@hive-mind/client-data-access-auth';
+import { FormLayout, RegisterForm } from '@hive-mind/client-data-access-auth';
 
 export const RegisterPage = () => {
   return (
-    <Container>
+    <FormLayout forPage="signup">
       <RegisterForm />
-    </Container>
+    </FormLayout>
   );
 };
