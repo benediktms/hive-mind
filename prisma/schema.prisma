@@ -11,12 +11,15 @@ datasource db {
 }
 
 model User {
-  id                  Int      @id @default(autoincrement())
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
-  email               String   @unique
-  firstName           String   @db.VarChar(100)
-  lastName            String   @db.VarChar(100)
+  id                  Int       @id @default(autoincrement())
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  email               String    @unique
+  firstName           String    @db.VarChar(100)
+  lastName            String    @db.VarChar(100)
   passwordHash        String
-  refreshTokenVersion Int      @default(0)
+  refreshTokenVersion Int       @default(0)
+  authToken           String?   @unique @db.VarChar(40)
+  authTokenExpiresAt  DateTime?
+  hasConfirmedEmail   Boolean   @default(true)
 }

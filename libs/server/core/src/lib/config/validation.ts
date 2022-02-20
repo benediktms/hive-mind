@@ -13,4 +13,7 @@ export const ConfigSchema = z.object({
   REFRESH_TOKEN_SECRET: z.string().min(1),
   ANON_KEY: z.string().min(1),
   SERVICE_KEY: z.string().min(1),
+  CONFIRM_ACCOUNT_NOTIFICATION_ID: z.string().min(1),
+  COURIER_BRAND_ID: z.string().min(1),
+  COURIER_AUTH_TOKEN: z.string().min(1),
 });

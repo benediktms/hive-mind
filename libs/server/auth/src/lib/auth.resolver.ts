@@ -9,25 +9,32 @@ import { UseGuards } from '@nestjs/common';
 import { GraphQLAuthGuard } from './guards/graphql-auth.guard';
 import { LogoutResponse } from './response/logout.response';
 import { CurrentUserResponse } from './response/current-user.response';
+import { TokenService } from './token.service';
+import { UserService } from './user.service';
+import { ConfirmEmailInput } from './dto/confirm-email.dto';
+import { ConfirmEmailResponse } from './response/confirm-email.response';
+import { RequestPasswordResetResponse } from './response/request-password-reset.response';
+import { RequestPasswordResetInput } from './dto/request-password-reset.dto';
+import { ResetPasswordInput } from './dto/reset-password.dto';
+import { ResetPasswordResponse } from './response/reset-password.dto';
 
 @Resolver()
 export class AuthResolver {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly tokenService: TokenService,
+    private readonly userService: UserService
+  ) {}
 
   @Mutation(() => RegisterResponse, {
     description: 'Registers a new User',
   })
   public async register(
-    @Args('input') input: RegisterInput,
-    @Context() context: GraphQLContext
+    @Args('input') input: RegisterInput
   ): Promise<RegisterResponse> {
-    const { accessToken, refreshToken, user } = await this.authService.register(
-      input
-    );
+    const message = await this.authService.register(input);
 
-    this.authService.setTokens(context.res, accessToken, refreshToken);
-
-    return new RegisterResponse(user, accessToken, refreshToken);
+    return new RegisterResponse(message);
   }
 
   @Mutation(() => LoginResponse, {
@@ -42,7 +49,7 @@ export class AuthResolver {
       input.password
     );
 
-    this.authService.setTokens(context.res, accessToken, refreshToken);
+    this.tokenService.setTokens(context.res, accessToken, refreshToken);
 
     return new LoginResponse(`Welcome back, ${user.firstName}!`);
   }
@@ -50,7 +57,7 @@ export class AuthResolver {
   @Mutation(() => LogoutResponse)
   @UseGuards(GraphQLAuthGuard)
   public logout(@Context() { res }: GraphQLContext): LogoutResponse {
-    this.authService.clearTokens(res);
+    this.tokenService.clearTokens(res);
 
     return new LogoutResponse('Logged out');
   }
@@ -62,11 +69,47 @@ export class AuthResolver {
   ): Promise<CurrentUserResponse> {
     const { cookies } = context.req;
     const token: string = cookies[Cookies.AccessToken];
-    const accessToken = this.authService.verifyAccessToken(token);
+    const accessToken = this.tokenService.verifyAccessToken(token);
 
     const { id, email, firstName, lastName } =
-      await this.authService.getUserById(accessToken.userId);
+      await this.userService.getUserById(accessToken.userId);
 
     return new CurrentUserResponse(id, email, firstName, lastName);
+  }
+
+  @Mutation(() => ConfirmEmailResponse)
+  public async confirmEmail(
+    @Args('input') input: ConfirmEmailInput,
+    @Context() context: GraphQLContext
+  ) {
+    const res = context.res;
+    const { accessToken, refreshToken } = await this.authService.confirmEmail(
+      input.email,
+      input.token
+    );
+
+    this.tokenService.setTokens(res, accessToken, refreshToken);
+
+    return new ConfirmEmailResponse('Email confirmed');
+  }
+
+  @Mutation(() => RequestPasswordResetResponse)
+  public async requestPasswordReset(
+    @Args('input') input: RequestPasswordResetInput
+  ) {
+    const res = await this.authService.requestPasswordReset(input.email);
+
+    return new RequestPasswordResetResponse(res.token, res.email);
+  }
+
+  @Mutation(() => ResetPasswordResponse)
+  public async resetPassword(@Args('input') input: ResetPasswordInput) {
+    await this.authService.resetPassword(
+      input.email,
+      input.password,
+      input.token
+    );
+
+    return new ResetPasswordResponse('Password reset successfully');
   }
 }

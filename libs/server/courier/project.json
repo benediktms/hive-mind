@@ -1,0 +1,23 @@
+{
+  "root": "libs/server/courier",
+  "sourceRoot": "libs/server/courier/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/server/courier/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/server/courier"],
+      "options": {
+        "jestConfig": "libs/server/courier/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

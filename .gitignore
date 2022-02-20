@@ -39,4 +39,6 @@ testem.log
 Thumbs.db
 
 # Environment variables
-.env*
+.env
+.env.test
+.env.local

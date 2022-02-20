@@ -2,6 +2,15 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input ConfirmEmailInput {
+  email: String!
+  token: String!
+}
+
+type ConfirmEmailResponse {
+  message: String!
+}
+
 type CurrentUserResponse {
   email: String!
   firstName: String!
@@ -23,12 +32,22 @@ type LogoutResponse {
 }
 
 type Mutation {
-  """Allows the user to log in"""
+  confirmEmail(input: ConfirmEmailInput!): ConfirmEmailResponse!
+
+  """
+  Allows the user to log in
+  """
   login(input: LoginInput!): LoginResponse!
   logout: LogoutResponse!
 
-  """Registers a new User"""
+  """
+  Registers a new User
+  """
   register(input: RegisterInput!): RegisterResponse!
+  requestPasswordReset(
+    input: RequestPasswordResetInput!
+  ): RequestPasswordResetResponse!
+  resetPassword(input: ResetPasswordInput!): ResetPasswordResponse!
 }
 
 type Query {
@@ -44,14 +63,24 @@ input RegisterInput {
 }
 
 type RegisterResponse {
-  accessToken: String!
-  refreshToken: String!
-  user: User!
+  message: String!
 }
 
-type User {
+input RequestPasswordResetInput {
   email: String!
-  firstName: String!
-  id: Float!
-  lastName: String!
+}
+
+type RequestPasswordResetResponse {
+  email: String!
+  token: String!
+}
+
+input ResetPasswordInput {
+  email: String!
+  password: String!
+  token: String!
+}
+
+type ResetPasswordResponse {
+  message: String!
 }

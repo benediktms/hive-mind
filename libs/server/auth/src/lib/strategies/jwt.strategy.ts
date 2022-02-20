@@ -2,8 +2,8 @@ import { AccessTokenPayload, Cookies } from '@hive-mind/shared';
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-jwt';
-import { AuthService } from '../auth.service';
 import { Request } from 'express';
+import { UserService } from '../user.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -15,7 +15,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     return token;
   }
 
-  constructor(private readonly authService: AuthService) {
+  constructor(private readonly userService: UserService) {
     super({
       jwtFromRequest: (req: Request) => JwtStrategy.extreactJWTFromCookie(req),
       secretOrKey: process.env.ACCESS_TOKEN_SECRET,
@@ -24,6 +24,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   public async validate(payload: AccessTokenPayload) {
-    return await this.authService.validateUser(payload.userId);
+    return await this.userService.getUserById(payload.userId);
   }
 }

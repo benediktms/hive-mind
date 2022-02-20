@@ -11,10 +11,14 @@ export class EntityFactory {
       firstName: name.firstName(),
       lastName: name.lastName(),
       ...opts,
+      // NOTE: this could potentially slow down tests
       passwordHash: await hash(
         (opts && opts.passwordHash) || internet.password()
       ),
       refreshTokenVersion: 0,
+      authToken: opts?.authToken as string,
+      authTokenExpiresAt: opts?.authTokenExpiresAt as Date,
+      hasConfirmedEmail: opts?.hasConfirmedEmail ?? false,
     };
   }
 }
