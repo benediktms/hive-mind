@@ -18,6 +18,7 @@ describe('AuthService', () => {
   let module: TestingModule;
   let authService: AuthService;
   let dataService: DataService;
+  let userService: UserService;
   const courierService = mockClass<CourierService>({
     sendConfirmAccountEmail: jest.fn(),
     sendRequestResetEmail: jest.fn(),
@@ -48,6 +49,7 @@ describe('AuthService', () => {
 
     authService = module.get(AuthService);
     dataService = module.get(DataService);
+    userService = module.get(UserService);
 
     await dataService.$connect();
   });
@@ -157,8 +159,6 @@ describe('AuthService', () => {
         'token',
         dayjs().subtract(1, 'day').toDate()
       );
-
-      console.log(user.authToken);
 
       await expect(
         authService.confirmEmail(user.email, 'token')
@@ -270,13 +270,15 @@ describe('AuthService', () => {
         dayjs().add(1, 'day').toDate()
       );
 
-      expect(
-        authService.resetPassword(
-          user.email,
-          'helloworld',
-          user.authToken as string
-        )
-      ).resolves;
+      await authService.resetPassword(
+        user.email,
+        'helloworld',
+        user.authToken as string
+      );
+
+      const updatedUser = await userService.getUserById(user.id);
+
+      expect(updatedUser.refreshTokenVersion).toEqual(1);
     });
   });
 });
