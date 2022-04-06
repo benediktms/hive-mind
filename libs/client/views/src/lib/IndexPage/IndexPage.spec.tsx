@@ -1,6 +1,6 @@
 import { IndexPage } from './IndexPage';
 import { MockedProvider } from '@apollo/client/testing';
-import { cleanup, render, screen, waitFor } from '@testing-library/react';
+import { act, cleanup, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 describe('IndexPage', () => {
@@ -9,7 +9,7 @@ describe('IndexPage', () => {
   });
 
   it('should render successfully', async () => {
-    await waitFor(async () => {
+    await act(async () => {
       render(
         <MockedProvider>
           <IndexPage />
