@@ -7,6 +7,7 @@ import { CoreResolver } from './core.resolver';
 import { join } from 'path';
 import { Request } from 'express';
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
 @Module({
   imports: [
@@ -15,7 +16,8 @@ import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.int
       load: [configuration],
       validate: (configuration) => ConfigSchema.parse(configuration),
     }),
-    GraphQLModule.forRoot({
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
       autoSchemaFile: join(
         process.cwd(),
         '/libs/server/core/src/schema.graphql'
@@ -23,14 +25,16 @@ import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.int
       sortSchema: true,
       playground: true,
       introspection: true,
-      formatResponse: (res, ctx) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      formatResponse: (res: any, ctx: any) => {
         const req = ctx.request;
 
         Logger.log(`${req.operationName} Request`, req.variables);
         Logger.log(`${req.operationName} Response`, res.data);
         return res;
       },
-      context: ({ res }) => ({ res }),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      context: ({ res }: any) => ({ res }),
       cors: (
         req: Request,
         callback: (error: Error | null, options: CorsOptions) => void
