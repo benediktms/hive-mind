@@ -5,7 +5,7 @@ COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile && \
   yarn cache clean
 
-FROM node:16-alpine as build
+FROM node:18-alpine as build
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY prisma ./prisma
@@ -13,7 +13,7 @@ COPY . .
 RUN yarn prisma:generate
 RUN yarn build:api:prod
 
-FROM node:16-alpine as runner
+FROM node:18-alpine as runner
 RUN apk add --no-cache libc6-compat
 RUN npm i --location=global pm2
 WORKDIR /app

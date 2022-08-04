@@ -7,7 +7,7 @@ COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 
 # Rebuild the source code only when needed
-FROM node:16-alpine AS builder
+FROM node:18-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -15,7 +15,7 @@ RUN yarn prisma:generate
 RUN yarn build:web:prod
 
 # Production image, copy all the files and run next
-FROM node:16-alpine AS runner
+FROM node:18-alpine AS runner
 RUN npm i --location=global pm2
 WORKDIR /app
 ENV NODE_ENV production
