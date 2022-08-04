@@ -8,6 +8,7 @@ RUN yarn install --frozen-lockfile && \
 FROM node:16-alpine as build
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
+COPY prisma ./prisma
 COPY . .
 RUN yarn prisma:generate
 RUN yarn build:api:prod
@@ -18,6 +19,7 @@ WORKDIR /app
 COPY package.json yarn.lock ./
 ENV NODE_ENV production
 COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/prisma ./prisma
 COPY --from=build /app/dist/apps/api ./
 RUN yarn install --frozen-lockfile --production && \
   yarn cache clean
