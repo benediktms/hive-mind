@@ -15,6 +15,7 @@ RUN yarn build:api:prod
 
 FROM node:16-alpine as runner
 RUN apk add --no-cache libc6-compat
+RUN npm i --location=global pm2
 WORKDIR /app
 COPY package.json yarn.lock ./
 ENV NODE_ENV production
@@ -25,5 +26,5 @@ RUN yarn install --frozen-lockfile --production && \
   yarn cache clean
 RUN yarn prisma:generate
 EXPOSE 3001
-CMD ["node", "main"]
+CMD ["pm2-runtime", "node", "--", "main"]
 

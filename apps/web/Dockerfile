@@ -16,6 +16,7 @@ RUN yarn build:web:prod
 
 # Production image, copy all the files and run next
 FROM node:16-alpine AS runner
+RUN npm i --location=global pm2
 WORKDIR /app
 ENV NODE_ENV production
 RUN adduser --system --uid 1001 nextjs
@@ -26,4 +27,4 @@ COPY --from=builder /app/dist/apps/web ./
 USER nextjs
 EXPOSE 3000
 ENV PORT 3000
-CMD ["npm", "run", "start"]
+CMD ["pm2-runtime", "npm", "--", "start"]
