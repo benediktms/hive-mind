@@ -11,20 +11,20 @@ FROM node:18-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN yarn prisma:generate
-RUN yarn build:web:prod
+RUN yarn prisma:generate && \
+  yarn build:web:prod
 
 # Production image, copy all the files and run next
 FROM node:18-alpine AS runner
-RUN npm i --location=global pm2
 WORKDIR /app
+RUN npm i --location=global pm2
 ENV NODE_ENV production
-RUN adduser --system --uid 1001 nextjs
-COPY --from=deps /app/node_modules ./node_modules
+# RUN adduser --system --uid 1001 nextjs
+COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist/apps/web ./
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
-USER nextjs
-EXPOSE 3000
+# USER nextjs
+# EXPOSE 3000
 ENV PORT 3000
 CMD ["pm2-runtime", "npm", "--", "start"]

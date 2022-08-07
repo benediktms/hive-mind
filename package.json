@@ -5,8 +5,8 @@
   "scripts": {
     "test:up": "docker-compose -f docker-compose.test.yml up -d",
     "test:down": "docker-compose -f docker-compose.test.yml down",
-    "docker:build:web": "docker build -f apps/web/Dockerfile . -t hive-mind-web",
-    "docker:build:api": "docker build -f apps/api/Dockerfile . -t hive-mind-api",
+    "docker:build:web": "docker build -f apps/web/Dockerfile . -t benediktms/hive-mind-web",
+    "docker:build:api": "docker build -f apps/api/Dockerfile . -t benediktms/hive-mind-api",
     "docker:start": "docker-compose up -d && sh ./scripts/run-migrations.sh",
     "test:db": "yarn test:up && yarn prisma:migrate:deploy && nx affected --target=test --parallel",
     "start:api": "nx run api:serve",
