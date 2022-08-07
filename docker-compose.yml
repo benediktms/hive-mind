@@ -1,44 +1,25 @@
 version: '3.8'
 
 services:
-  # hivemind-postgres:
-  #   image: postgres:latest
-  #   volumes:
-  #     - data:/var/lib/postgresql/data
-  #   container_name: hivemind-database
-  #   env_file:
-  #     - '.env'
-  #     - ./apps/api/.env.local
-  #   ports:
-  #     - 5432:5432
-  #   environment:
-  #     - POSTGRES_USER=postgres
-  #     - POSTGRES_PASSWORD=postgres
-  #     - POSTGRES_DB=hivemind
   hive-mind-api:
     container_name: hivemind-api
+    hostname: api.hive-mind.app
     env_file:
-      - '.env'
-      - 'apps/api/.env.local'
-    image: 'hive-mind-api'
+      - apps/api/.env.local
+    image: benediktms/hive-mind-api
     ports:
       - 3001:3001
-    build:
-      context: '.'
-      dockerfile: apps/api
     network_mode: host
+    restart: on-failure
+
   hive-mind-web:
     container_name: hivemind-web
+    hostname: hive-mind.app
     env_file:
-      - '.env'
-      - 'apps/web/.env.local'
-    image: 'hive-mind-web'
+      - apps/web/.env.local
+    image: benediktms/hive-mind-web
     ports:
       - 3000:3000
-    build:
-      context: '.'
-      dockerfile: apps/web
-
-volumes:
-  data:
-    driver: local
+    depends_on:
+      - hive-mind-api
+    restart: on-failure
