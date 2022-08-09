@@ -9,8 +9,9 @@ services:
     image: benediktms/hive-mind-api
     ports:
       - 3001:3001
-    network_mode: host
     restart: on-failure
+    labels:
+      - 'traefik.http.routers.hivemind-api.rule=Host(`hivemind-api.docker.localhost:30001`)'
 
   hive-mind-web:
     container_name: hivemind-web
@@ -23,3 +24,9 @@ services:
     depends_on:
       - hive-mind-api
     restart: on-failure
+    labels:
+      - 'traefik.http.routers.hivemind-web.rule=Host(`hivemind-web.docker.localhost`)'
+
+networks:
+  traefik-public:
+    external: true
