@@ -1,0 +1,36 @@
+name: CI - Deploy
+on: [push]
+branches: [prod]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      SSH_KEY: ${{ secrets.SSH_KEY }}
+      DEPLOY_HOST: benedikt@hive-mind.app
+      DEPLOY_PATH: /srv/hivemind
+    steps:
+      - name: Add ssh key
+        shell: bash
+        run: |
+          echo $SSH_KEY  > /tmp/ssh-key
+          chmod 600 /tmp/ssh-key
+      - name: rsync to remote
+        shell: bash
+        run: |
+          rsync \
+            --verbose \
+            --recursive \
+            --rsh "ssh -i /tmp/ssh-key -o UserKnownHostsFile=/dev/null \
+            -o StricHostKeyChecking=no" \
+            ./ $DEPLOY_HOST:$DEPLOY_PATH
+      - name: start container images
+        shell: bash
+        run: |
+          ssh \
+          -i /tmp/ssh-key \
+          -o UserKnownHostsFile=/dev/null \
+          -o StrictHostKeyChecking=no \
+          -n \
+          $DEPLOY_HOST \
+          "cd $DEPLOY_PATH && docker-compose up -d"
