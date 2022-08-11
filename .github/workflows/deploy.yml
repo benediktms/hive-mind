@@ -1,6 +1,8 @@
 name: CI - Deploy
-on: [push]
-branches: [prod]
+on:
+  push:
+    branches:
+      - prod
 
 jobs:
   deploy:
@@ -10,19 +12,25 @@ jobs:
       DEPLOY_HOST: benedikt@hive-mind.app
       DEPLOY_PATH: /srv/hivemind
     steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Add ssh key
         shell: bash
         run: |
-          echo $SSH_KEY  > /tmp/ssh-key
+          echo "$SSH_KEY" > /tmp/ssh-key
           chmod 600 /tmp/ssh-key
+      - name: Echo SSH key
+        run: echo /tmp/ssh-key
       - name: rsync to remote
         shell: bash
+        working-directory: docker
         run: |
           rsync \
             --verbose \
             --recursive \
-            --rsh "ssh -i /tmp/ssh-key -o UserKnownHostsFile=/dev/null \
-            -o StricHostKeyChecking=no" \
+            --checksum \
+            --rsh "ssh -i /tmp/ssh-key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" \
             ./ $DEPLOY_HOST:$DEPLOY_PATH
       - name: start container images
         shell: bash
@@ -33,4 +41,5 @@ jobs:
           -o StrictHostKeyChecking=no \
           -n \
           $DEPLOY_HOST \
-          "cd $DEPLOY_PATH && docker-compose up -d"
+          "cd $DEPLOY_PATH && \
+          docker-compose pull && docker-compose up -d"

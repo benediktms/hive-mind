@@ -5,11 +5,6 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
-
-# Rebuild the source code only when needed
-FROM node:18-alpine AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN yarn prisma:generate && \
   yarn build:web:prod
@@ -17,14 +12,11 @@ RUN yarn prisma:generate && \
 # Production image, copy all the files and run next
 FROM node:18-alpine AS runner
 WORKDIR /app
-RUN npm i --location=global pm2
 ENV NODE_ENV production
-# RUN adduser --system --uid 1001 nextjs
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/dist/apps/web ./
+COPY --from=deps /app/dist/apps/web ./
+COPY --from=deps /app/yarn.lock ./
+RUN yarn install --production && yarn cache clean
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
-# USER nextjs
-# EXPOSE 3000
 ENV PORT 3000
-CMD ["pm2-runtime", "npm", "--", "start"]
+CMD [ "npm", "run", "start"]

@@ -5,19 +5,22 @@ services:
     container_name: hivemind-api
     hostname: api.hive-mind.app
     env_file:
-      - apps/api/.env.local
+      - ./.env
     image: benediktms/hive-mind-api
     ports:
       - 3001:3001
     restart: on-failure
     labels:
-      - 'traefik.http.routers.hivemind-api.rule=Host(`hivemind-api.docker.localhost:3001`)'
+      # - 'traefik.http.routers.hivemind-api.rule=Host(`hivemind-api.docker.localhost:3001`)'
+      - 'traefik.http.routers.hivemind-api.rule=Host(`hive-mind.app`)'
+    networks:
+      - traefik-public
 
   hive-mind-web:
     container_name: hivemind-web
     hostname: hive-mind.app
     env_file:
-      - apps/web/.env.local
+      - ./.env
     image: benediktms/hive-mind-web
     ports:
       - 3000:3000
@@ -25,7 +28,10 @@ services:
       - hive-mind-api
     restart: on-failure
     labels:
-      - 'traefik.http.routers.hivemind-web.rule=Host(`hivemind-web.docker.localhost`)'
+      # - 'traefik.http.routers.hivemind-web.rule=Host(`hivemind-web.docker.localhost`)'
+      - 'traefik.http.routers.hivemind-api.rule=Host(`api.hive-mind.app`)'
+    networks:
+      - traefik-public
 
 networks:
   traefik-public:
