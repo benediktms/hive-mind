@@ -1,18 +1,32 @@
-version: '3.9'
+version: '3.3'
 
 services:
-  db:
-    image: postgres:latest
-    volumes:
-      - data:/var/lib/postgresql/data
-    container_name: hivemind-database
-    env_file: ./apps/api/.env.local
+  hive-mind-api:
+    container_name: hivemind-api
+    hostname: api.hive-mind.app
+    env_file:
+      - apps/api/.env.local
+    image: benediktms/hive-mind-api
     ports:
-      - '5432:5432'
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=hivemind
+      - 3001:3001
+    restart: on-failure
+    labels:
+      - 'traefik.http.routers.hivemind-api.rule=Host(`hivemind-api.docker.localhost:3001`)'
 
-volumes:
-  data:
+  hive-mind-web:
+    container_name: hivemind-web
+    hostname: hive-mind.app
+    env_file:
+      - apps/web/.env.local
+    image: benediktms/hive-mind-web
+    ports:
+      - 3000:3000
+    depends_on:
+      - hive-mind-api
+    restart: on-failure
+    labels:
+      - 'traefik.http.routers.hivemind-web.rule=Host(`hivemind-web.docker.localhost`)'
+
+networks:
+  traefik-public:
+    external: true

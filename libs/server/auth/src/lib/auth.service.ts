@@ -180,7 +180,7 @@ export class AuthService {
 
     await this.dataService.user.update({
       where: { email },
-      data: { passwordHash },
+      data: { passwordHash, refreshTokenVersion: { increment: 1 } },
     });
   }
 }
