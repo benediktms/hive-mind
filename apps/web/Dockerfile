@@ -16,7 +16,6 @@ ENV NODE_ENV production
 COPY --from=deps /app/dist/apps/web ./
 COPY --from=deps /app/yarn.lock ./
 RUN yarn install --production && yarn cache clean
-COPY --from=deps app/node_modules/.prisma/ /app/node_modules
 RUN rm next.config.js
 ENV PORT 3000
 CMD [ "npm", "run", "start"]
