@@ -11,8 +11,10 @@ services:
       - 3001:3001
     restart: on-failure
     labels:
-      # - 'traefik.http.routers.hivemind-api.rule=Host(`hivemind-api.docker.localhost:3001`)'
-      - 'traefik.http.routers.hivemind-api.rule=Host(`hive-mind.app`)'
+      - traefik.enable=true
+      - 'traefik.http.routers.hivemind-api.rule=Host(`api.hive-mind.app`)'
+      - traefik.http.routers.hivemind-api.entrypoints=websecure
+      - traefik.http.routers.hivemind-api.tls.certresolver=myresolver
     networks:
       - traefik-public
 
@@ -28,8 +30,10 @@ services:
       - hive-mind-api
     restart: on-failure
     labels:
-      # - 'traefik.http.routers.hivemind-web.rule=Host(`hivemind-web.docker.localhost`)'
-      - 'traefik.http.routers.hivemind-api.rule=Host(`api.hive-mind.app`)'
+      - traefik.enable=true
+      - 'traefik.http.routers.hivemind-web.rule=Host(`hive-mind.app`)'
+      - traefik.http.routers.hivemind-web.entrypoints=websecure
+      - traefik.http.routers.hivemind-web.tls.certresolver=myresolver
     networks:
       - traefik-public
 
