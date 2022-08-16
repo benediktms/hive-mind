@@ -3,6 +3,14 @@
   "sourceRoot": "libs/server/data/src",
   "projectType": "library",
   "targets": {
+    "create-migration": {
+      "builder": "@nrwl/workspace:run-commands",
+      "outputs": [],
+      "options": {
+        "command": "ts-node --project tsconfig.lib.json ../../../node_modules/.bin/typeorm migration:create ./migrations --pretty -f .env.local",
+        "cwd": "libs/server/data"
+      }
+    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
