@@ -31,7 +31,7 @@ function getPageHeading(title: Props['forPage']): string {
   }
 }
 
-export const FormLayout: FC<PropsWithChildren & Props> = ({
+export const FormLayout: FC<PropsWithChildren<Props>> = ({
   forPage,
   children,
 }) => {

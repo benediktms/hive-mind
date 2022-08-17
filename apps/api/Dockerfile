@@ -12,9 +12,9 @@ FROM node:16-alpine
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 ENV NODE_ENV production
-COPY --from=deps /app/prisma ./
-COPY --from=deps /app/yarn.lock ./
-COPY --from=deps /app/dist/apps/api ./
+COPY --from=build /app/prisma ./
+COPY --from=build /app/yarn.lock ./
+COPY --from=build /app/dist/apps/api ./
 RUN npx prisma generate
 RUN yarn install --production && \
   yarn cache clean
