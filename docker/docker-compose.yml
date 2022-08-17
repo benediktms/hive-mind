@@ -10,7 +10,8 @@ services:
     restart: on-failure
     labels:
       - traefik.enable=true
-      - 'traefik.http.routers.hivemind-api.rule=Host(`api.hive-mind.app`)'
+      - traefik.http.routers.hivemind-api.rule=Host(`api.hive-mind.app`)
+      - traefik.http.services.hive-mind-api.loadbalancer.port=3001
     networks:
       - traefik-public
 
@@ -25,7 +26,8 @@ services:
     restart: on-failure
     labels:
       - traefik.enable=true
-      - 'traefik.http.routers.hivemind-web.rule=Host(`hive-mind.app`)'
+      - traefik.http.routers.hivemind-web.rule=Host(`hive-mind.app`)
+      - traefik.http.services.hive-mind-web.loadbalancer.port=3000
     networks:
       - traefik-public
 
