@@ -9,7 +9,7 @@ import {
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { BiArrowBack } from 'react-icons/bi';
-import { FC } from 'react';
+import { FC, PropsWithChildren } from 'react';
 import NextLink from 'next/link';
 
 type Props = {
@@ -31,7 +31,10 @@ function getPageHeading(title: Props['forPage']): string {
   }
 }
 
-export const FormLayout: FC<Props> = ({ forPage, children }) => {
+export const FormLayout: FC<PropsWithChildren & Props> = ({
+  forPage,
+  children,
+}) => {
   const router = useRouter();
 
   return (
