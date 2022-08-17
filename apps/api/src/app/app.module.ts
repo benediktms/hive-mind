@@ -1,7 +1,7 @@
 import { AuthModule } from '@hive-mind/server-auth';
 import { CoreModule } from '@hive-mind/server-core';
-import { DataModule } from '@hive-mind/server-data';
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -11,7 +11,11 @@ import { LoggerModule } from 'nestjs-pino';
 @Module({
   imports: [
     CoreModule,
-    DataModule,
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      url: process.env.DATABASE_URL,
+      entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+    }),
     AuthModule,
     LoggerModule.forRoot({
       pinoHttp: {

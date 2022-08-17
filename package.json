@@ -22,7 +22,10 @@
     "prisma:migrate": "npx prisma migrate dev --name",
     "prisma:migrate:deploy": "yarn prisma migrate deploy",
     "prisma:generate": "npx prisma generate",
-    "gen": "graphql-codegen --config codegen.yml"
+    "gen": "graphql-codegen --config codegen.yml",
+    "migration:create": "ts-node --transpile-only ./node_modules/typeorm/cli.js migration:create",
+    "migration:generate": "ts-node --transpile-only ./node_modules/typeorm/cli.js migration:generate",
+    "migration:run": "ts-node --transpile-only ./node_modules/typeorm/cli.js migration:run"
   },
   "prisma": {
     "seed": "ts-node ./prisma/seed.ts"
@@ -41,6 +44,7 @@
     "@nestjs/jwt": "^8.0.0",
     "@nestjs/passport": "^8.0.1",
     "@nestjs/platform-express": "9.0.11",
+    "@nestjs/typeorm": "^9.0.1",
     "@prisma/client": "^3.8.1",
     "@trycourier/courier": "^3.4.0",
     "apollo-server-express": "^3.5.0",
@@ -64,6 +68,7 @@
     "next": "12.2.3",
     "passport": "^0.5.2",
     "passport-jwt": "^4.0.0",
+    "pg": "^8.7.3",
     "pino-http": "^6.5.0",
     "pino-pretty": "^7.5.0",
     "react": "18.2.0",
@@ -75,6 +80,7 @@
     "regenerator-runtime": "0.13.7",
     "rxjs": "^7.0.0",
     "tslib": "^2.0.0",
+    "typeorm": "^0.3.7",
     "zod": "^3.11.6"
   },
   "devDependencies": {
