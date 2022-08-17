@@ -7,14 +7,10 @@ services:
     env_file:
       - ./.env
     image: benediktms/hive-mind-api
-    ports:
-      - 3001:3001
     restart: on-failure
     labels:
       - traefik.enable=true
       - 'traefik.http.routers.hivemind-api.rule=Host(`api.hive-mind.app`)'
-      - traefik.http.routers.hivemind-api.entrypoints=websecure
-      - traefik.http.routers.hivemind-api.tls.certresolver=myresolver
     networks:
       - traefik-public
 
@@ -24,16 +20,12 @@ services:
     env_file:
       - ./.env
     image: benediktms/hive-mind-web
-    ports:
-      - 3000:3000
     depends_on:
       - hive-mind-api
     restart: on-failure
     labels:
       - traefik.enable=true
       - 'traefik.http.routers.hivemind-web.rule=Host(`hive-mind.app`)'
-      - traefik.http.routers.hivemind-web.entrypoints=websecure
-      - traefik.http.routers.hivemind-web.tls.certresolver=myresolver
     networks:
       - traefik-public
 
