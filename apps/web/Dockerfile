@@ -15,7 +15,8 @@ WORKDIR /app
 ENV NODE_ENV production
 COPY --from=deps /app/dist/apps/web ./
 COPY --from=deps /app/yarn.lock ./
+COPY apps/web/next.config.prod.js ./
+RUN rm next.config.js && mv next.config.prod.js next.config.js
 RUN yarn install --production && yarn cache clean
-RUN rm next.config.js
 ENV PORT 3000
 CMD [ "npm", "run", "start"]
