@@ -1,15 +1,15 @@
-module.exports = {
-  displayName: 'server-courier',
+/* eslint-disable */
+export default {
+  displayName: 'client-mocks',
   preset: '../../../jest.preset.js',
   globals: {
     'ts-jest': {
       tsconfig: '<rootDir>/tsconfig.spec.json',
     },
   },
-  testEnvironment: 'node',
   transform: {
     '^.+\\.[tj]sx?$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../../coverage/libs/server/courier',
+  coverageDirectory: '../../../coverage/libs/client/mocks',
 };

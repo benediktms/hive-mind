@@ -1,5 +1,6 @@
-module.exports = {
-  displayName: 'client-mocks',
+/* eslint-disable */
+export default {
+  displayName: 'server-auth',
   preset: '../../../jest.preset.js',
   globals: {
     'ts-jest': {
@@ -10,5 +11,5 @@ module.exports = {
     '^.+\\.[tj]sx?$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../../coverage/libs/client/mocks',
+  coverageDirectory: '../../../coverage/libs/server/auth',
 };

@@ -3,9 +3,6 @@
   "affected": {
     "defaultBase": "main"
   },
-  "cli": {
-    "defaultCollection": "@nrwl/nest"
-  },
   "implicitDependencies": {
     "package.json": {
       "dependencies": "*",
@@ -27,14 +24,6 @@
       }
     }
   },
-  "targetDependencies": {
-    "build": [
-      {
-        "target": "build",
-        "projects": "dependencies"
-      }
-    ]
-  },
   "defaultProject": "api",
   "generators": {
     "@nrwl/react": {
@@ -47,6 +36,12 @@
         "style": "css",
         "linter": "eslint"
       }
+    }
+  },
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "targetDefaults": {
+    "build": {
+      "dependsOn": ["^build"]
     }
   }
 }

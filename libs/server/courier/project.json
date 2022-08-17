@@ -1,5 +1,5 @@
 {
-  "root": "libs/server/courier",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/server/courier/src",
   "projectType": "library",
   "targets": {
@@ -14,7 +14,7 @@
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/libs/server/courier"],
       "options": {
-        "jestConfig": "libs/server/courier/jest.config.js",
+        "jestConfig": "libs/server/courier/jest.config.ts",
         "passWithNoTests": true
       }
     }

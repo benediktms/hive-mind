@@ -1,15 +1,16 @@
-module.exports = {
-  displayName: 'client-views',
+/* eslint-disable */
+export default {
+  displayName: 'server-core',
   preset: '../../../jest.preset.js',
   globals: {
     'ts-jest': {
       tsconfig: '<rootDir>/tsconfig.spec.json',
     },
   },
+  testEnvironment: 'node',
   transform: {
     '^.+\\.[tj]sx?$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../../coverage/libs/client/views',
-  setupFilesAfterEnv: ['./jest.setup.js'],
+  coverageDirectory: '../../../coverage/libs/server/core',
 };

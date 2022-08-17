@@ -1,5 +1,5 @@
 {
-  "root": "libs/client/data-access-gql",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/client/data-access-gql/src",
   "projectType": "library",
   "tags": [],
@@ -15,7 +15,7 @@
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/libs/client/data-access-gql"],
       "options": {
-        "jestConfig": "libs/client/data-access-gql/jest.config.js",
+        "jestConfig": "libs/client/data-access-gql/jest.config.ts",
         "passWithNoTests": true
       }
     }
