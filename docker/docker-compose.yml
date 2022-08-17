@@ -4,8 +4,6 @@ services:
   hive-mind-api:
     container_name: hivemind-api
     hostname: api.hive-mind.app
-    env_file:
-      - ./.env
     image: benediktms/hive-mind-api
     labels:
       - traefik.enable=true
@@ -17,8 +15,6 @@ services:
   hive-mind-web:
     container_name: hivemind-web
     hostname: hive-mind.app
-    env_file:
-      - ./.env
     image: benediktms/hive-mind-web
     depends_on:
       - hive-mind-api
