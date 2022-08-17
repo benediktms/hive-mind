@@ -20,6 +20,8 @@ jobs:
     strategy:
       matrix:
         services: ['api', 'web']
+    env:
+      NEXT_PUBLIC_API_URI: https://api.hive-mind.app
     steps:
       - uses: actions/checkout@v3
       - name: List versions
