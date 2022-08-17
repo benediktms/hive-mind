@@ -1,5 +1,5 @@
 {
-  "root": "libs/client/validation",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/client/validation/src",
   "projectType": "library",
   "targets": {
@@ -14,7 +14,7 @@
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/libs/client/validation"],
       "options": {
-        "jestConfig": "libs/client/validation/jest.config.js",
+        "jestConfig": "libs/client/validation/jest.config.ts",
         "passWithNoTests": true
       }
     }

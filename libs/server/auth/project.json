@@ -1,5 +1,5 @@
 {
-  "root": "libs/server/auth",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/server/auth/src",
   "projectType": "library",
   "targets": {
@@ -14,7 +14,7 @@
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/libs/server/auth"],
       "options": {
-        "jestConfig": "libs/server/auth/jest.config.js",
+        "jestConfig": "libs/server/auth/jest.config.ts",
         "passWithNoTests": true
       }
     }

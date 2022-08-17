@@ -1,5 +1,5 @@
 {
-  "root": "libs/client/mocks",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/client/mocks/src",
   "projectType": "library",
   "tags": [],
@@ -15,7 +15,7 @@
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/libs/client/mocks"],
       "options": {
-        "jestConfig": "libs/client/mocks/jest.config.js",
+        "jestConfig": "libs/client/mocks/jest.config.ts",
         "passWithNoTests": true
       }
     }

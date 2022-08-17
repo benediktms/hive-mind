@@ -1,5 +1,6 @@
-module.exports = {
-  displayName: 'client-ui-form',
+/* eslint-disable */
+export default {
+  displayName: 'client-data-access-auth',
   preset: '../../../jest.preset.js',
   globals: {
     'ts-jest': {
@@ -10,5 +11,5 @@ module.exports = {
     '^.+\\.[tj]sx?$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../../coverage/libs/client/ui-form',
+  coverageDirectory: '../../../coverage/libs/client/data-access-auth',
 };
