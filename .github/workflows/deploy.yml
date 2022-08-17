@@ -39,6 +39,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
       - name: Push images
+        working-directory: docker
         run: docker-compose push
 
   deploy:
