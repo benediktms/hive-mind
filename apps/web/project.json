@@ -12,14 +12,7 @@
         "outputPath": "dist/apps/web"
       },
       "configurations": {
-        "production": {
-          "fileReplacements": [
-            {
-              "replace": "apps/web/next.config.js",
-              "with": "apps/web/next.config.prod.js"
-            }
-          ]
-        }
+        "production": {}
       }
     },
     "serve": {
