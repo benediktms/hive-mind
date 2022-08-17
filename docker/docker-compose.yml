@@ -13,8 +13,6 @@ services:
       - 'traefik.http.routers.hivemind-api.rule=Host(`api.hive-mind.app`)'
     networks:
       - traefik-public
-    ports:
-      - 3001:3001
 
   hive-mind-web:
     container_name: hivemind-web
@@ -30,8 +28,6 @@ services:
       - 'traefik.http.routers.hivemind-web.rule=Host(`hive-mind.app`)'
     networks:
       - traefik-public
-    ports:
-      - 3000:3000
 
 networks:
   traefik-public:
