@@ -28,8 +28,10 @@ jobs:
         run: |
           docker --version
           docker-compose --version
+      - name: Create .env file
+        working-directory: apps/web
+        run: echo $NEXT_PUBLIC_API_URI >> .env.local
       - name: Build
-        working-directory: docker
         shell: bash
         env:
           COMMIT_HASH: ${{ github.sha }}
