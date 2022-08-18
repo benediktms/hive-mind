@@ -1,5 +1,4 @@
 {
-  "root": "libs/client/data-access-auth",
   "sourceRoot": "libs/client/data-access-auth/src",
   "projectType": "library",
   "tags": [],

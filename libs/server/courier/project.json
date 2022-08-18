@@ -1,5 +1,4 @@
 {
-  "root": "libs/server/courier",
   "sourceRoot": "libs/server/courier/src",
   "projectType": "library",
   "targets": {

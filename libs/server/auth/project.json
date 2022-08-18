@@ -1,5 +1,4 @@
 {
-  "root": "libs/server/auth",
   "sourceRoot": "libs/server/auth/src",
   "projectType": "library",
   "targets": {

@@ -1,5 +1,4 @@
 {
-  "root": "libs/client/data-access-gql",
   "sourceRoot": "libs/client/data-access-gql/src",
   "projectType": "library",
   "tags": [],

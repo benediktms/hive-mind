@@ -1,5 +1,4 @@
 {
-  "root": "libs/server/core",
   "sourceRoot": "libs/server/core/src",
   "projectType": "library",
   "targets": {

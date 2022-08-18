@@ -1,5 +1,4 @@
 {
-  "root": "libs/client/views",
   "sourceRoot": "libs/client/views/src",
   "projectType": "library",
   "tags": [],

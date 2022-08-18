@@ -1,5 +1,4 @@
 {
-  "root": "libs/client/mocks",
   "sourceRoot": "libs/client/mocks/src",
   "projectType": "library",
   "tags": [],

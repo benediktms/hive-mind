@@ -1,5 +1,4 @@
 {
-  "root": "libs/client/ui-form",
   "sourceRoot": "libs/client/ui-form/src",
   "projectType": "library",
   "tags": [],
