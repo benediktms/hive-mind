@@ -13,10 +13,8 @@ RUN yarn build:web:prod
 FROM node:16-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV production
-ENV NEXT_PUBLIC_API_URI https://api.hive-mind.app
 COPY --from=deps /app/dist/apps/web ./
 COPY --from=deps /app/yarn.lock ./
 RUN yarn install && yarn cache clean
-# RUN rm next.config.js
 EXPOSE 3000
 CMD [ "npm", "run", "start"]
