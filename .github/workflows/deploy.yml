@@ -21,16 +21,13 @@ jobs:
       matrix:
         services: ['api', 'web']
     env:
-      NEXT_PUBLIC_API_URI: https://api.hive-mind.app
+      BACKEND_URL: https://api.hive-mind.app
     steps:
       - uses: actions/checkout@v3
       - name: List versions
         run: |
           docker --version
           docker-compose --version
-      - name: Create .env file
-        working-directory: apps/web
-        run: echo $NEXT_PUBLIC_API_URI >> .env.local
       - name: Build
         shell: bash
         env:
