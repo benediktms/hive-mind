@@ -14,7 +14,7 @@
       "configurations": {
         "production": {},
         "development": {
-          "outputPath": "tmp/apps/web"
+          "outputPath": "apps/web"
         }
       }
     },
@@ -42,7 +42,7 @@
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/apps/web"],
       "options": {
-        "jestConfig": "apps/web/jest.config.js",
+        "jestConfig": "apps/web/jest.config.ts",
         "passWithNoTests": true
       }
     },
