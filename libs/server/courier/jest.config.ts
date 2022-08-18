@@ -1,5 +1,6 @@
+/* eslint-disable */
 module.exports = {
-  displayName: 'client-validation',
+  displayName: 'server-courier',
   preset: '../../../jest.preset.js',
   globals: {
     'ts-jest': {
@@ -11,5 +12,5 @@ module.exports = {
     '^.+\\.[tj]sx?$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../../coverage/libs/client/validation',
+  coverageDirectory: '../../../coverage/libs/server/courier',
 };

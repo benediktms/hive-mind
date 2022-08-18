@@ -1,12 +1,28 @@
 {
   "migrations": [
     {
-      "version": "13.4.4-beta.0",
+      "version": "14.5.5-beta.0",
       "cli": "nx",
-      "description": "Create a root babel config file if it doesn't exist and using babel-jest in jest.config.js and add @nrwl/web as needed",
-      "factory": "./src/migrations/update-13-4-4/add-missing-root-babel-config",
+      "description": "Exclude jest.config.ts from tsconfig where missing.",
+      "factory": "./src/migrations/update-14-0-0/update-jest-config-ext",
       "package": "@nrwl/jest",
-      "name": "add-missing-root-babel-config"
+      "name": "exclude-jest-config-from-ts-config"
+    },
+    {
+      "cli": "nx",
+      "version": "14.5.3-beta.0",
+      "description": "Add .next folder to gitignore.",
+      "factory": "./src/migrations/update-14-5-3/add-gitignore-entry",
+      "package": "@nrwl/next",
+      "name": "add-gitignore-entry"
+    },
+    {
+      "cli": "nx",
+      "version": "14.5.3-beta.0",
+      "description": "Update development outputPath to the project root.",
+      "factory": "./src/migrations/update-14-5-3/update-dev-output-path",
+      "package": "@nrwl/next",
+      "name": "update-dev-output-path"
     }
   ]
 }

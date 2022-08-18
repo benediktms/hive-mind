@@ -3,9 +3,6 @@
   "affected": {
     "defaultBase": "main"
   },
-  "cli": {
-    "defaultCollection": "@nrwl/nest"
-  },
   "implicitDependencies": {
     "package.json": {
       "dependencies": "*",
@@ -17,23 +14,10 @@
     "default": {
       "runner": "@nrwl/nx-cloud",
       "options": {
-        "cacheableOperations": [
-          "build",
-          "lint",
-          "test",
-          "e2e"
-        ],
+        "cacheableOperations": ["build", "lint", "test", "e2e"],
         "accessToken": "YzEyZGUwMzgtZmFlNy00Y2RmLWEwYTktMGYwZDVmZGE2MGEyfHJlYWQtd3JpdGU="
       }
     }
-  },
-  "targetDependencies": {
-    "build": [
-      {
-        "target": "build",
-        "projects": "dependencies"
-      }
-    ]
   },
   "defaultProject": "api",
   "generators": {
@@ -47,6 +31,12 @@
         "style": "css",
         "linter": "eslint"
       }
+    }
+  },
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "targetDefaults": {
+    "build": {
+      "dependsOn": ["^build"]
     }
   }
 }

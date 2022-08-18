@@ -1,3 +1,4 @@
+/* eslint-disable */
 module.exports = {
   displayName: 'server-auth',
   preset: '../../../jest.preset.js',

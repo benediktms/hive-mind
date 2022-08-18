@@ -2,9 +2,13 @@ import { useCurrentUserQuery } from '@hive-mind/client-data-access-gql';
 import { getErrorMessage } from '@hive-mind/shared';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import { FC, useEffect } from 'react';
+import { FC, ReactNode, useEffect } from 'react';
 
-export const WithUser: FC = ({ children }) => {
+type Props = {
+  children: ReactNode;
+};
+
+export const WithUser: FC<Props> = ({ children }) => {
   const { data, error, loading } = useCurrentUserQuery();
   const router = useRouter();
   const isUnauthenticated = !!error || !data;

@@ -1,5 +1,6 @@
+/* eslint-disable */
 module.exports = {
-  displayName: 'client-data-access-gql',
+  displayName: 'client-mocks',
   preset: '../../../jest.preset.js',
   globals: {
     'ts-jest': {
@@ -10,5 +11,5 @@ module.exports = {
     '^.+\\.[tj]sx?$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../../coverage/libs/client/data-access-gql',
+  coverageDirectory: '../../../coverage/libs/client/mocks',
 };
