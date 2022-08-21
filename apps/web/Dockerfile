@@ -12,8 +12,8 @@ RUN yarn build:web:prod
 # Production image, copy all the files and run next
 FROM node:16-alpine AS runner
 WORKDIR /app
-ARG BACKEND_URL=https://api.hive-mind.app
-ENV BACKEND_URL=${BACKEND_URL}
+ARG NEXT_PUBLIC_API_URI
+ENV NEXT_PUBLIC_API_URI=${NEXT_PUBLIC_API_URI}
 ENV NODE_ENV production
 COPY --from=deps /app/dist/apps/web ./
 COPY --from=deps /app/yarn.lock ./
