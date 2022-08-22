@@ -1,0 +1,17 @@
+version: '3.3'
+
+services:
+  hive-mind-api:
+    container_name: hivemind-api
+    hostname: api.hive-mind.app
+    image: benediktms/hive-mind-api
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.hivemind-api.rule=Host(`api.hive-mind.app`)
+      - traefik.http.services.hive-mind-api.loadbalancer.server.port=3001
+    networks:
+      - traefik-public
+
+networks:
+  traefik-public:
+    external: true
