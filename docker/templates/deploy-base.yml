@@ -1,0 +1,26 @@
+version: '3.3'
+
+x-references:
+  backend-env: &backend-env
+    ANON_KEY: ${ANON_KEY}
+    SERVICE_KEY: ${SERVICE_KEY}
+    CLIENT_URL: ${CLIENT_URL}
+    BASE_DOMAIN: ${BASE_DOMAIN}
+    ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET}
+    REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}
+    DATABASE_URL: ${DATABASE_URL}
+    COURIER_AUTH_TOKEN: ${COURIER_AUTH_TOKEN}
+    COURIER_BRAND_ID: ${COURIER_BRAND_ID}
+    CONFIRM_ACCOUNT_NOTIFICATION_ID: ${CONFIRM_ACCOUNT_NOTIFICATION_ID}
+
+  frontend-env: &frontend-env
+    NEXT_PUBLIC_API_URI: ${NEXT_PUBLIC_API_URI}
+
+services:
+  hive-mind-api:
+    environment:
+      <<: *backend-env
+
+  hive-mind-web:
+    environment:
+      <<: *frontend-env

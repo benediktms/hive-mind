@@ -81,5 +81,6 @@ jobs:
           -o StrictHostKeyChecking=no \
           -n \
           $DEPLOY_HOST \
-          "cd $DEPLOY_PATH && \
-          docker-compose pull && docker-compose --env-file .env up -d"
+          "cd $DEPLOY_PATH \
+          ./scripts/build.sh \
+          ./scripts/run-migrations.sh"
