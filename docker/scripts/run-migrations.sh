@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-docker exec hivemind-api yarn prisma:migrate:deploy
+docker exec hivemind-api npx prisma migrate deploy
