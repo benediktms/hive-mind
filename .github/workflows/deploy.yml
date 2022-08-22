@@ -84,4 +84,4 @@ jobs:
           -n \
           $DEPLOY_HOST \
           "cd $DEPLOY_PATH && \
-          docker-compose pull && docker-compose --env-fiel .env up -d"
+          docker-compose pull && docker-compose --env-file .env up -d"
