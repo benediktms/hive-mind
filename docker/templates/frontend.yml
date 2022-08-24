@@ -12,9 +12,9 @@ services:
       - traefik.http.routers.hivemind-web.rule=Host(`hive-mind.app`, `www.hive-mind.app`)
       - traefik.http.services.hive-mind-web.loadbalancer.server.port=3000
       - traefik.http.routers.hive-mind-web-www-to-no.rule=Host(`www.hive-mind.app`)
-      - traefik.http.routers.hive-mind-web-www.to-no.middlewares=hive-mind-web-ww-to-no-middleware
-      - traefik.http.middlewares.hive-mind-web-ww-to-no-middleware.redirectregex.regex=^https?://www\.(.*)$
-      - traefik.http.middlewares.hive-mind-web-ww-to-no-middleware.redirectregex.replacement=^http://$${1}
+      - traefik.http.routers.hive-mind-web-www-to-no.middlewares=hive-mind-web-www-to-no-middleware
+      - traefik.http.middlewares.hive-mind-web-www-to-no-middleware.redirectregex.regex=^https?://www\.(.*)$$
+      - traefik.http.middlewares.hive-mind-web-www-to-no-middleware.redirectregex.replacement=^http://$${1}
     networks:
       - traefik-public
 
