@@ -1,5 +1,9 @@
 name: CI - Check Branch
-on: [push]
+
+on:
+  push:
+    branches-ignore:
+      - prod
 
 env:
   # NX_CLOUD_DISTRIBUTED_EXECUTION: true

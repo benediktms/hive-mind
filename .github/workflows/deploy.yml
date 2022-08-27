@@ -41,7 +41,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
       - name: Push images
         working-directory: docker
-        run: docker-compose push
+        run: docker push benediktms/hive-mind-${{ matrix.services }}
 
   deploy:
     runs-on: ubuntu-latest
