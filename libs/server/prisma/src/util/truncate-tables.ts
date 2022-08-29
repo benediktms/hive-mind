@@ -1,15 +1,15 @@
 import { Logger } from '@nestjs/common';
-import { DataService } from '..';
+import { PrismaService } from '..';
 
-export async function truncateTables(dataService: DataService) {
-  const tablenames = await dataService.$queryRaw<
+export async function truncateTables(prisma: PrismaService) {
+  const tablenames = await prisma.$queryRaw<
     Array<{ tablename: string }>
   >`SELECT tablename FROM pg_tables WHERE schemaname='public'`;
 
   for (const { tablename } of tablenames) {
     if (tablename !== '_prisma_migrations') {
       try {
-        await dataService.$executeRawUnsafe(
+        await prisma.$executeRawUnsafe(
           `TRUNCATE TABLE "public"."${tablename}" CASCADE;`
         );
       } catch (error) {

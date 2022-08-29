@@ -1,6 +1,6 @@
 import { AuthModule } from '@hive-mind/server-auth';
 import { CoreModule } from '@hive-mind/server-core';
-import { DataModule } from '@hive-mind/server-data';
+import { PrismaModule } from '@hive-mind/server-prisma';
 import { Module } from '@nestjs/common';
 
 import { AppController } from './app.controller';
@@ -11,7 +11,7 @@ import { LoggerModule } from 'nestjs-pino';
 @Module({
   imports: [
     CoreModule,
-    DataModule,
+    PrismaModule,
     AuthModule,
     LoggerModule.forRoot({
       pinoHttp: {

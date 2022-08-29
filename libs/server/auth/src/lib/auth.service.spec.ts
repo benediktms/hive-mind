@@ -1,9 +1,9 @@
 import {
-  DataService,
+  PrismaService,
   EntityFactory,
   mockClass,
   truncateTables,
-} from '@hive-mind/server-data';
+} from '@hive-mind/server-prisma';
 import { CourierService } from '@hive-mind/server/courier';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -17,7 +17,7 @@ import { UserService } from './user.service';
 describe('AuthService', () => {
   let module: TestingModule;
   let authService: AuthService;
-  let dataService: DataService;
+  let prisma: PrismaService;
   let userService: UserService;
   const courierService = mockClass<CourierService>({
     sendConfirmAccountEmail: jest.fn(),
@@ -30,7 +30,7 @@ describe('AuthService', () => {
     module = await Test.createTestingModule({
       providers: [
         AuthService,
-        DataService,
+        PrismaService,
         {
           provide: JwtService,
           useValue: mockClass<JwtService>({
@@ -48,18 +48,18 @@ describe('AuthService', () => {
     }).compile();
 
     authService = module.get(AuthService);
-    dataService = module.get(DataService);
+    prisma = module.get(PrismaService);
     userService = module.get(UserService);
 
-    await dataService.$connect();
+    await prisma.$connect();
   });
 
   afterAll(async () => {
-    await dataService.$disconnect();
+    await prisma.$disconnect();
     await module.close();
   });
 
-  beforeEach(async () => await truncateTables(dataService));
+  beforeEach(async () => await truncateTables(prisma));
 
   async function setupUser(
     password: string,
@@ -78,7 +78,7 @@ describe('AuthService', () => {
       authTokenExpiresAt,
     });
 
-    return await dataService.user.create({ data: user });
+    return await prisma.user.create({ data: user });
   }
 
   describe('register', () => {
@@ -203,7 +203,7 @@ describe('AuthService', () => {
 
       await authService.confirmEmail(user.email, 'token');
 
-      const updatedUser = await dataService.user.findUnique({
+      const updatedUser = await prisma.user.findUnique({
         where: { id: user.id },
       });
 
@@ -231,7 +231,7 @@ describe('AuthService', () => {
 
       const { token } = await authService.requestPasswordReset(user.email);
 
-      const updatedUser = await dataService.user.findUnique({
+      const updatedUser = await prisma.user.findUnique({
         where: { id: user.id },
       });
 

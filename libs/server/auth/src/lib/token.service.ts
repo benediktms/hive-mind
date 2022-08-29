@@ -1,4 +1,4 @@
-import { DataService } from '@hive-mind/server-data';
+import { PrismaService } from '@hive-mind/server-prisma';
 import {
   AccessTokenPayload,
   TokenExpiration,
@@ -20,7 +20,7 @@ export class TokenService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
-    private readonly dataService: DataService
+    private readonly prisma: PrismaService
   ) {}
 
   private signAccessToken(payload: AccessTokenPayload) {
@@ -128,7 +128,7 @@ export class TokenService {
 
   // Use this for password reset and password change
   public async invalidateRefreshToken(userId: number) {
-    await this.dataService.user.update({
+    await this.prisma.user.update({
       where: { id: userId },
       data: { refreshTokenVersion: { increment: 1 } },
     });

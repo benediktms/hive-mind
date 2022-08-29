@@ -1,4 +1,4 @@
-import { DataService } from '@hive-mind/server-data';
+import { PrismaService } from '@hive-mind/server-prisma';
 import { Injectable } from '@nestjs/common';
 import { SALT_LENGTH, SALT_ROUNDS } from '../utils/constants';
 import RegisterDTO from './dto/register.dto';
@@ -15,7 +15,7 @@ import dayjs from 'dayjs';
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly dataService: DataService,
+    private readonly prisma: PrismaService,
     private readonly tokenService: TokenService,
     private readonly courierService: CourierService,
     private readonly userService: UserService
@@ -40,7 +40,7 @@ export class AuthService {
   }
 
   public async register(input: RegisterDTO) {
-    const taken = await this.dataService.user.findUnique({
+    const taken = await this.prisma.user.findUnique({
       where: { email: input.email.toLowerCase() },
     });
 
@@ -50,7 +50,7 @@ export class AuthService {
 
     const passwordHash = await this.createPassword(input.password);
 
-    const user = await this.dataService.user.create({
+    const user = await this.prisma.user.create({
       data: {
         email: input.email.toLowerCase(),
         firstName: input.firstName.trim(),
@@ -110,7 +110,7 @@ export class AuthService {
     this.checkAuthTokens(token, user.authToken, user.authTokenExpiresAt);
     this.checkUserHasConfirmedEmail(user.hasConfirmedEmail, true);
 
-    await this.dataService.user.update({
+    await this.prisma.user.update({
       where: { email },
       data: { authToken: null, hasConfirmedEmail: true },
     });
@@ -140,7 +140,7 @@ export class AuthService {
   }
 
   public async requestPasswordReset(email: string) {
-    const user = await this.dataService.user.update({
+    const user = await this.prisma.user.update({
       where: { email },
       data: {
         authToken: nanoid(),
@@ -171,14 +171,14 @@ export class AuthService {
 
     this.checkAuthTokens(token, user.authToken, user.authTokenExpiresAt);
 
-    await this.dataService.user.update({
+    await this.prisma.user.update({
       where: { email },
       data: { authToken: null, authTokenExpiresAt: null },
     });
 
     const passwordHash = await this.createPassword(password);
 
-    await this.dataService.user.update({
+    await this.prisma.user.update({
       where: { email },
       data: { passwordHash, refreshTokenVersion: { increment: 1 } },
     });

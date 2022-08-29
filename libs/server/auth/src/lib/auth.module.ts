@@ -1,4 +1,4 @@
-import { DataModule } from '@hive-mind/server-data';
+import { PrismaModule } from '@hive-mind/server-prisma';
 import { Module } from '@nestjs/common';
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
@@ -24,7 +24,7 @@ import { UserService } from './user.service';
   ],
   exports: [],
   imports: [
-    DataModule,
+    PrismaModule,
     PassportModule.register({
       session: false,
       defaultStrategy: 'jwt',

@@ -1,4 +1,4 @@
-import { DataService } from '@hive-mind/server-data';
+import { PrismaService } from '@hive-mind/server-prisma';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import cookieParser from 'cookie-parser';
@@ -12,8 +12,8 @@ async function bootstrap() {
 
   const logger = app.get(Logger);
 
-  const dataService = app.get(DataService);
-  await dataService.enableShutdownHooks(app);
+  const prisma = app.get(PrismaService);
+  await prisma.enableShutdownHooks(app);
 
   const configService = app.get(ConfigService);
   const port = configService.get('PORT');

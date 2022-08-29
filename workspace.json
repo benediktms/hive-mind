@@ -11,7 +11,7 @@
     "server-auth": "libs/server/auth",
     "server-core": "libs/server/core",
     "server-courier": "libs/server/courier",
-    "server-data": "libs/server/data",
+    "server-prisma": "libs/server/prisma",
     "shared": "libs/shared",
     "web": "apps/web",
     "web-e2e": "apps/web-e2e"

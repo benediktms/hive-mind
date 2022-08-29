@@ -1,6 +1,6 @@
 /* eslint-disable */
 module.exports = {
-  displayName: 'server-data',
+  displayName: 'server-prisma',
   preset: '../../../jest.preset.js',
   globals: {
     'ts-jest': {
@@ -12,5 +12,5 @@ module.exports = {
     '^.+\\.[tj]sx?$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../../coverage/libs/server/data',
+  coverageDirectory: '../../../coverage/libs/server/prisma',
 };

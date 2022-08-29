@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { Controller, Logger, Post, Res } from '@nestjs/common';
 import { Cookies } from '@hive-mind/shared';
-import { DataService } from '@hive-mind/server-data';
+import { PrismaService } from '@hive-mind/server-prisma';
 import { ReqCookies } from './decorators/cookies.decorator';
 import { TokenService } from './token.service';
 
@@ -9,7 +9,7 @@ import { TokenService } from './token.service';
 export class AuthController {
   constructor(
     private readonly tokenService: TokenService,
-    private readonly dataService: DataService
+    private readonly prisma: PrismaService
   ) {}
 
   @Post('refresh_token')
@@ -22,7 +22,7 @@ export class AuthController {
     try {
       const current = this.tokenService.verifyRefreshToken(token);
 
-      const user = await this.dataService.user.findUnique({
+      const user = await this.prisma.user.findUnique({
         where: { id: current.userId },
       });
 
