@@ -2,11 +2,10 @@ import { AuthModule } from '@hive-mind/server-auth';
 import { CoreModule } from '@hive-mind/server-core';
 import { PrismaModule } from '@hive-mind/server-prisma';
 import { Module } from '@nestjs/common';
-
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-
 import { LoggerModule } from 'nestjs-pino';
+import { CollectiveModule } from '@hive-mind/server/collective';
 
 @Module({
   imports: [
@@ -31,6 +30,7 @@ import { LoggerModule } from 'nestjs-pino';
             : undefined,
       },
     }),
+    CollectiveModule,
   ],
   controllers: [AppController],
   providers: [AppService],

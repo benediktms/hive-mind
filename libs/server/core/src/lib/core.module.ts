@@ -40,8 +40,11 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
         callback: (error: Error | null, options: CorsOptions) => void
       ) => {
         const origin = req.headers['origin'];
+        const isPermitted =
+          origin === process.env.CLIENT_URL ||
+          process.env.NODE_ENV === 'development';
 
-        if (origin === process.env.CLIENT_URL) {
+        if (isPermitted) {
           callback(null, { origin: true, credentials: true });
         } else {
           callback(new Error('Not allowed by CORS'), { origin: false });

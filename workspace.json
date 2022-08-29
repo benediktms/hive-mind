@@ -9,6 +9,7 @@
     "client-validation": "libs/client/validation",
     "client-views": "libs/client/views",
     "server-auth": "libs/server/auth",
+    "server-collective": "libs/server/collective",
     "server-core": "libs/server/core",
     "server-courier": "libs/server/courier",
     "server-prisma": "libs/server/prisma",

@@ -22,4 +22,35 @@ model User {
   authToken           String?   @unique @db.VarChar(40)
   authTokenExpiresAt  DateTime?
   hasConfirmedEmail   Boolean   @default(true)
+
+  Membership Membership[]
+}
+
+model Collective {
+  id       Int                  @id @default(autoincrement())
+  name     String
+  features CollectiveFeatures[]
+
+  Membership Membership[]
+}
+
+enum CollectiveFeatures {
+  PLANNER
+  CHAT
+  COST_SPLITTING
+}
+
+model Membership {
+  id   Int            @id @default(autoincrement())
+  type MembershipType
+
+  Collective   Collective @relation(fields: [collectiveId], references: [id])
+  collectiveId Int
+  User         User       @relation(fields: [userId], references: [id])
+  userId       Int
+}
+
+enum MembershipType {
+  ADMIN
+  MEMBER
 }
