@@ -52,13 +52,19 @@ type Mutation {
   """
   createCollective(input: CreateCollectiveInput!): CreateCollectiveResponse!
 
-  """Allows the user to log in"""
+  """
+  Allows the user to log in
+  """
   login(input: LoginInput!): LoginResponse!
   logout: LogoutResponse!
 
-  """Registers a new User"""
+  """
+  Registers a new User
+  """
   register(input: RegisterInput!): RegisterResponse!
-  requestPasswordReset(input: RequestPasswordResetInput!): RequestPasswordResetResponse!
+  requestPasswordReset(
+    input: RequestPasswordResetInput!
+  ): RequestPasswordResetResponse!
   resetPassword(input: ResetPasswordInput!): ResetPasswordResponse!
 }
 
