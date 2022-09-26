@@ -1,11 +1,11 @@
-import { useToast } from '@chakra-ui/react';
 import {
   ResetPasswordInput,
   useResetPasswordMutation,
 } from '@hive-mind/client-data-access-gql';
-import { Form, LabeledTextField } from '@hive-mind/client-ui-form';
-import { ResetPasswordSchema } from '@hive-mind/client/validation';
-import { normalizeError } from '@hive-mind/shared';
+import { FormControl, InputLabel, Input, Button } from '@mui/material';
+import { useState } from 'react';
+// import { ResetPasswordSchema } from '@hive-mind/client/validation';
+// import { normalizeError } from '@hive-mind/shared';
 
 type Props = {
   email: string;
@@ -14,7 +14,9 @@ type Props = {
 
 export const ResetPasswordForm = ({ email, token }: Props) => {
   const [resetPassword] = useResetPasswordMutation();
-  const toast = useToast();
+  // const toast = useToast();
+  const [password, setPassword] = useState('');
+  const [passwordConfirmation, setPasswordConfirmation] = useState('');
 
   const handleSubmit = async (password: ResetPasswordInput['password']) => {
     try {
@@ -28,41 +30,38 @@ export const ResetPasswordForm = ({ email, token }: Props) => {
         },
       });
 
-      toast({
-        status: 'success',
-        title: 'Password reset successful',
-        description: 'You can now login with your new password',
-      });
+      // toast({
+      //   status: 'success',
+      //   title: 'Password reset successful',
+      //   description: 'You can now login with your new password',
+      // });
     } catch (e) {
-      const error = normalizeError(e);
-
-      toast({
-        status: 'error',
-        title: 'Something went wrong',
-        description: error.message,
-      });
+      // const error = normalizeError(e);
+      // toast({
+      //   status: 'error',
+      //   title: 'Something went wrong',
+      //   description: error.message,
+      // });
     }
   };
 
   return (
-    <Form
-      submitText="Reset password"
-      schema={ResetPasswordSchema}
-      initialValues={{ password: '', passwordConfirmation: '' }}
-      onSubmit={async (e) => handleSubmit(e.password)}
-    >
-      <LabeledTextField
-        name="password"
-        label="Password"
-        placeholder="Enter your new password"
-        type="password"
+    <FormControl>
+      <InputLabel htmlFor="password">Password</InputLabel>
+      <Input
+        id="password"
+        value={password}
+        onChange={e => setPassword(e.target.value)}
       />
-      <LabeledTextField
-        name="passwordConfirmation"
-        label="Confirm password"
-        placeholder="Confirm your new password"
-        type="password"
+      <InputLabel htmlFor="passwordConfirmation">
+        Password Confirmation
+      </InputLabel>
+      <Input
+        id="passwordConfirmation"
+        value={passwordConfirmation}
+        onChange={e => setPasswordConfirmation(e.target.value)}
       />
-    </Form>
+      <Button onClick={() => handleSubmit(password)}>Reset Password</Button>
+    </FormControl>
   );
 };

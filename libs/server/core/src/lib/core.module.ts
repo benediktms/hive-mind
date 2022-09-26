@@ -14,7 +14,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configuration],
-      validate: (configuration) => ConfigSchema.parse(configuration),
+      validate: configuration => ConfigSchema.parse(configuration),
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,

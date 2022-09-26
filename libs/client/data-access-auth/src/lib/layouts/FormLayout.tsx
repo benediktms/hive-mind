@@ -1,16 +1,8 @@
-import {
-  Box,
-  Button,
-  Container,
-  Heading,
-  IconButton,
-  Text,
-  Link,
-} from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { BiArrowBack } from 'react-icons/bi';
 import { FC, PropsWithChildren } from 'react';
 import NextLink from 'next/link';
+import { Container, Box, IconButton, Button, Typography } from '@mui/material';
 
 type Props = {
   forPage: 'signup' | 'login' | 'forgot-password' | 'reset-password';
@@ -39,51 +31,33 @@ export const FormLayout: FC<PropsWithChildren<Props>> = ({
 
   return (
     <Container>
-      <Heading variant="h1" textAlign="center" my={5}>
+      <Typography variant="h1" textAlign="center" my={5}>
         {getPageHeading(forPage)}
-      </Heading>
+      </Typography>
 
       {children}
 
       <Box mt={5} display="flex">
-        <IconButton
-          aria-label="back-button"
-          onClick={() => router.push('/')}
-          w="50%"
-        >
+        <IconButton onClick={() => router.push('/')}>
           <BiArrowBack />
         </IconButton>
 
         {forPage === 'login' && (
-          <Button
-            colorScheme="purple"
-            variant="outline"
-            w="50%"
-            ml={2}
-            onClick={async () => await router.push('/register')}
-          >
+          <Button onClick={async () => await router.push('/register')}>
             Sign up
           </Button>
         )}
 
         {forPage === 'signup' && (
-          <Button
-            colorScheme="purple"
-            variant="outline"
-            w="50%"
-            ml={2}
-            onClick={async () => await router.push('/login')}
-          >
+          <Button onClick={async () => await router.push('/login')}>
             Login
           </Button>
         )}
       </Box>
       {forPage !== 'forgot-password' && forPage !== 'reset-password' && (
-        <Text mt={10} align="center">
-          <NextLink href="/forgot-password">
-            <Link>Forgot Password?</Link>
-          </NextLink>
-        </Text>
+        <Typography align="center">
+          <NextLink href="/forgot-password">Forgot Password?</NextLink>
+        </Typography>
       )}
     </Container>
   );

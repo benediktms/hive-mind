@@ -62,6 +62,7 @@ export type LoginInput = {
 export type LoginResponse = {
   __typename?: 'LoginResponse';
   message: Scalars['String'];
+  user: User;
 };
 
 export type LogoutResponse = {
@@ -123,6 +124,7 @@ export type RegisterInput = {
 export type RegisterResponse = {
   __typename?: 'RegisterResponse';
   message: Scalars['String'];
+  user: User;
 };
 
 export type RequestPasswordResetInput = {
@@ -146,6 +148,14 @@ export type ResetPasswordResponse = {
   message: Scalars['String'];
 };
 
+export type User = {
+  __typename?: 'User';
+  email: Scalars['String'];
+  firstName: Scalars['String'];
+  hasConfirmedEmail: Scalars['Boolean'];
+  id: Scalars['Float'];
+  lastName: Scalars['String'];
+};
 export type ConfirmEmailMutationVariables = Exact<{
   input: ConfirmEmailInput;
 }>;
@@ -161,7 +171,18 @@ export type LoginMutationVariables = Exact<{
 
 export type LoginMutation = {
   __typename?: 'Mutation';
-  login: { __typename?: 'LoginResponse'; message: string };
+  login: {
+    __typename?: 'LoginResponse';
+    message: string;
+    user: {
+      __typename?: 'User';
+      id: number;
+      email: string;
+      firstName: string;
+      lastName: string;
+      hasConfirmedEmail: boolean;
+    };
+  };
 };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never }>;
@@ -177,7 +198,18 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = {
   __typename?: 'Mutation';
-  register: { __typename?: 'RegisterResponse'; message: string };
+  register: {
+    __typename?: 'RegisterResponse';
+    message: string;
+    user: {
+      __typename?: 'User';
+      id: number;
+      email: string;
+      firstName: string;
+      lastName: string;
+      hasConfirmedEmail: boolean;
+    };
+  };
 };
 
 export type RequestResetMutationVariables = Exact<{
@@ -273,6 +305,13 @@ export const LoginDocument = gql`
   mutation Login($input: LoginInput!) {
     login(input: $input) {
       message
+      user {
+        id
+        email
+        firstName
+        lastName
+        hasConfirmedEmail
+      }
     }
   }
 `;
@@ -366,6 +405,13 @@ export const RegisterDocument = gql`
   mutation Register($input: RegisterInput!) {
     register(input: $input) {
       message
+      user {
+        id
+        email
+        firstName
+        lastName
+        hasConfirmedEmail
+      }
     }
   }
 `;

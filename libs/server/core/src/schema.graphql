@@ -38,6 +38,7 @@ input LoginInput {
 
 type LoginResponse {
   message: String!
+  user: User!
 }
 
 type LogoutResponse {
@@ -52,19 +53,13 @@ type Mutation {
   """
   createCollective(input: CreateCollectiveInput!): CreateCollectiveResponse!
 
-  """
-  Allows the user to log in
-  """
+  """Allows the user to log in"""
   login(input: LoginInput!): LoginResponse!
   logout: LogoutResponse!
 
-  """
-  Registers a new User
-  """
+  """Registers a new User"""
   register(input: RegisterInput!): RegisterResponse!
-  requestPasswordReset(
-    input: RequestPasswordResetInput!
-  ): RequestPasswordResetResponse!
+  requestPasswordReset(input: RequestPasswordResetInput!): RequestPasswordResetResponse!
   resetPassword(input: ResetPasswordInput!): ResetPasswordResponse!
 }
 
@@ -82,6 +77,7 @@ input RegisterInput {
 
 type RegisterResponse {
   message: String!
+  user: User!
 }
 
 input RequestPasswordResetInput {
@@ -101,4 +97,12 @@ input ResetPasswordInput {
 
 type ResetPasswordResponse {
   message: String!
+}
+
+type User {
+  email: String!
+  firstName: String!
+  hasConfirmedEmail: Boolean!
+  id: Float!
+  lastName: String!
 }

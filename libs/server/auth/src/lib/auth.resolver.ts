@@ -32,9 +32,9 @@ export class AuthResolver {
   public async register(
     @Args('input') input: RegisterInput
   ): Promise<RegisterResponse> {
-    const message = await this.authService.register(input);
+    const { message, user } = await this.authService.register(input);
 
-    return new RegisterResponse(message);
+    return new RegisterResponse(message, user);
   }
 
   @Mutation(() => LoginResponse, {
@@ -51,7 +51,7 @@ export class AuthResolver {
 
     this.tokenService.setTokens(context.res, accessToken, refreshToken);
 
-    return new LoginResponse(`Welcome back, ${user.firstName}!`);
+    return new LoginResponse(`Welcome back, ${user.firstName}!`, user);
   }
 
   @Mutation(() => LogoutResponse)

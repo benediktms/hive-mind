@@ -11,6 +11,7 @@ import { nanoid } from 'nanoid';
 import { TokenService } from './token.service';
 import { UserService } from './user.service';
 import dayjs from 'dayjs';
+import User from './entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -39,7 +40,9 @@ export class AuthService {
     return { user, accessToken, refreshToken };
   }
 
-  public async register(input: RegisterDTO) {
+  public async register(
+    input: RegisterDTO
+  ): Promise<{ message: string; user: User }> {
     const taken = await this.prisma.user.findUnique({
       where: { email: input.email.toLowerCase() },
     });
@@ -74,7 +77,11 @@ export class AuthService {
       user.authToken
     );
 
-    return 'Sign up successful. Please check your email to confirm your account.';
+    return {
+      message:
+        'Sign up successful. Please check your email to confirm your account.',
+      user,
+    };
   }
 
   private checkAuthTokens(

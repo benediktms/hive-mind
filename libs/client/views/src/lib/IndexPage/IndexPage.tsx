@@ -1,5 +1,4 @@
-import { Container, Heading, Grid, GridItem } from '@chakra-ui/layout';
-import { Button } from '@chakra-ui/react';
+import { Container, Grid, Button, Typography } from '@mui/material';
 import {
   useCurrentUserQuery,
   useLogoutMutation,
@@ -8,70 +7,58 @@ import { useRouter } from 'next/router';
 
 export const IndexPage = () => {
   const router = useRouter();
-  const [logoutMutation, { loading: logoutLoding }] = useLogoutMutation();
+  const [logoutMutation] = useLogoutMutation();
   const { data, error } = useCurrentUserQuery();
   const isAuthenticated: boolean = !!data && !error;
 
   return (
     <Container>
-      <Heading>index</Heading>
+      <Typography variant="h2">index</Typography>
 
-      <Grid gap={2}>
-        <GridItem>
+      <Grid container gap={2}>
+        <Grid item>
           <Button
-            colorScheme="purple"
-            isDisabled={isAuthenticated}
+            disabled={isAuthenticated}
             onClick={async () => await router.push('/login')}
-            w="100%"
           >
             Login
           </Button>
-        </GridItem>
-        <GridItem>
+        </Grid>
+        <Grid item>
           <Button
-            colorScheme="purple"
-            isDisabled={isAuthenticated}
+            disabled={isAuthenticated}
             onClick={async () => await router.push('/register')}
-            w="100%"
           >
             Register
           </Button>
-        </GridItem>
-        <GridItem>
+        </Grid>
+        <Grid item>
           <Button
-            colorScheme="purple"
-            isDisabled={!isAuthenticated}
+            disabled={!isAuthenticated}
             onClick={async () => await router.push('/uptime')}
-            w="100%"
           >
             Uptime
           </Button>
           <Button
-            colorScheme="purple"
-            isDisabled={!isAuthenticated}
-            isLoading={logoutLoding}
+            disabled={!isAuthenticated}
+            // isLoading={logoutLoding}
             onClick={async () => {
               await logoutMutation();
               await router.replace('/');
               window.location.reload();
             }}
-            w="100%"
-            mt={2}
           >
             Logout
           </Button>
           <Button
-            colorScheme="purple"
-            isDisabled={!isAuthenticated}
+            disabled={!isAuthenticated}
             onClick={async () => {
               await router.push('/me');
             }}
-            w="100%"
-            mt={2}
           >
             Me
           </Button>
-        </GridItem>
+        </Grid>
       </Grid>
     </Container>
   );

@@ -1,8 +1,8 @@
-import { Container, Heading, Text } from '@chakra-ui/layout';
 import {
   useConfirmEmailMutation,
   withApollo,
 } from '@hive-mind/client-data-access-gql';
+import { Container, Typography } from '@mui/material';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
@@ -24,7 +24,7 @@ export function ConfirmAccount() {
             void router.push('/me');
           }, 3000);
         })
-        .catch((e) => {
+        .catch(e => {
           console.log(e);
         });
     }
@@ -33,12 +33,14 @@ export function ConfirmAccount() {
   return (
     <Container>
       {(!token || !email) && (
-        <Heading>Please check your email to confirm your account</Heading>
+        <Typography variant="h1">
+          Please check your email to confirm your account
+        </Typography>
       )}
       {token && email && (
         <>
-          <Heading>Thanks for joining Hive Mind!</Heading>
-          <Text>You will be redirected shortly</Text>
+          <Typography variant="h1">Thanks for joining Hive Mind!</Typography>
+          <Typography>You will be redirected shortly</Typography>
         </>
       )}
 

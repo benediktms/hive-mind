@@ -1,15 +1,16 @@
-import { useToast } from '@chakra-ui/react';
 import {
   RequestPasswordResetInput,
   useRequestResetMutation,
 } from '@hive-mind/client-data-access-gql';
-import { Form, LabeledTextField } from '@hive-mind/client-ui-form';
-import { RequestResetSchema } from '@hive-mind/client/validation';
-import { normalizeError } from '@hive-mind/shared';
+// import { RequestResetSchema } from '@hive-mind/client/validation';
+// import { normalizeError } from '@hive-mind/shared';
+import { Button, FormControl, Input, InputLabel } from '@mui/material';
+import { useState } from 'react';
 
 export const RequestResetForm = () => {
   const [requestResetMutation] = useRequestResetMutation();
-  const toast = useToast();
+  // const toast = useToast();
+  const [email, setEmail] = useState('');
 
   const handleSubmit = async (input: RequestPasswordResetInput) => {
     try {
@@ -18,37 +19,34 @@ export const RequestResetForm = () => {
       });
 
       if (data) {
-        toast({
-          status: 'success',
-          title: 'Password reset email was sent',
-          description: 'Please check your email and follow the instructions',
-        });
+        // toast({
+        //   status: 'success',
+        //   title: 'Password reset email was sent',
+        //   description: 'Please check your email and follow the instructions',
+        // });
       } else {
         throw errors;
       }
     } catch (e) {
-      const error = normalizeError(e);
+      // const error = normalizeError(e);
       console.log(e);
-      toast({
-        status: 'error',
-        title: 'Something went wrong',
-        description: error.message,
-      });
+      // toast({
+      //   status: 'error',
+      //   title: 'Something went wrong',
+      //   description: error.message,
+      // });
     }
   };
 
   return (
-    <Form
-      submitText="Request Password Reset"
-      schema={RequestResetSchema}
-      initialValues={{ email: '' }}
-      onSubmit={handleSubmit}
-    >
-      <LabeledTextField
-        name="email"
-        label="Email"
-        placeholder="Please enter your email"
+    <FormControl>
+      <InputLabel htmlFor="email">Email</InputLabel>
+      <Input
+        id="email"
+        value={email}
+        onChange={e => setEmail(e.target.value)}
       />
-    </Form>
+      <Button onClick={() => handleSubmit({ email })}>Reset Password</Button>
+    </FormControl>
   );
 };

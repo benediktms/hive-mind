@@ -1,21 +1,12 @@
 import { WithUser } from '@hive-mind/client-data-access-auth';
-import {
-  useCurrentUserQuery,
-  withApollo,
-} from '@hive-mind/client-data-access-gql';
-import Link from 'next/link';
+import { withApollo } from '@hive-mind/client-data-access-gql';
+import { UserPage } from '@hive-mind/client/views';
 import React from 'react';
 
 function Me() {
-  const { data, loading, error } = useCurrentUserQuery();
-
   return (
     <WithUser>
-      <h1>Me</h1>
-      {loading && <div>Loading...</div>}
-      {(error || !data) && <div>Something went wrong</div>}
-      {data && <div>{data.currentUser.firstName}</div>}
-      <Link href="/">Home</Link>
+      <UserPage />
     </WithUser>
   );
 }

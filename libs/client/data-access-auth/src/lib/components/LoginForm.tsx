@@ -1,16 +1,20 @@
-import { useToast } from '@chakra-ui/react';
 import {
   LoginInput,
   useLoginMutation,
 } from '@hive-mind/client-data-access-gql';
-import { Form, LabeledTextField } from '@hive-mind/client-ui-form';
-import { LoginSchema } from '@hive-mind/client/validation';
+// import { LoginSchema } from '@hive-mind/client/validation';
+import { Button, FormControl, Input, InputLabel } from '@mui/material';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { useCurrentUserStore } from '../stores/currentUserStore';
 
 export const LoginForm = () => {
   const [loginMutation] = useLoginMutation();
-  const toast = useToast();
+  // const toast = useToast();
   const router = useRouter();
+  const setCurrentUser = useCurrentUserStore(state => state.setCurrentUser);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleSubmit = async (input: LoginInput) => {
     try {
@@ -19,40 +23,43 @@ export const LoginForm = () => {
       });
 
       if (data) {
-        toast({
-          title: 'Login Successful',
-          description: `Welcome back, ${data.login.message}!`,
-          status: 'success',
-        });
+        // toast({
+        //   title: 'Login Successful',
+        //   description: `Welcome back, ${data.login.message}!`,
+        //   status: 'success',
+        // });
+
+        setCurrentUser(data.login.user);
 
         await router.push('/me');
       } else {
         throw errors;
       }
     } catch (e) {
-      toast({
-        title: 'Login Failed',
-        description: (e as Error).message,
-        status: 'error',
-      });
+      setCurrentUser(null);
+      // toast({
+      //   title: 'Login Failed',
+      //   description: (e as Error).message,
+      //   status: 'error',
+      // });
     }
   };
 
   return (
-    <Form
-      submitText="Login"
-      schema={LoginSchema}
-      // initialValues={{ email: '', password: '' }}
-      initialValues={{ email: 'ben@example.com', password: 'helloworld' }}
-      onSubmit={handleSubmit}
-    >
-      <LabeledTextField name="email" label="Email" placeholder="Email" />
-      <LabeledTextField
-        name="password"
-        label="Password"
-        placeholder="Password"
-        type="password"
+    <FormControl>
+      <InputLabel htmlFor="email">Email</InputLabel>
+      <Input
+        id="email"
+        value={email}
+        onChange={e => setEmail(e.target.value)}
       />
-    </Form>
+      <InputLabel htmlFor="password">Email</InputLabel>
+      <Input
+        id="password"
+        value={password}
+        onChange={e => setPassword(e.target.value)}
+      />
+      <Button onClick={() => handleSubmit({ email, password })}>Log in</Button>
+    </FormControl>
   );
 };
