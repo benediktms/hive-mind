@@ -5,7 +5,6 @@
     "client-data-access-auth": "libs/client/data-access-auth",
     "client-data-access-gql": "libs/client/data-access-gql",
     "client-mocks": "libs/client/mocks",
-    "client-ui-form": "libs/client/ui-form",
     "client-validation": "libs/client/validation",
     "client-views": "libs/client/views",
     "server-auth": "libs/server/auth",
