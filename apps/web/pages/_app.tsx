@@ -13,7 +13,7 @@ function CustomApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>grp</title>
+        <title>Hive Mind</title>
       </Head>
 
       <>
