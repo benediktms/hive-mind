@@ -7,6 +7,7 @@ on:
 
 env:
   DATABASE_URL: postgresql://postgres:postgres@localhost/test?schema=public
+  NEXT_PUBLIC_API_URI: https://fake-backend.com
 
 jobs:
   check-branch:
