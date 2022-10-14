@@ -6027,10 +6027,10 @@
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-2.0.0.tgz#f544a148d3ab35801c1f633a7441fd87c2e484bf"
   integrity sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==
 
-"@trycourier/courier@^3.4.0":
-  version "3.12.0"
-  resolved "https://registry.yarnpkg.com/@trycourier/courier/-/courier-3.12.0.tgz#568627346061c308de680eec09285cfa4dd40d60"
-  integrity sha512-U+/Lunjp9PvaGkbSQF1Y1oQQxJZcq6RH0bdLbnoeFaTPfUEBQ69vn5jC/rkTfYgoDw+/6x+312bnfS2BkYbkyg==
+"@trycourier/courier@^3.15.0":
+  version "3.16.0"
+  resolved "https://registry.yarnpkg.com/@trycourier/courier/-/courier-3.16.0.tgz#dcd418f62dfbf7c198caea09c09d738ca3087fd9"
+  integrity sha512-B9eGwsvXK5wM/wcD1eXBVEwQwf4eM4Jsc8XgIKKtkpVX8agyDz71ejhfc71HL3fDTf020rNpDZLZRBcPyUrDIg==
   dependencies:
     axios "^0.21.1"
 
