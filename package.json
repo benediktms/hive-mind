@@ -32,7 +32,7 @@
     "@apollo/client": "^3.6.9",
     "@chakra-ui/react": "^1.7.3",
     "@emotion/react": "11.10.0",
-    "@emotion/styled": "11.10.0",
+    "@emotion/styled": "11.10.4",
     "@nestjs/apollo": "^10.1.0",
     "@nestjs/common": "9.1.2",
     "@nestjs/config": "^1.1.5",
