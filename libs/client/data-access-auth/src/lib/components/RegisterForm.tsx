@@ -97,7 +97,15 @@ export const RegisterForm = () => {
       />
       <Button
         variant="contained"
-        onClick={() => handleSubmit({ email, firstName, lastName, password })}
+        onClick={() =>
+          handleSubmit({
+            email,
+            firstName,
+            lastName,
+            password,
+            passwordConfirmation,
+          })
+        }
         disabled={
           validateSchema(registerSchema, {
             email,

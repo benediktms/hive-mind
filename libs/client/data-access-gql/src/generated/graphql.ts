@@ -119,6 +119,7 @@ export type RegisterInput = {
   firstName: Scalars['String'];
   lastName: Scalars['String'];
   password: Scalars['String'];
+  passwordConfirmation: Scalars['String'];
 };
 
 export type RegisterResponse = {
@@ -156,6 +157,7 @@ export type User = {
   id: Scalars['Float'];
   lastName: Scalars['String'];
 };
+
 export type ConfirmEmailMutationVariables = Exact<{
   input: ConfirmEmailInput;
 }>;

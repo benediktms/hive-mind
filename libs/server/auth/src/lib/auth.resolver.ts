@@ -32,6 +32,10 @@ export class AuthResolver {
   public async register(
     @Args('input') input: RegisterInput
   ): Promise<RegisterResponse> {
+    if (input.password !== input.passwordConfirmation) {
+      throw new Error('Passwords must match');
+    }
+
     const { message, user } = await this.authService.register(input);
 
     return new RegisterResponse(message, user);

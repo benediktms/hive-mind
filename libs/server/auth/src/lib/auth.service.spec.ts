@@ -38,7 +38,15 @@ describe('AuthService', () => {
           }),
         },
         ConfigService,
-        TokenService,
+        {
+          provide: TokenService,
+          useValue: mockClass<TokenService>({
+            buildTokens: async () => ({
+              accessToken: 'token',
+              refreshToken: 'refresh',
+            }),
+          }),
+        },
         UserService,
         {
           provide: CourierService,
@@ -60,6 +68,10 @@ describe('AuthService', () => {
   });
 
   beforeEach(async () => await truncateTables(prisma));
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
 
   async function setupUser(
     password: string,
@@ -91,6 +103,7 @@ describe('AuthService', () => {
           firstName: taken.firstName,
           lastName: taken.lastName,
           password: 'helloworld',
+          passwordConfirmation: 'helloworld',
         })
       ).rejects.toThrow(/this email is already being used/i);
 
@@ -110,6 +123,7 @@ describe('AuthService', () => {
           firstName: user.firstName,
           lastName: user.lastName,
           password: 'helloworld',
+          passwordConfirmation: 'helloworld',
         })
       ).resolves.toEqual(
         expect.objectContaining({

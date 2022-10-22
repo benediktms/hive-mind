@@ -21,6 +21,11 @@ export default class RegisterInput {
   password!: string;
 
   @Field()
+  @IsString()
+  @IsNotEmpty()
+  passwordConfirmation!: string;
+
+  @Field()
   @IsNotEmpty()
   @IsString()
   @Length(1, 100)

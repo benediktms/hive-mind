@@ -79,6 +79,7 @@ input RegisterInput {
   firstName: String!
   lastName: String!
   password: String!
+  passwordConfirmation: String!
 }
 
 type RegisterResponse {
