@@ -8,8 +8,8 @@ import { AppModule } from './app/app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
-  app.useLogger(app.get(Logger));
 
+  app.useLogger(app.get(Logger));
   const logger = app.get(Logger);
 
   const prisma = app.get(PrismaService);
@@ -39,4 +39,5 @@ async function bootstrap() {
   }
 }
 
-void bootstrap();
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
+bootstrap();

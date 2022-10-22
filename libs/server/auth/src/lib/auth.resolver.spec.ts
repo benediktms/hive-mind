@@ -4,7 +4,15 @@ import { AuthService } from './auth.service';
 
 describe('AuthResolver', () => {
   let resolver: AuthResolver;
-  const authService = mockClass<AuthService>({ register: jest.fn() });
+  const authService = mockClass<AuthService>({
+    register: jest.fn(async () => {
+      return {
+        message: 'message',
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        user: {} as any,
+      };
+    }),
+  });
 
   beforeEach(() => {
     resolver = new AuthResolver(authService, mockClass(), mockClass());

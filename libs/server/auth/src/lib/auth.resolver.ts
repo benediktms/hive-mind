@@ -1,7 +1,7 @@
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import LoginInput from './dto/login.dto';
-import RegisterInput from './dto/register.dto';
+import { RegisterInput } from './dto/register.dto';
 import LoginResponse from './response/login.response';
 import RegisterResponse from './response/register.response';
 import { Cookies, GraphQLContext } from '@hive-mind/shared';

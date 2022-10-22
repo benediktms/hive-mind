@@ -56,6 +56,7 @@ export function normalizeError(err: unknown): Readonly<INormalizedError> {
     result.message = err;
     result.stack = result.error.stack;
   } else {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const aErr = err as any;
 
     if (typeof err === 'object') {

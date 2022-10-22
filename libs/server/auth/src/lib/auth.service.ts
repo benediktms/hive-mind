@@ -1,7 +1,7 @@
 import { PrismaService } from '@hive-mind/server-prisma';
 import { Injectable } from '@nestjs/common';
 import { SALT_LENGTH, SALT_ROUNDS } from '../utils/constants';
-import RegisterDTO from './dto/register.dto';
+import { RegisterInput } from './dto/register.dto';
 import { hash, verify } from 'argon2';
 import { randomBytes } from 'crypto';
 import { FailedToAuthenticateError } from '../utils/failed-to-authenticate-error';
@@ -41,7 +41,7 @@ export class AuthService {
   }
 
   public async register(
-    input: RegisterDTO
+    input: RegisterInput
   ): Promise<{ message: string; user: User }> {
     const taken = await this.prisma.user.findUnique({
       where: { email: input.email.toLowerCase() },
