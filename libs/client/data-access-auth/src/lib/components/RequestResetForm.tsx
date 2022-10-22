@@ -2,15 +2,16 @@ import {
   RequestPasswordResetInput,
   useRequestResetMutation,
 } from '@hive-mind/client-data-access-gql';
+import { useNotificationStore } from '@hive-mind/client-notifications';
 // import { RequestResetSchema } from '@hive-mind/client/validation';
-// import { normalizeError } from '@hive-mind/shared';
+import { normalizeError } from '@hive-mind/shared';
 import { Button, FormControl, Input, InputLabel } from '@mui/material';
 import { useState } from 'react';
 
 export const RequestResetForm = () => {
   const [requestResetMutation] = useRequestResetMutation();
-  // const toast = useToast();
   const [email, setEmail] = useState('');
+  const { addNotification } = useNotificationStore();
 
   const handleSubmit = async (input: RequestPasswordResetInput) => {
     try {
@@ -19,22 +20,21 @@ export const RequestResetForm = () => {
       });
 
       if (data) {
-        // toast({
-        //   status: 'success',
-        //   title: 'Password reset email was sent',
-        //   description: 'Please check your email and follow the instructions',
-        // });
+        addNotification({
+          type: 'info',
+          message:
+            'Password reset email sent. Please check your email and follow the instructions',
+        });
       } else {
         throw errors;
       }
     } catch (e) {
-      // const error = normalizeError(e);
-      console.log(e);
-      // toast({
-      //   status: 'error',
-      //   title: 'Something went wrong',
-      //   description: error.message,
-      // });
+      const error = normalizeError(e);
+
+      addNotification({
+        type: 'error',
+        message: error.message,
+      });
     }
   };
 

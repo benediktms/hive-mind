@@ -112,7 +112,10 @@ describe('AuthService', () => {
           password: 'helloworld',
         })
       ).resolves.toEqual(
-        'Sign up successful. Please check your email to confirm your account.'
+        expect.objectContaining({
+          message:
+            'Sign up successful. Please check your email to confirm your account.',
+        })
       );
 
       expect(courierService.sendConfirmAccountEmail).toHaveBeenCalledTimes(1);

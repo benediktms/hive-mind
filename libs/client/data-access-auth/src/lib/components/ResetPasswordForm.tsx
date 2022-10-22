@@ -5,7 +5,8 @@ import {
 import { FormControl, InputLabel, Input, Button } from '@mui/material';
 import { useState } from 'react';
 // import { ResetPasswordSchema } from '@hive-mind/client/validation';
-// import { normalizeError } from '@hive-mind/shared';
+import { normalizeError } from '@hive-mind/shared';
+import { useNotificationStore } from '@hive-mind/client-notifications';
 
 type Props = {
   email: string;
@@ -13,8 +14,8 @@ type Props = {
 };
 
 export const ResetPasswordForm = ({ email, token }: Props) => {
+  const { addNotification } = useNotificationStore();
   const [resetPassword] = useResetPasswordMutation();
-  // const toast = useToast();
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
 
@@ -30,18 +31,16 @@ export const ResetPasswordForm = ({ email, token }: Props) => {
         },
       });
 
-      // toast({
-      //   status: 'success',
-      //   title: 'Password reset successful',
-      //   description: 'You can now login with your new password',
-      // });
+      addNotification({
+        type: 'success',
+        message: 'Password reset successful',
+      });
     } catch (e) {
-      // const error = normalizeError(e);
-      // toast({
-      //   status: 'error',
-      //   title: 'Something went wrong',
-      //   description: error.message,
-      // });
+      const error = normalizeError(e);
+      addNotification({
+        type: 'error',
+        message: error.message,
+      });
     }
   };
 

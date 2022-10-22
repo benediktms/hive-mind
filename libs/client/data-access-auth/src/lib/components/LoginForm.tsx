@@ -2,15 +2,16 @@ import {
   LoginInput,
   useLoginMutation,
 } from '@hive-mind/client-data-access-gql';
+import { useNotificationStore } from '@hive-mind/client-notifications';
 // import { LoginSchema } from '@hive-mind/client/validation';
-import { Button, FormControl, Input, InputLabel } from '@mui/material';
+import { Box, Button, TextField } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useCurrentUserStore } from '../stores/currentUserStore';
 
 export const LoginForm = () => {
   const [loginMutation] = useLoginMutation();
-  // const toast = useToast();
+  const { addNotification } = useNotificationStore();
   const router = useRouter();
   const setCurrentUser = useCurrentUserStore(state => state.setCurrentUser);
   const [email, setEmail] = useState('');
@@ -23,11 +24,10 @@ export const LoginForm = () => {
       });
 
       if (data) {
-        // toast({
-        //   title: 'Login Successful',
-        //   description: `Welcome back, ${data.login.message}!`,
-        //   status: 'success',
-        // });
+        addNotification({
+          message: `Welcome back, ${data.login.message}!`,
+          type: 'success',
+        });
 
         setCurrentUser(data.login.user);
 
@@ -37,29 +37,40 @@ export const LoginForm = () => {
       }
     } catch (e) {
       setCurrentUser(null);
-      // toast({
-      //   title: 'Login Failed',
-      //   description: (e as Error).message,
-      //   status: 'error',
-      // });
+
+      addNotification({
+        message: (e as Error).message,
+        type: 'error',
+      });
     }
   };
 
   return (
-    <FormControl>
-      <InputLabel htmlFor="email">Email</InputLabel>
-      <Input
-        id="email"
+    <Box
+      component="form"
+      display="flex"
+      flexDirection="column"
+      maxWidth={400}
+      sx={{
+        '& > div': { mb: '1rem' },
+      }}
+    >
+      <TextField
+        label="Email"
         value={email}
         onChange={e => setEmail(e.target.value)}
       />
-      <InputLabel htmlFor="password">Email</InputLabel>
-      <Input
-        id="password"
+      <TextField
+        label="password"
         value={password}
         onChange={e => setPassword(e.target.value)}
       />
-      <Button onClick={() => handleSubmit({ email, password })}>Log in</Button>
-    </FormControl>
+      <Button
+        variant="contained"
+        onClick={() => handleSubmit({ email, password })}
+      >
+        Log in
+      </Button>
+    </Box>
   );
 };

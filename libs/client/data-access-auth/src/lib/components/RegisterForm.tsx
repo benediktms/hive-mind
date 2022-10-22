@@ -2,6 +2,7 @@ import {
   RegisterInput,
   useRegisterMutation,
 } from '@hive-mind/client-data-access-gql';
+import { useNotificationStore } from '@hive-mind/client-notifications';
 // import { RegisterSchema } from '@hive-mind/client/validation';
 import { Button, FormControl, Input, InputLabel } from '@mui/material';
 import { useRouter } from 'next/router';
@@ -9,7 +10,7 @@ import { useState } from 'react';
 
 export const RegisterForm = () => {
   const [registerMutation] = useRegisterMutation();
-  // const toast = useToast();
+  const { addNotification } = useNotificationStore();
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -24,22 +25,20 @@ export const RegisterForm = () => {
       });
 
       if (data) {
-        // toast({
-        //   status: 'success',
-        //   title: 'Account creation successfull',
-        //   description: 'Welcome to the party! You are now ready to use grp',
-        // });
+        addNotification({
+          type: 'success',
+          message: 'Welcome to the party! You are now ready to use grp',
+        });
 
         await router.push('/confirm');
       } else {
         throw errors;
       }
     } catch (e) {
-      // toast({
-      //   title: 'Signup Failed',
-      //   description: (e as Error).message,
-      //   status: 'error',
-      // });
+      addNotification({
+        type: 'error',
+        message: (e as Error).message,
+      });
     }
   };
 

@@ -9,6 +9,8 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
+import { NotificationWrapper } from '@hive-mind/client-notifications';
+
 function CustomApp({ Component, pageProps }: AppProps) {
   return (
     <>
@@ -18,7 +20,9 @@ function CustomApp({ Component, pageProps }: AppProps) {
 
       <>
         <CssBaseline />
-        <Component {...pageProps} />
+        <NotificationWrapper>
+          <Component {...pageProps} />
+        </NotificationWrapper>
       </>
     </>
   );

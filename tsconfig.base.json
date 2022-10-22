@@ -23,6 +23,9 @@
       "@hive-mind/client-data-access-gql": [
         "libs/client/data-access-gql/src/index.ts"
       ],
+      "@hive-mind/client-notifications": [
+        "libs/client/notifications/src/index.ts"
+      ],
       "@hive-mind/client-ui-form": ["libs/client/ui-form/src/index.ts"],
       "@hive-mind/client/mocks": ["libs/client/mocks/src/index.ts"],
       "@hive-mind/client/validation": ["libs/client/validation/src/index.ts"],

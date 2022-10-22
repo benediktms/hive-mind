@@ -5,6 +5,31 @@
     "client-data-access-auth": "libs/client/data-access-auth",
     "client-data-access-gql": "libs/client/data-access-gql",
     "client-mocks": "libs/client/mocks",
+    "client-notifications": {
+      "root": "libs/client/notifications",
+      "sourceRoot": "libs/client/notifications/src",
+      "projectType": "library",
+      "tags": [],
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": [
+              "libs/client/notifications/**/*.{ts,tsx,js,jsx}"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/client/notifications"],
+          "options": {
+            "jestConfig": "libs/client/notifications/jest.config.ts",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
     "client-validation": "libs/client/validation",
     "client-views": "libs/client/views",
     "server-auth": "libs/server/auth",
