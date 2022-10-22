@@ -3,7 +3,13 @@ import {
   useLoginMutation,
 } from '@hive-mind/client-data-access-gql';
 import { useNotificationStore } from '@hive-mind/client-notifications';
-// import { LoginSchema } from '@hive-mind/client/validation';
+import {
+  addTextFieldError,
+  emailSchema,
+  loginSchema,
+  passwordSchema,
+} from '@hive-mind/client/validation';
+import { normalizeError, validateSchema } from '@hive-mind/shared';
 import { Box, Button, TextField } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -36,14 +42,17 @@ export const LoginForm = () => {
         throw errors;
       }
     } catch (e) {
+      const error = normalizeError(e);
       setCurrentUser(null);
 
       addNotification({
-        message: (e as Error).message,
+        message: error.message,
         type: 'error',
       });
     }
   };
+
+  console.log(validateSchema(loginSchema, { email, password }).errors);
 
   return (
     <Box
@@ -58,16 +67,27 @@ export const LoginForm = () => {
       <TextField
         label="Email"
         value={email}
-        onChange={e => setEmail(e.target.value)}
+        onChange={e => {
+          const value = e.target.value;
+          setEmail(value);
+        }}
+        {...(email && addTextFieldError(emailSchema, email))}
       />
       <TextField
         label="password"
         value={password}
-        onChange={e => setPassword(e.target.value)}
+        onChange={e => {
+          const value = e.target.value;
+          setPassword(value);
+        }}
+        {...(password && addTextFieldError(passwordSchema, password))}
       />
       <Button
         variant="contained"
         onClick={() => handleSubmit({ email, password })}
+        disabled={
+          validateSchema(loginSchema, { email, password }).errors.length > 0
+        }
       >
         Log in
       </Button>

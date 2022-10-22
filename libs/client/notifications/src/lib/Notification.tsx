@@ -1,9 +1,9 @@
 import { Snackbar } from '@mui/material';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import { forwardRef, FC } from 'react';
-import { Notification } from './notificationStore';
+import { NotificationPopup } from './notificationStore';
 
-type Props = Notification & {
+type Props = NotificationPopup & {
   open: boolean;
   onClose: () => void;
 };

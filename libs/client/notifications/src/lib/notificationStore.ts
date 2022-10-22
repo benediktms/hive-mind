@@ -2,14 +2,14 @@ import { AlertColor } from '@mui/material';
 import create from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 
-export interface Notification {
+export interface NotificationPopup {
   type: AlertColor;
   message: string;
 }
 
 interface NotificationContext {
-  notifications: Notification[];
-  addNotification: (notification: Notification) => void;
+  notifications: NotificationPopup[];
+  addNotification: (notification: NotificationPopup) => void;
   closeNotification: () => void;
 }
 
