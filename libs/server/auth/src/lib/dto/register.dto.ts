@@ -10,11 +10,13 @@ import {
 @InputType()
 export default class RegisterInput {
   @Field()
+  @IsString()
   @IsEmail()
   @IsNotEmpty()
   email!: string;
 
   @Field()
+  @IsString()
   @IsNotEmpty()
   password!: string;
 

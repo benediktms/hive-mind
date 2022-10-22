@@ -1,18 +1,13 @@
 import { z } from 'zod';
 import { emailSchema } from './shared/emailSchema';
+import { nameSchema } from './shared/nameSchema';
 import { newPasswordSchema } from './shared/passwordSchema';
-
-const name = z
-  .string()
-  .min(2)
-  .max(100)
-  .transform(str => str.trim());
 
 export const registerSchema = z
   .object({
     email: emailSchema,
-    firstName: name,
-    lastName: name,
+    firstName: nameSchema,
+    lastName: nameSchema,
     password: newPasswordSchema,
     passwordConfirmation: newPasswordSchema,
   })

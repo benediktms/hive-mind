@@ -10,10 +10,11 @@ import {
   passwordSchema,
 } from '@hive-mind/client/validation';
 import { normalizeError, validateSchema } from '@hive-mind/shared';
-import { Box, Button, TextField } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useCurrentUserStore } from '../stores/currentUserStore';
+import { Form } from './Form';
 
 export const LoginForm = () => {
   const [loginMutation] = useLoginMutation();
@@ -52,30 +53,18 @@ export const LoginForm = () => {
     }
   };
 
-  console.log(validateSchema(loginSchema, { email, password }).errors);
-
   return (
-    <Box
-      component="form"
-      display="flex"
-      flexDirection="column"
-      maxWidth={400}
-      sx={{
-        '& > div': { mb: '1rem' },
-      }}
-    >
+    <Form>
       <TextField
         label="Email"
         value={email}
-        onChange={e => {
-          const value = e.target.value;
-          setEmail(value);
-        }}
+        onChange={e => setEmail(e.target.value)}
         {...(email && addTextFieldError(emailSchema, email))}
       />
       <TextField
         label="password"
         value={password}
+        type="password"
         onChange={e => {
           const value = e.target.value;
           setPassword(value);
@@ -91,6 +80,6 @@ export const LoginForm = () => {
       >
         Log in
       </Button>
-    </Box>
+    </Form>
   );
 };
