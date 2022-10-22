@@ -17,7 +17,7 @@
     "test": "dotenv -e .env.test -- yarn test:db",
     "test:e2e": "nx e2e web-e2e --headed",
     "lint": "nx affected --target=lint --parallel",
-    "format": "nx format --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
+    "format": "nx format --write \"apps/**/*.{ts,js,gql,graphql,json}\" \"libs/**/*.{ts,js,gql,graphql,json}\"",
     "prepare": "husky install",
     "prisma:migrate": "npx prisma migrate dev --name",
     "prisma:migrate:deploy": "yarn prisma migrate deploy",
