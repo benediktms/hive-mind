@@ -35,7 +35,7 @@ export const RegisterForm = () => {
         variables: { input },
       });
 
-      console.log(data);
+      if (errors) throw errors;
 
       if (data) {
         addNotification({
@@ -44,8 +44,6 @@ export const RegisterForm = () => {
         });
 
         await router.push('/confirm');
-      } else {
-        throw errors;
       }
     } catch (e) {
       console.log(e);

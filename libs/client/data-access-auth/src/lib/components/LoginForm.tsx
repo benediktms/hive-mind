@@ -30,6 +30,8 @@ export const LoginForm = () => {
         variables: { input },
       });
 
+      if (errors) throw errors;
+
       if (data) {
         addNotification({
           message: `Welcome back, ${data.login.message}!`,
@@ -39,8 +41,6 @@ export const LoginForm = () => {
         setCurrentUser(data.login.user);
 
         await router.push('/me');
-      } else {
-        throw errors;
       }
     } catch (e) {
       const error = normalizeError(e);

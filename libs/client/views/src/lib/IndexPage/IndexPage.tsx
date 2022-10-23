@@ -17,7 +17,7 @@ export const IndexPage = () => {
         display="flex"
         flexDirection="column"
         sx={{
-          '& > * ': {
+          '& > *': {
             marginY: '0.3em',
           },
         }}
