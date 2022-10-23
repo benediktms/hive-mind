@@ -1,4 +1,5 @@
 import { PrismaService } from '@hive-mind/server-prisma';
+import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import cookieParser from 'cookie-parser';
@@ -11,6 +12,8 @@ async function bootstrap() {
 
   app.useLogger(app.get(Logger));
   const logger = app.get(Logger);
+
+  app.useGlobalPipes(new ValidationPipe());
 
   const prisma = app.get(PrismaService);
   await prisma.enableShutdownHooks(app);
