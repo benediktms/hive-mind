@@ -29,8 +29,6 @@ export const RegisterForm = () => {
 
   const handleSubmit = async (input: RegisterInput) => {
     try {
-      console.log(input);
-
       const { data, errors } = await registerMutation({
         variables: { input },
       });
@@ -46,8 +44,6 @@ export const RegisterForm = () => {
         await router.push('/confirm');
       }
     } catch (e) {
-      console.log(e);
-
       addNotification({
         type: 'error',
         message: (e as Error).message,

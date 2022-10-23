@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { BiArrowBack } from 'react-icons/bi';
 import { FC, PropsWithChildren } from 'react';
 import NextLink from 'next/link';
-import { Container, Box, IconButton, Button, Typography } from '@mui/material';
+import { Box, IconButton, Button, Typography } from '@mui/material';
 
 type Props = {
   forPage: 'signup' | 'login' | 'forgot-password' | 'reset-password';
@@ -15,9 +15,8 @@ function getPageHeading(title: Props['forPage']): string {
     case 'login':
       return 'Login';
     case 'forgot-password':
-      return 'Request Password reset';
     case 'reset-password':
-      return 'Reset password';
+      return 'Reset Password';
     default:
       throw Error('Unknown page title');
   }
@@ -30,26 +29,32 @@ export const FormLayout: FC<PropsWithChildren<Props>> = ({
   const router = useRouter();
 
   return (
-    <Container>
+    <Box mx="30%" maxWidth={400}>
       <Typography variant="h1" textAlign="center" my={5}>
         {getPageHeading(forPage)}
       </Typography>
 
       {children}
 
-      <Box mt={5} display="flex">
-        <IconButton onClick={() => router.push('/')}>
+      <Box my={3}>
+        <IconButton sx={{ mr: 2 }} onClick={() => router.push('/')}>
           <BiArrowBack />
         </IconButton>
 
         {forPage === 'login' && (
-          <Button onClick={async () => await router.push('/register')}>
+          <Button
+            variant="outlined"
+            onClick={async () => await router.push('/register')}
+          >
             Sign up
           </Button>
         )}
 
         {forPage === 'signup' && (
-          <Button onClick={async () => await router.push('/login')}>
+          <Button
+            variant="outlined"
+            onClick={async () => await router.push('/login')}
+          >
             Login
           </Button>
         )}
@@ -59,6 +64,6 @@ export const FormLayout: FC<PropsWithChildren<Props>> = ({
           <NextLink href="/forgot-password">Forgot Password?</NextLink>
         </Typography>
       )}
-    </Container>
+    </Box>
   );
 };

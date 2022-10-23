@@ -7,7 +7,6 @@ export const Form: FC<PropsWithChildren> = ({ children }) => {
       component="form"
       display="flex"
       flexDirection="column"
-      maxWidth={400}
       sx={{
         '& > div': { mb: '1rem' },
       }}

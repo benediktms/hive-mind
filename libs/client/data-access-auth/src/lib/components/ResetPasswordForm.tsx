@@ -2,11 +2,16 @@ import {
   ResetPasswordInput,
   useResetPasswordMutation,
 } from '@hive-mind/client-data-access-gql';
-import { FormControl, InputLabel, Input, Button } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import { useState } from 'react';
-// import { ResetPasswordSchema } from '@hive-mind/client/validation';
 import { normalizeError } from '@hive-mind/shared';
 import { useNotificationStore } from '@hive-mind/client-notifications';
+import { Form } from './Form';
+import {
+  addTextFieldError,
+  newPasswordSchema,
+  passwordConfirmationSchema,
+} from '@hive-mind/client/validation';
 
 type Props = {
   email: string;
@@ -45,22 +50,24 @@ export const ResetPasswordForm = ({ email, token }: Props) => {
   };
 
   return (
-    <FormControl>
-      <InputLabel htmlFor="password">Password</InputLabel>
-      <Input
-        id="password"
+    <Form>
+      <TextField
+        label="password"
         value={password}
         onChange={e => setPassword(e.target.value)}
+        {...(password && addTextFieldError(newPasswordSchema, password))}
       />
-      <InputLabel htmlFor="passwordConfirmation">
-        Password Confirmation
-      </InputLabel>
-      <Input
-        id="passwordConfirmation"
+      <TextField
+        label="passwordConfirmation"
         value={passwordConfirmation}
         onChange={e => setPasswordConfirmation(e.target.value)}
+        {...(passwordConfirmation &&
+          addTextFieldError(passwordConfirmationSchema, {
+            password,
+            passwordConfirmation,
+          }))}
       />
       <Button onClick={() => handleSubmit(password)}>Reset Password</Button>
-    </FormControl>
+    </Form>
   );
 };

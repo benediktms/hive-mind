@@ -3,10 +3,11 @@ import {
   useRequestResetMutation,
 } from '@hive-mind/client-data-access-gql';
 import { useNotificationStore } from '@hive-mind/client-notifications';
-// import { RequestResetSchema } from '@hive-mind/client/validation';
+import { addTextFieldError, emailSchema } from '@hive-mind/client/validation';
 import { normalizeError } from '@hive-mind/shared';
-import { Button, FormControl, Input, InputLabel } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import { useState } from 'react';
+import { Form } from './Form';
 
 export const RequestResetForm = () => {
   const [requestResetMutation] = useRequestResetMutation();
@@ -39,14 +40,14 @@ export const RequestResetForm = () => {
   };
 
   return (
-    <FormControl>
-      <InputLabel htmlFor="email">Email</InputLabel>
-      <Input
-        id="email"
+    <Form>
+      <TextField
+        label="email"
         value={email}
         onChange={e => setEmail(e.target.value)}
+        {...(email && addTextFieldError(emailSchema, email))}
       />
       <Button onClick={() => handleSubmit({ email })}>Reset Password</Button>
-    </FormControl>
+    </Form>
   );
 };
