@@ -51,24 +51,24 @@
     tslib "^2.3.0"
     zen-observable-ts "^1.2.5"
 
-"@apollo/client@~3.2.5 || ~3.3.0 || ~3.4.0 || ~3.5.0 || ~3.6.0":
-  version "3.6.2"
-  resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.6.2.tgz#0418bfa6358dd117894c8af396706cfa2b186032"
-  integrity sha512-DNWyl+NNU2VsfHtXwOr4rV9hnQFPkl2/dNXeouhk9q7bXCWdEh3K8YTt/frULGVKbQjtnlPmz8C+LFI/JZ2N3w==
+"@apollo/client@~3.2.5 || ~3.3.0 || ~3.4.0 || ~3.5.0 || ~3.6.0 || ~3.7.0":
+  version "3.7.6"
+  resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.7.6.tgz#fdc2ce3c440c7edda70fc02b0244a05128fef696"
+  integrity sha512-K0l8+wgcdVDjdgI8O2YuhX1CiQlavGuBp8HR/+PEbc2+jqM/BaVpL0g7YAuXrTW20np/MXHNRDxK20/ujF9hjA==
   dependencies:
     "@graphql-typed-document-node/core" "^3.1.1"
-    "@wry/context" "^0.6.0"
+    "@wry/context" "^0.7.0"
     "@wry/equality" "^0.5.0"
     "@wry/trie" "^0.3.0"
     graphql-tag "^2.12.6"
     hoist-non-react-statics "^3.3.2"
     optimism "^0.16.1"
     prop-types "^15.7.2"
+    response-iterator "^0.2.6"
     symbol-observable "^4.0.0"
-    ts-invariant "^0.10.0"
+    ts-invariant "^0.10.3"
     tslib "^2.3.0"
-    use-sync-external-store "^1.0.0"
-    zen-observable-ts "^1.2.0"
+    zen-observable-ts "^1.2.5"
 
 "@apollo/protobufjs@1.2.4":
   version "1.2.4"
@@ -4060,6 +4060,14 @@
     "@graphql-tools/utils" "8.9.0"
     tslib "^2.4.0"
 
+"@graphql-tools/merge@8.3.17":
+  version "8.3.17"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/merge/-/merge-8.3.17.tgz#d7e184a296eb455c1550ab95991c5a2f68ea16a4"
+  integrity sha512-CLzz49lc6BavPhH9gPRm0sJeNA7kC/tF/jLUTQsyef6xj82Jw3rqIJ9PE+bk1cqPCOG01WLOfquBu445OMDO2g==
+  dependencies:
+    "@graphql-tools/utils" "9.2.0"
+    tslib "^2.4.0"
+
 "@graphql-tools/merge@8.3.3":
   version "8.3.3"
   resolved "https://registry.yarnpkg.com/@graphql-tools/merge/-/merge-8.3.3.tgz#74dd4816c3fc7af38730fc59d1cba6e687d7fb2d"
@@ -4156,6 +4164,16 @@
     tslib "^2.4.0"
     value-or-promise "1.0.11"
 
+"@graphql-tools/schema@9.0.15":
+  version "9.0.15"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/schema/-/schema-9.0.15.tgz#6632765e0281a6c890c7ea6865f13c10bc98fc1b"
+  integrity sha512-p2DbpkOBcsi+yCEjwoS+r4pJ5z+3JjlJdhbPkCwC4q8lGf5r93dVYrExOrqGKTU5kxLXI/mxabSxcunjNIsDIg==
+  dependencies:
+    "@graphql-tools/merge" "8.3.17"
+    "@graphql-tools/utils" "9.2.0"
+    tslib "^2.4.0"
+    value-or-promise "1.0.12"
+
 "@graphql-tools/schema@9.0.4":
   version "9.0.4"
   resolved "https://registry.yarnpkg.com/@graphql-tools/schema/-/schema-9.0.4.tgz#1a74608b57abf90fae6fd929d25e5482c57bc05d"
@@ -4241,6 +4259,14 @@
   resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-8.9.0.tgz#c6aa5f651c9c99e1aca55510af21b56ec296cdb7"
   integrity sha512-pjJIWH0XOVnYGXCqej8g/u/tsfV4LvLlj0eATKQu5zwnxd/TiTHq7Cg313qUPTFFHZ3PP5wJ15chYVtLDwaymg==
   dependencies:
+    tslib "^2.4.0"
+
+"@graphql-tools/utils@9.2.0":
+  version "9.2.0"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-9.2.0.tgz#d74d0376231c0e8bf897a715fafaf53d0f6bf06c"
+  integrity sha512-s3lEG1iYkyYEnKCWrIFECX3XH2wmZvbg6Ir3udCvIDynq+ydaO7JQXobclpPtwSJtjlS353haF//6V7mnBQ4bg==
+  dependencies:
+    "@graphql-typed-document-node/core" "^3.1.1"
     tslib "^2.4.0"
 
 "@graphql-tools/utils@^8.6.0":
@@ -10876,15 +10902,15 @@ graphql-tag@2.12.6, graphql-tag@^2.11.0, graphql-tag@^2.12.6:
   dependencies:
     tslib "^2.1.0"
 
-graphql-tools@^8.3.6:
-  version "8.3.6"
-  resolved "https://registry.yarnpkg.com/graphql-tools/-/graphql-tools-8.3.6.tgz#37ec7f6e2c5d11def54a18200cdd2dd60d7ec984"
-  integrity sha512-9ADr32CCTMh7YYM6VDErzb9i5Lns7UJAR17f7vxmkXLmuzPwcEMoP69GVU5PcWJcTU7rLHZHVxH+X7AwsgBXQA==
+graphql-tools@^8.3.14:
+  version "8.3.17"
+  resolved "https://registry.yarnpkg.com/graphql-tools/-/graphql-tools-8.3.17.tgz#1863bb462819be63b253d85e2279ca26f3b8d5f7"
+  integrity sha512-nB8RE/LDjREea85D4s48dO0XyAiJJ9hIxMNRixnyaLxATdVIqrZDxyGT+jgusrLp1wDKTzBSshmHkqmaAyk7PA==
   dependencies:
-    "@graphql-tools/schema" "9.0.4"
+    "@graphql-tools/schema" "9.0.15"
     tslib "^2.4.0"
   optionalDependencies:
-    "@apollo/client" "~3.2.5 || ~3.3.0 || ~3.4.0 || ~3.5.0 || ~3.6.0"
+    "@apollo/client" "~3.2.5 || ~3.3.0 || ~3.4.0 || ~3.5.0 || ~3.6.0 || ~3.7.0"
 
 graphql-ws@5.5.5, graphql-ws@^5.4.1:
   version "5.5.5"
@@ -16649,13 +16675,6 @@ ts-essentials@^7.0.3:
   resolved "https://registry.yarnpkg.com/ts-essentials/-/ts-essentials-7.0.3.tgz#686fd155a02133eedcc5362dc8b5056cde3e5a38"
   integrity sha512-8+gr5+lqO3G84KdiTSMRLtuyJ+nTBVRKuCrK4lidMPdVeEp0uqC875uE5NMcaA7YYMN7XsNiFQuMvasF8HT/xQ==
 
-ts-invariant@^0.10.0:
-  version "0.10.2"
-  resolved "https://registry.yarnpkg.com/ts-invariant/-/ts-invariant-0.10.2.tgz#ae0413fa60cc3603edf8709d9a11db9d9ddb335a"
-  integrity sha512-5BybOL23OXYmmnA0C8NYPkUo5Kb/I4IVQk31K1VcdBZpQIn4fWKMIORGBJqGkwvDLyu9cxUb4Zv4G6xA4/07IQ==
-  dependencies:
-    tslib "^2.1.0"
-
 ts-invariant@^0.10.3:
   version "0.10.3"
   resolved "https://registry.yarnpkg.com/ts-invariant/-/ts-invariant-0.10.3.tgz#3e048ff96e91459ffca01304dbc7f61c1f642f6c"
@@ -17060,11 +17079,6 @@ use-sync-external-store@1.2.0:
   resolved "https://registry.yarnpkg.com/use-sync-external-store/-/use-sync-external-store-1.2.0.tgz#7dbefd6ef3fe4e767a0cf5d7287aacfb5846928a"
   integrity sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==
 
-use-sync-external-store@^1.0.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/use-sync-external-store/-/use-sync-external-store-1.1.0.tgz#3343c3fe7f7e404db70f8c687adf5c1652d34e82"
-  integrity sha512-SEnieB2FPKEVne66NpXPd1Np4R1lTNKfjuy3XdIoPQKYBAFdzbzSZlSn1KJZUiihQLQC5Znot4SBz1EOTBwQAQ==
-
 util-deprecate@^1.0.1, util-deprecate@^1.0.2, util-deprecate@~1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
@@ -17127,6 +17141,11 @@ value-or-promise@1.0.11, value-or-promise@^1.0.11:
   version "1.0.11"
   resolved "https://registry.yarnpkg.com/value-or-promise/-/value-or-promise-1.0.11.tgz#3e90299af31dd014fe843fe309cefa7c1d94b140"
   integrity sha512-41BrgH+dIbCFXClcSapVs5M6GkENd3gQOJpEfPDNa71LsUGMXDL0jMWpI/Rh7WhX+Aalfz2TTS3Zt5pUsbnhLg==
+
+value-or-promise@1.0.12:
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/value-or-promise/-/value-or-promise-1.0.12.tgz#0e5abfeec70148c78460a849f6b003ea7986f15c"
+  integrity sha512-Z6Uz+TYwEqE7ZN50gwn+1LCVo9ZVrpxRPOhOLnncYkY1ZzOYtrX8Fwf/rFktZ8R5mJms6EZf5TqNOMeZmnPq9Q==
 
 vary@^1, vary@~1.1.2:
   version "1.1.2"
@@ -17700,13 +17719,6 @@ yocto-queue@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
-
-zen-observable-ts@^1.2.0:
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/zen-observable-ts/-/zen-observable-ts-1.2.3.tgz#c2f5ccebe812faf0cfcde547e6004f65b1a6d769"
-  integrity sha512-hc/TGiPkAWpByykMwDcem3SdUgA4We+0Qb36bItSuJC9xD0XVBZoFHYoadAomDSNf64CG8Ydj0Qb8Od8BUWz5g==
-  dependencies:
-    zen-observable "0.8.15"
 
 zen-observable-ts@^1.2.5:
   version "1.2.5"
