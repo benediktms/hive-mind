@@ -59,7 +59,7 @@
     "framer-motion": "^4",
     "graphql": "^15",
     "graphql-scalars": "^1.18.0",
-    "graphql-tools": "^8.3.6",
+    "graphql-tools": "^8.3.14",
     "lodash": "^4.17.21",
     "nanoid": "^3.2.0",
     "nestjs-pino": "^3.1",
